@@ -47,13 +47,13 @@ def analyse_property_granularity(
         )
     #FIXME plt.tight_layout()? not good solution
     return axs
-#demopgraphic
+#Demographic granularity
 analyse_property_granularity(data, "demography", ["Sex", "RaceEthnicityCategory", "AgeCategory", "State"])
-savefig(f"figures/{file_tag}_granularity_demography.png")
+savefig(f"images/{file_tag}_granularity_demography.png")
 
 #Health Indicators #TODO change Days interval?
 analyse_property_granularity(data, "health indicators", ["GeneralHealth", "PhysicalHealthDays", "MentalHealthDays", "LastCheckupTime"])
-savefig(f"figures/{file_tag}_granularity_health_indicators.png")
+savefig(f"images/{file_tag}_granularity_health_indicators.png")
 
 #TODO Sub-Levels of information? SleepHours, SmokerStatus+ECigars
 
@@ -73,7 +73,7 @@ if [] != vars:
         for j in range(i + 1, len(vars)):
             var2: str = vars[j]
             plot_multi_scatters_chart(data, var1, var2, target, ax=axs[i, j - 1])
-    savefig(f"figures/{file_tag}_sparsity_study.png")
+    savefig(f"images/{file_tag}_sparsity_study.png")
 else:
     print("Sparsity class: there are no variables.")
 	
