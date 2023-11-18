@@ -21,13 +21,13 @@ from sklearn.metrics import confusion_matrix, RocCurveDisplay
 from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
 from sklearn.neighbors import KNeighborsClassifier
 
-from config import ACTIVE_COLORS, LINE_COLOR, FILL_COLOR, cmap_blues
+from auxiliar.config import ACTIVE_COLORS, LINE_COLOR, FILL_COLOR, cmap_blues
 
 NR_COLUMNS: int = 3
 HEIGHT: int = 4
 
 TEXT_MARGIN = 0.05
-FONT_SIZE = 4
+FONT_SIZE = 6
 FONT_TEXT = FontProperties(size=FONT_SIZE)
 
 alpha = 0.3
@@ -445,7 +445,9 @@ def knn_study(trnX, trnY, tstX, tstY, k_max=19, lag=2, metric='accuracy', file_t
         values[d] = y_tst_values
     print(f'KNN best with k={best_params["params"][0]} and {best_params["params"][1]}')
 
-    plot_multiple_line_chart(kvalues, values, title=f'KNN Models ({metric})', xlabel='k', ylabel=metric, percentage=True)
+    #plot_multiple_line_chart(kvalues, values, title=f'KNN Models ({metric})', xlabel='k', ylabel=metric, percentage=True) #error?
+    plot_multiline_chart(kvalues, values, title=f'KNN Models ({metric})', xlabel='k', ylabel=metric, percentage=True)
     savefig(f'images/{file_tag}_knn_{metric}_study.png')
 
     return best_model, best_params
+
