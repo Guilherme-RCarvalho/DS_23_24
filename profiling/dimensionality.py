@@ -45,7 +45,7 @@ class Dimensionality:
 
     def num_variables_per_type(self):
         variable_types: dict[str, list] = get_variable_types(self.data)
-        print(variable_types)
+        print(variable_types, '\n')
         counts: dict[str, int] = {}
         for tp in variable_types.keys():
             counts[tp] = len(variable_types[tp])

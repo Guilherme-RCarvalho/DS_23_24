@@ -5,6 +5,7 @@ file:       set2.py
 #Imports
 from pandas import read_csv, DataFrame
 from profiling.dimensionality import Dimensionality
+from profiling.distribution import Distribution
 from profiling.sparsity import Sparsity
 from profiling.granularity import Granularity
 
@@ -40,32 +41,33 @@ dim.num_records_variables()
 dim.missing_values()
 
 # Variables Type
-print('Set2 Data Types:\n', data.dtypes)
-print()
+print('Set2 Data Types:\n', data.dtypes, '\n')
 
 # Number of variables per type
 dim.num_variables_per_type()
-print()
 
+# -- Distribution --
+
+summary5: DataFrame = data.describe(include="all")
+print(summary5, '\n')
+
+distribution = Distribution(filename, file_tag, data)
+
+print('Numeric Variables: ', distribution.get_numeric_variables(), '\n')
+print('Symbolic Variables: ', distribution.get_symbolic_variables(), '\n')
+
+# Global Boxplots
+#distribution.global_boxplot()
+
+# Single Variable Boxplots
+distribution.boxplots()
+
+# Outliers Study
+distribution.num_standart_outliers_per_variable()
 
 # -- Granularity --
 granularity = Granularity(filename, file_tag, data)
 
-
 # -- Sparsity -- 
 sparsity = Sparsity(filename, file_tag, data)
-
-# -- Distribution --
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -3,10 +3,10 @@
 file:       distribution.py
 '''
 
-# Global boxplots           - Done: global_boxplot()
+# Global boxplots           - Done: global_boxplot() dá bronca
 # Single variables boxplots - Done: boxplots()
-# Histograms                - Done: todos??
 # Outliers study            - Done: num_outliers_per_variable()
+# Histograms                - Done: todos??
 # Class Distribution        - Done: class_distribution()
 
 
@@ -14,7 +14,7 @@ file:       distribution.py
 from numpy import ndarray, log
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
-from matplotlib.pyplot import figure, savefig, show, subplots
+from matplotlib.pyplot import figure, savefig, show, subplots, xticks
 from pandas import Series
 from auxiliar.dslabs_functions import HEIGHT, count_outliers, define_grid, get_variable_types, plot_bar_chart, plot_multibar_chart, plot_multiline_chart
 from scipy.stats import norm, expon, lognorm
@@ -81,6 +81,7 @@ class Distribution():
                 ylabel="nr outliers",
                 percentage=False,
             )
+            xticks(rotation=45, ha="right")
             savefig(f"images/{self.file_tag}_outliers_standard.png")
             show()
         else:
@@ -99,6 +100,7 @@ class Distribution():
                 ylabel="nr outliers",
                 percentage=False,
             )
+            xticks(rotation=45, ha="right")
             savefig(f"images/{self.file_tag}_outliers.png")
             show()
         else:
