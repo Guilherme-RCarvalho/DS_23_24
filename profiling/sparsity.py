@@ -75,7 +75,9 @@ class Sparsity:
     
     def encode_pos_covid(self):
         encoded_data = self.data.copy()
-        
+        print(self.data)
+
+
         encoding = {
             # Symbolic (Ordinal)
             "GeneralHealth": {"Poor": 0, "Fair": 1, "Good": 2, "Very good": 3, "Excellent": 4},
