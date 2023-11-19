@@ -116,7 +116,7 @@ distribution = Distribution(filename, file_tag, data)
 distribution.global_boxplot()
 
 # Single Variable Boxplots
-#distribution.boxplots()
+distribution.boxplots()
 
 # Outliers Study
 distribution.num_standart_outliers_per_variable()
