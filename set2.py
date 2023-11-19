@@ -6,8 +6,8 @@ file:       set2.py
 from pandas import read_csv, DataFrame
 from profiling.dimensionality import Dimensionality
 from profiling.distribution import Distribution
-# from profiling.sparsity import Sparsity
-# from profiling.granularity import Granularity
+from profiling.sparsity import Sparsity
+from profiling.granularity import Granularity
 
 # ------------------------------------------------- #
 #                     DATASET 2                     #
@@ -21,6 +21,10 @@ data: DataFrame = read_csv(filename, na_values="", index_col="ID")
 # -------------------- #
 # -- Dimensionality -- #
 # -------------------- #
+
+# Nr records x Nr variables - Done (images2submit/credit_records_variables.png)
+# Nr Variable types         - Done (images2submit/credit_variable_types.png)
+# Nr missing values         - Done (images2submit/credit_mv.png)
 
 dim = Dimensionality(filename, file_tag, data)
 
@@ -53,6 +57,14 @@ dim.num_variables_per_type()
 # -- Distribution -- #
 # ------------------ #
 
+# Global boxplot                        -
+# Boxplots for individual numeric vars  - Done (images2submit/credit_single_boxplots.png)
+# Outliers                              - não sabemos qual dos graficos é
+# Histograms for numeric                -
+# Distributions for numeric             -
+# Histograms for symbolic               -
+# Class Distribution                    - Done (images2submit/credit_class_distribution.png)
+
 summary5: DataFrame = data.describe(include="all")
 print(summary5, '\n')
 
@@ -61,7 +73,7 @@ distribution = Distribution(filename, file_tag, data)
 print('Numeric Variables: ', distribution.get_numeric_variables(), '\n')
 print('Symbolic Variables: ', distribution.get_symbolic_variables(), '\n')
 
-# Global Boxplots
+# Global Boxplot - dá bosta
 # distribution.global_boxplot()
 
 # Single Variable Boxplots
@@ -74,6 +86,15 @@ NR_STDEV: int = 2
 IQR_FACTOR: float = 1.5
 distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR)
 
+# Histograms - numeric
+#distribution.histograms_numeric_with_distributions()
+
+# Histograms - symbolic
+distribution.histograms_symbolic_variables()
+
+# Distribution for numeric
+#distribution.histograms_numeric_with_distributions()
+
 # Class Distribution
 distribution.class_distribution(target='Credit_Score')
 
@@ -81,10 +102,15 @@ distribution.class_distribution(target='Credit_Score')
 # -- Granularity -- #
 # ----------------- #
 
-#granularity = Granularity(filename, file_tag, data)
+# Symbolic variables  -
+
+granularity = Granularity(filename, file_tag, data)
 
 # -------------- #
 # -- Sparsity -- #
 # -------------- #
 
-#sparsity = Sparsity(filename, file_tag, data)
+# Scatter-plots (all x all - including class)   -
+# Correlation (all x all - including class)     -
+
+sparsity = Sparsity(filename, file_tag, data)
