@@ -38,6 +38,17 @@ dim.missing_values()
 print('Set1 Data Types:\n', data.dtypes)
 print()
 
+
+# -> 'numeric': ['PhysicalHealthDays', 'MentalHealthDays', 'SleepHours', 'HeightInMeters', 'WeightInKilograms', 'BMI'], 
+# -> 'binary':  ['Sex', 'PhysicalActivities', 'HadHeartAttack', 'HadAngina', 'HadStroke', 'HadAsthma', 'HadSkinCancer', 
+# 'HadCOPD', 'HadDepressiveDisorder', 'HadKidneyDisease', 'HadArthritis', 'DeafOrHardOfHearing', 'BlindOrVisionDifficulty', 
+# 'DifficultyConcentrating', 'DifficultyWalking', 'DifficultyDressingBathing', 'DifficultyErrands', 'ChestScan', 'AlcoholDrinkers', 
+# 'HIVTesting', 'FluVaxLast12', 'PneumoVaxEver', 'HighRiskLastYear', 'CovidPos'], 
+# -> 'date': [], 
+# -> 'symbolic': ['State', 'GeneralHealth', 'LastCheckupTime', 'RemovedTeeth', 'HadDiabetes', 'SmokerStatus', 'ECigaretteUsage', 
+# 'RaceEthnicityCategory', 'AgeCategory', 'TetanusLast10Tdap']
+
+
 # Number of variables per type
 dim.num_variables_per_type()
 print()
@@ -108,7 +119,7 @@ distribution.histograms_numeric_with_distributions()
 distribution.histograms_symbolic_variables()
 
 # Class Distribution
-distribution.class_distribution()
+distribution.class_distribution("CovidPos")
 
 
 
