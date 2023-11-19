@@ -14,7 +14,7 @@ from profiling.distribution import Distribution
 # ---------------------------------------
 
 # Load Data
-filename = "data/class_pos_covid.csv"
+filename = "class_pos_covid.csv"
 file_tag = "pos_covid"
 data: DataFrame = read_csv(filename, na_values="") 
 
@@ -79,6 +79,8 @@ sparsity = Sparsity(filename, file_tag, data)
 # Scatter plots to project the data along two of its defining variables
 #sparsity.analyse_property_sparsity("CovidPos")
 #print()
+
+
 
 # Correlation Analysis
 #Variable encoding before?? Applied to ordinal / binary variables

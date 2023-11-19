@@ -62,7 +62,7 @@ class Sparsity:
 
 
 
-    # VERIFIQUEM Q DEVE TAR MAL
+    # Ta a dar erro, faltam coisas, rever
     # Horroroso tudo hardcoded mas chatgpt <3 
 
     # Ordinal Encoding, Cyclic Variables (nao temos?), Dummification or One-hot Encoding:
@@ -71,6 +71,8 @@ class Sparsity:
         # in this ordinal encoding process.
             ### -> No - 0, Yes - 1 (binary)
 
+    # FALTA HadDiabetes
+    
     def encode_pos_covid(self):
         encoded_data = self.data.copy()
         
@@ -81,12 +83,7 @@ class Sparsity:
             "SmokerStatus": {"Never smoked": 0, "Former smoker": 1, "Current smoker - now smokes some days": 2, "Current smoker - now smokes every day": 3},            
             "AgeCategory": {"Age 40 to 44": 0, "Age 55 to 59": 1, "Age 65 to 69": 2, "Age 70 to 74": 3, "Age 75 to 79": 4, "Age 80 or older": 5},
             "TetanusLast10Tdap": {"No": 0, "Yes, received tetanus shot but not sure what type": 1, "Yes, received Tdap": 2},
-            "RemovedTeeth": {
-                "None of them": 0,
-                "1 to 5": 1,  
-                "6 or more, but not all": 2,                  
-                "All": 3,  
-            },
+            "RemovedTeeth": {"None of them": 0, "1 to 5": 1, "6 or more, but not all": 2,"All": 3},
 
             # Binary - mudar c a da prof so yes no Yes No wtv
             "Sex": {"Male": 0, "Female": 1}, 
@@ -122,11 +119,10 @@ class Sparsity:
     
         # Dummification (One-hot encoding) (non-ordenal) ???????????????
         # The dummifying 'State' will create separate binary columns for each unique state, increasing the dimensionality of your dataset. - help
-        vars_to_dummify = ["State", "RaceEthnicityCategory"]
+        vars_to_dummify = ["State", "RaceEthnicityCategory", "HadDiabetes"]
         df_encoded = dummify(encoded_data, vars_to_dummify)
         
         return df_encoded
-
 
     def encode_credit(self):
         pass
