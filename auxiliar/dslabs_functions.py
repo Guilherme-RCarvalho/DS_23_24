@@ -27,7 +27,7 @@ NR_COLUMNS: int = 3
 HEIGHT: int = 4
 
 TEXT_MARGIN = 0.05
-FONT_SIZE = 6
+FONT_SIZE = 4
 FONT_TEXT = FontProperties(size=FONT_SIZE)
 
 alpha = 0.3
