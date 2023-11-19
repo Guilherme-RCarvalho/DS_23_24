@@ -14,7 +14,7 @@ from profiling.distribution import Distribution
 # ---------------------------------------
 
 # Load Data
-filename = "data/class_pos_covid.csv"
+filename = "class_pos_covid.csv"
 file_tag = "pos_covid"
 data: DataFrame = read_csv(filename, na_values="") 
 
@@ -37,7 +37,6 @@ dim.missing_values()
 # Variables Type
 print('Set1 Data Types:\n', data.dtypes)
 print()
-
 
 # -> 'numeric': ['PhysicalHealthDays', 'MentalHealthDays', 'SleepHours', 'HeightInMeters', 'WeightInKilograms', 'BMI'], 
 # -> 'binary':  ['Sex', 'PhysicalActivities', 'HadHeartAttack', 'HadAngina', 'HadStroke', 'HadAsthma', 'HadSkinCancer', 
@@ -81,7 +80,7 @@ sparsity.analyse_property_sparsity("CovidPos")
 print()
 
 # Correlation Analysis
-#Variable encoding before??
+#Variable encoding before?? Applied to ordinal / binary variables
 sparsity.correlation_analysis()
 
 
@@ -114,9 +113,9 @@ IQR_FACTOR: float = 1.5
 distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR) #testar varios valores??
 
 
-# Histograms
-distribution.histograms_numeric_with_distributions()
-distribution.histograms_symbolic_variables()
+# Histograms - nao esta a carregar need help
+#distribution.histograms_numeric_with_distributions()
+#distribution.histograms_symbolic_variables()
 
 # Class Distribution
 distribution.class_distribution("CovidPos")

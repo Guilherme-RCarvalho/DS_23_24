@@ -3,12 +3,11 @@ file:       sparsity.py
 '''
 
 # Scatter-plots      - Done: ?
-# Correlation        - Done: ?
+# Correlation        - Done: correlation_analysis()
 
 # Imports
-from matplotlib import figure
 from numpy import ndarray
-from matplotlib.pyplot import savefig, show, subplots
+from matplotlib.pyplot import figure, savefig, show, subplots
 from pandas import DataFrame, Series
 from auxiliar.dslabs_functions import HEIGHT, plot_bar_chart, plot_multi_scatters_chart
 from seaborn import heatmap
