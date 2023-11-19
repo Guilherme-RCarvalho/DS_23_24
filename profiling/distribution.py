@@ -17,7 +17,7 @@ from matplotlib.figure import Figure
 from matplotlib.pyplot import figure, savefig, show, subplots, xticks
 from pandas import Series
 from auxiliar.dslabs_functions import HEIGHT, count_outliers, define_grid, get_variable_types, plot_bar_chart, \
-    plot_multibar_chart, plot_multiline_chart
+    plot_multibar_chart, plot_multiline_chart, set_chart_labels
 from scipy.stats import norm, expon, lognorm
 
 
@@ -170,6 +170,30 @@ class Distribution():
             ylabel="",
         )
 
+    def histogram_numeric(self):
+        numeric = self.get_numeric_variables()
+        if [] != numeric:
+            rows, cols = define_grid(len(numeric))
+            _, axs = subplots(
+                rows, cols, figsize=(cols * HEIGHT, rows * HEIGHT), squeeze=False
+            )
+            i: int
+            j: int
+            i, j = 0, 0
+            for n in range(len(numeric)):
+                set_chart_labels(
+                    axs[i, j],
+                    title=f"Histogram for {numeric[n]}",
+                    xlabel=numeric[n],
+                    ylabel="nr records",
+                )
+                axs[i, j].hist(self.data[numeric[n]].dropna().values, "auto")
+                i, j = (i + 1, 0) if (n + 1) % cols == 0 else (i, j + 1)
+            savefig(f"images/{self.file_tag}_single_histograms_numeric.png")
+            show()
+        else:
+            print("There are no numeric variables.")
+            
     def histograms_numeric_with_distributions(self):
         numeric = self.get_numeric_variables()
         if [] != numeric:

@@ -14,12 +14,12 @@ from profiling.distribution import Distribution
 # ---------------------------------------
 
 # Load Data
-filename = "data/class_pos_covid.csv"
+filename = "class_pos_covid.csv"
 file_tag = "pos_covid"
 data: DataFrame = read_csv(filename, na_values="") 
 
 
-'''
+
 # -------------------- #
 # -- Dimensionality -- #
 # -------------------- #
@@ -80,17 +80,24 @@ sparsity = Sparsity(filename, file_tag, data)
 #sparsity.analyse_property_sparsity("CovidPos")
 #print()
 
-
-
 # Correlation Analysis
 #Variable encoding before?? Applied to ordinal / binary variables
-encoded_data = sparsity.encode_pos_covid()
-print(encoded_data)
-print('Encoded Data Shape: ', encoded_data.shape) #aumentou dummification acho
+#encoded_data = sparsity.encode_pos_covid()
+
+#print(encoded_data["State"].unique())
+#print(encoded_data["RaceEthnicityCategory"].unique())
+#print(encoded_data["HadDiabetes"].unique())
+
+
+
+#print(encoded_data["HadDiabetes"].unique()) #[1 0 'No, pre-diabetes or borderline diabetes' nan 'Yes, but only during pregnancy (female)']
+
+
+#print('Encoded Data Shape: ', encoded_data.shape) #aumentou dummification acho
 
 #sparsity.correlation_analysis(encoded_data)
 
-'''
+
 
 # ------------------ #
 # -- Distribution -- #
@@ -112,7 +119,7 @@ distribution.global_boxplot()
 #distribution.boxplots()
 
 # Outliers Study
-#distribution.num_standart_outliers_per_variable()
+distribution.num_standart_outliers_per_variable()
 
 ### default ainda
 #NR_STDEV:   int   = 3
@@ -125,8 +132,7 @@ distribution.global_boxplot()
 #distribution.histograms_symbolic_variables()
 
 # Class Distribution
-#distribution.class_distribution("CovidPos")
-
+distribution.class_distribution("CovidPos")
 
 
 
