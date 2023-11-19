@@ -59,9 +59,12 @@ granularity.analyse_property_granularity("health indicators", ["GeneralHealth", 
 # -- Sparsity -- 
 sparsity = Sparsity(filename, file_tag, data)
 
+# Scatter plots to project the data along two of its defining variables
 sparsity.analyse_property_sparsity("CovidPos")
 print()
 
+# Correlation Analysis
+sparsity.correlation_analysis()
 
 
 
@@ -82,7 +85,7 @@ distribution.global_boxplot()
 # Single Variable Boxplots
 distribution.boxplots()
 
-#Outliers Study
+# Outliers Study
 distribution.num_standart_outliers_per_variable()
 
 ### default ainda
