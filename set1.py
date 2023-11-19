@@ -38,6 +38,7 @@ dim.missing_values()
 print('Set1 Data Types:\n', data.dtypes)
 print()
 
+
 # -> 'numeric': ['PhysicalHealthDays', 'MentalHealthDays', 'SleepHours', 'HeightInMeters', 'WeightInKilograms', 'BMI'], 
 # -> 'binary':  ['Sex', 'PhysicalActivities', 'HadHeartAttack', 'HadAngina', 'HadStroke', 'HadAsthma', 'HadSkinCancer', 
 # 'HadCOPD', 'HadDepressiveDisorder', 'HadKidneyDisease', 'HadArthritis', 'DeafOrHardOfHearing', 'BlindOrVisionDifficulty', 
@@ -76,13 +77,16 @@ granularity.analyse_property_granularity("health indicators", ["GeneralHealth", 
 sparsity = Sparsity(filename, file_tag, data)
 
 # Scatter plots to project the data along two of its defining variables
-sparsity.analyse_property_sparsity("CovidPos")
-print()
+#sparsity.analyse_property_sparsity("CovidPos")
+#print()
 
 # Correlation Analysis
 #Variable encoding before?? Applied to ordinal / binary variables
-#sparsity.encode_pos_covid()
-sparsity.correlation_analysis()
+encoded_data = sparsity.encode_pos_covid()
+print(encoded_data)
+print('Encoded Data Shape: ', encoded_data.shape) #aumentou dummification acho
+
+sparsity.correlation_analysis(encoded_data)
 
 
 
@@ -120,8 +124,6 @@ distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR) #testar varios valo
 
 # Class Distribution
 distribution.class_distribution("CovidPos")
-
-
 
 
 

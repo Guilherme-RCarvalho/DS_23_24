@@ -37,16 +37,21 @@ class Sparsity:
         else:
             print("Sparsity class: there are no variables.")
 
-    def correlation_analysis(self):
-        variables_types: dict[str, list] = get_variable_types(self.data)
+    def correlation_analysis(self, encoded_data):        
+
+        '''
+        variables_types: dict[str, list] = get_variable_types(encoded_data)
         numeric: list[str] = variables_types["numeric"]
-        corr_mtx: DataFrame = self.data[numeric].corr().abs()
+        corr_mtx: DataFrame = encoded_data[numeric].corr().abs()
+        '''
+        
+        corr_mtx: DataFrame = encoded_data.corr().abs()
 
         figure()
         heatmap(
             abs(corr_mtx),
-            xticklabels=numeric,
-            yticklabels=numeric,
+            #xticklabels=numeric,
+            #yticklabels=numeric,
             annot=False,
             cmap="Blues",
             vmin=0,
@@ -72,11 +77,17 @@ class Sparsity:
         encoding = {
             # Symbolic (Ordinal)
             "GeneralHealth": {"Poor": 0, "Fair": 1, "Good": 2, "Very good": 3, "Excellent": 4},
-            "LastCheckupTime": {"Never": 0, "Within past year (anytime less than 12 months ago)": 1, "Over a year ago": 2},
+            "LastCheckupTime": {"Never": 0, "Within past year (anytime less than 12 months ago)": 1, "Over a year ago": 2, "Within past 2 years (1 year but less than 2 years ago)": 3, "Within past 5 years (2 years but less than 5 years ago)": 4, "5 or more years ago": 5 },
             "SmokerStatus": {"Never smoked": 0, "Former smoker": 1, "Current smoker - now smokes some days": 2, "Current smoker - now smokes every day": 3},            
             "AgeCategory": {"Age 40 to 44": 0, "Age 55 to 59": 1, "Age 65 to 69": 2, "Age 70 to 74": 3, "Age 75 to 79": 4, "Age 80 or older": 5},
             "TetanusLast10Tdap": {"No": 0, "Yes, received tetanus shot but not sure what type": 1, "Yes, received Tdap": 2},
-            
+            "RemovedTeeth": {
+                "None of them": 0,
+                "1 to 5": 1,  
+                "6 or more, but not all": 2,                  
+                "All": 3,  
+            },
+
             # Binary - mudar c a da prof so yes no Yes No wtv
             "Sex": {"Male": 0, "Female": 1}, 
             "PhysicalActivities": {"No": 0, "Yes": 1},
@@ -106,15 +117,15 @@ class Sparsity:
             
         }
 
+        # Encoding ordinal variables
+        encoded_data.replace(encoding, inplace=True)
+    
         # Dummification (One-hot encoding) (non-ordenal) ???????????????
-        # The dummifying 'State' will create separate binary columns for each unique state, 
-        # increasing the dimensionality of your dataset. - help
+        # The dummifying 'State' will create separate binary columns for each unique state, increasing the dimensionality of your dataset. - help
         vars_to_dummify = ["State", "RaceEthnicityCategory"]
         df_encoded = dummify(encoded_data, vars_to_dummify)
         
-        df_encoded = encoded_data.replace(encoding, inplace=False)
         return df_encoded
-
 
 
     def encode_credit(self):
