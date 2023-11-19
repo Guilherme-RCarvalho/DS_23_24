@@ -77,12 +77,16 @@ granularity.analyse_property_granularity("health indicators", ["GeneralHealth", 
 sparsity = Sparsity(filename, file_tag, data)
 
 # Scatter plots to project the data along two of its defining variables
-sparsity.analyse_property_sparsity("CovidPos")
-print()
+#sparsity.analyse_property_sparsity("CovidPos")
+#print()
 
 # Correlation Analysis
-#Variable encoding before??
-sparsity.correlation_analysis()
+#Variable encoding before?? Applied to ordinal / binary variables
+encoded_data = sparsity.encode_pos_covid()
+print(encoded_data)
+print('Encoded Data Shape: ', encoded_data.shape) #aumentou dummification acho
+
+sparsity.correlation_analysis(encoded_data)
 
 
 
@@ -114,14 +118,12 @@ IQR_FACTOR: float = 1.5
 distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR) #testar varios valores??
 
 
-# Histograms
-distribution.histograms_numeric_with_distributions()
-distribution.histograms_symbolic_variables()
+# Histograms - nao esta a carregar need help
+#distribution.histograms_numeric_with_distributions()
+#distribution.histograms_symbolic_variables()
 
 # Class Distribution
 distribution.class_distribution("CovidPos")
-
-
 
 
 
