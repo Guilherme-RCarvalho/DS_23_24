@@ -14,7 +14,7 @@ from profiling.distribution import Distribution
 # ---------------------------------------
 
 # Load Data
-filename = "class_pos_covid.csv"
+filename = "data/class_pos_covid.csv"
 file_tag = "pos_covid"
 data: DataFrame = read_csv(filename, na_values="") 
 
@@ -81,6 +81,7 @@ print()
 
 # Correlation Analysis
 #Variable encoding before?? Applied to ordinal / binary variables
+#sparsity.encode_pos_covid()
 sparsity.correlation_analysis()
 
 
