@@ -188,16 +188,3 @@ class Distribution():
         )
         savefig(f"images/{self.file_tag}_class_distribution.png")
         show()
-
-
-    
-
-
-    
-
-
-
-    
-
-    
-
