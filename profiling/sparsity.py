@@ -6,12 +6,13 @@ file:       sparsity.py
 # Correlation        - Done: ?
 
 # Imports
+from matplotlib import figure
 from numpy import ndarray
-from matplotlib.figure import Figure
-from matplotlib.pyplot import savefig, subplots
-from pandas import Series
+from matplotlib.pyplot import savefig, show, subplots
+from pandas import DataFrame, Series
 from auxiliar.dslabs_functions import HEIGHT, plot_bar_chart, plot_multi_scatters_chart
-
+from seaborn import heatmap
+from auxiliar.dslabs_functions import get_variable_types
 
 class Sparsity:
 
@@ -36,3 +37,21 @@ class Sparsity:
             savefig(f"images/{self.file_tag}_sparsity_study.png")
         else:
             print("Sparsity class: there are no variables.")
+
+    def correlation_analysis(self):
+        variables_types: dict[str, list] = get_variable_types(self.data)
+        numeric: list[str] = variables_types["numeric"]
+        corr_mtx: DataFrame = self.data[numeric].corr().abs()
+
+        figure()
+        heatmap(
+            abs(corr_mtx),
+            xticklabels=numeric,
+            yticklabels=numeric,
+            annot=False,
+            cmap="Blues",
+            vmin=0,
+            vmax=1,
+        )
+        savefig(f"images/{self.file_tag}_correlation_analysis.png")
+        show()
