@@ -2,12 +2,12 @@
 file:       set2.py
 '''
 
-#Imports
+# Imports
 from pandas import read_csv, DataFrame
 from profiling.dimensionality import Dimensionality
 from profiling.distribution import Distribution
-from profiling.sparsity import Sparsity
-from profiling.granularity import Granularity
+# from profiling.sparsity import Sparsity
+# from profiling.granularity import Granularity
 
 # ------------------------------------------------- #
 #                     DATASET 2                     #
@@ -24,7 +24,7 @@ data: DataFrame = read_csv(filename, na_values="", index_col="ID")
 
 dim = Dimensionality(filename, file_tag, data)
 
-print('Set2 Data Shape: ', data.shape) # Dimension: (100000, 27)
+print('Set2 Data Shape: ', data.shape)  # Dimension: (100000, 27)
 print('Set2 Columns Names: ', data.columns)
 
 # Index(['Customer_ID', 'Month', 'Name', 'Age', 'SSN', 'Occupation',
@@ -62,7 +62,7 @@ print('Numeric Variables: ', distribution.get_numeric_variables(), '\n')
 print('Symbolic Variables: ', distribution.get_symbolic_variables(), '\n')
 
 # Global Boxplots
-#distribution.global_boxplot()
+# distribution.global_boxplot()
 
 # Single Variable Boxplots
 distribution.boxplots()
@@ -70,15 +70,21 @@ distribution.boxplots()
 # Outliers Study
 distribution.num_standart_outliers_per_variable()
 
+NR_STDEV: int = 2
+IQR_FACTOR: float = 1.5
+distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR)
+
+# Class Distribution
+distribution.class_distribution(target='Credit_Score')
+
 # ----------------- #
 # -- Granularity -- #
 # ----------------- #
 
-granularity = Granularity(filename, file_tag, data)
+#granularity = Granularity(filename, file_tag, data)
 
 # -------------- #
 # -- Sparsity -- #
 # -------------- #
 
-sparsity = Sparsity(filename, file_tag, data)
-
+#sparsity = Sparsity(filename, file_tag, data)
