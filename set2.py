@@ -7,7 +7,7 @@ from pandas import read_csv, DataFrame
 from profiling.dimensionality import Dimensionality
 from profiling.distribution import Distribution
 from profiling.sparsity import Sparsity
-from profiling.granularity import Granularity
+#from profiling.granularity import Granularity
 
 # ------------------------------------------------- #
 #                     DATASET 2                     #
@@ -74,29 +74,29 @@ print('Numeric Variables: ', distribution.get_numeric_variables(), '\n')
 print('Symbolic Variables: ', distribution.get_symbolic_variables(), '\n')
 
 # Global Boxplot - dá bosta
-# distribution.global_boxplot()
+#distribution.global_boxplot2()
 
 # Single Variable Boxplots
-distribution.boxplots()
+#distribution.boxplots()
 
 # Outliers Study
-distribution.num_standart_outliers_per_variable()
+#distribution.num_standart_outliers_per_variable()
 
 NR_STDEV: int = 2
 IQR_FACTOR: float = 1.5
-distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR)
+#distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR)
 
 # Histograms - numeric
 #distribution.histograms_numeric_with_distributions()
 
 # Histograms - symbolic
-distribution.histograms_symbolic_variables()
+#distribution.histograms_symbolic_variables()
 
 # Distribution for numeric
 #distribution.histograms_numeric_with_distributions()
 
 # Class Distribution
-distribution.class_distribution(target='Credit_Score')
+#distribution.class_distribution(target='Credit_Score')
 
 # ----------------- #
 # -- Granularity -- #
@@ -104,7 +104,7 @@ distribution.class_distribution(target='Credit_Score')
 
 # Symbolic variables  -
 
-granularity = Granularity(filename, file_tag, data)
+#granularity = Granularity(filename, file_tag, data)
 
 # -------------- #
 # -- Sparsity -- #
@@ -114,3 +114,7 @@ granularity = Granularity(filename, file_tag, data)
 # Correlation (all x all - including class)     -
 
 sparsity = Sparsity(filename, file_tag, data)
+
+# Scatter plots to project the data along two of its defining variables
+sparsity.analyse_property_sparsity("Credit_Score")
+print()

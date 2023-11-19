@@ -47,6 +47,40 @@ class Distribution():
         else:
             print("There are no numeric variables.")
 
+    def global_boxplot2(self):
+        numeric = self.get_numeric_variables()
+        print("1")
+        print(self.data[numeric].shape[1])
+        print("2")
+        print(self.data[numeric].columns)
+        print("3")
+        print(self.data[numeric].head())
+        if [] != numeric:
+            fig, ax = subplots(figsize=(12, HEIGHT))
+            self.data[numeric].boxplot(ax=ax, rot=45)
+            ax.set_title(f"Global Boxplot for Numeric Variables")
+            ax.set_ylabel("Values")
+            ax.set_xlabel("Variables")
+            savefig(f"images/{self.file_tag}_global_boxplot.png")
+            show()
+        else:
+            print("There are no numeric variables.")
+
+
+    def global_boxplot3(self):
+        numeric = self.get_numeric_variables()
+        # Remova temporariamente a linha com o valor problemático
+        problematic_row_index = self.data[self.data['MonthlyBalance'] == -3.33333E+26].index
+        self.data_temp = self.data.drop(problematic_row_index)
+        # Crie o boxplot
+        if [] != numeric:
+            fig, ax = subplots(figsize=(12, HEIGHT))
+            self.data_temp[numeric].boxplot(ax=ax, rot=45)
+            savefig(f"images/{self.file_tag}_global_boxplot3.png")
+            show()
+        else:
+            print("There are no numeric variables.")
+
     def boxplots(self):
         numeric = self.get_numeric_variables()
         if [] != numeric:
