@@ -4,15 +4,15 @@ file:       distribution.py
 '''
 
 # Global boxplots           - Done: global_boxplot()
-# Single variables boxplots - Done
-# Histograms                - Done
-# Outliers study            - Done
-# Class Distribution        - Done
+# Single variables boxplots - Done: boxplots()
+# Histograms                - Done: todos??
+# Outliers study            - Done: num_outliers_per_variable()
+# Class Distribution        - Done: class_distribution()
 
 
 # Imports
-from matplotlib.axes import Axes
 from numpy import ndarray, log
+from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.pyplot import figure, savefig, show, subplots
 from pandas import Series
@@ -26,9 +26,18 @@ class Distribution():
         self.file_tag = file_tag
         self.data     = data
 
-    def global_boxplot(self):
+    def get_numeric_variables(self):
         variables_types: dict[str, list] = get_variable_types(self.data)
         numeric: list[str] = variables_types["numeric"]
+        return numeric
+    
+    def get_symbolic_variables(self):
+        variables_types: dict[str, list] = get_variable_types(self.data)
+        symbolic: list[str] = variables_types["symbolic"] + variables_types["binary"]
+        return symbolic
+    
+    def global_boxplot(self): 
+        numeric = self.get_numeric_variables()       
         if [] != numeric:
             self.data[numeric].boxplot(rot=45)
             savefig(f"images/{self.file_tag}_global_boxplot.png")
@@ -36,7 +45,8 @@ class Distribution():
         else:
             print("There are no numeric variables.")
 
-    def boxplots(self, numeric):
+    def boxplots(self):
+        numeric = self.get_numeric_variables()       
         if [] != numeric:
             rows: int
             cols: int
@@ -57,7 +67,8 @@ class Distribution():
             print("There are no numeric variables.")
 
     # Depois pode-se juntar estas duas funcoes
-    def num_standart_outliers_per_variable(self, numeric):
+    def num_standart_outliers_per_variable(self):
+        numeric = self.get_numeric_variables() 
         if [] != numeric:
             outliers: dict[str, int] = count_outliers(self.data, numeric)
 
@@ -75,7 +86,8 @@ class Distribution():
         else:
             print("There are no numeric variables.")
 
-    def num_outliers_per_variable(self, numeric, nrstdev, iqrfactor):
+    def num_outliers_per_variable(self, nrstdev, iqrfactor):
+        numeric = self.get_numeric_variables()
         if [] != numeric:
             outliers: dict[str, int] = count_outliers(self.data, numeric, nrstdev, iqrfactor)
             figure(figsize=(12, HEIGHT))
@@ -121,9 +133,11 @@ class Distribution():
             ylabel="",
         )
 
-    def all_histograms_with_distributions(self, numeric, rows, cols):
+    def histograms_numeric_with_distributions(self):
+        numeric = self.get_numeric_variables()
         if [] != numeric:
-            fig, axs = subplots(
+            rows, cols = define_grid(len(numeric))
+            _, axs = subplots(
                 rows, cols, figsize=(cols * HEIGHT, rows * HEIGHT), squeeze=False
             )
             i, j = 0, 0
@@ -136,10 +150,11 @@ class Distribution():
             print("There are no numeric variables.")
 
 
-    def histograms_symbolic_variables(self, symbolic):
+    def histograms_symbolic_variables(self):
+        symbolic = self.get_symbolic_variables()
         if [] != symbolic:
             rows, cols = define_grid(len(symbolic))
-            fig, axs = subplots(
+            _, axs = subplots(
                 rows, cols, figsize=(cols * HEIGHT, rows * HEIGHT), squeeze=False
             )
             i, j = 0, 0

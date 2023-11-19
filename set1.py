@@ -7,6 +7,7 @@ from pandas import read_csv, DataFrame
 from profiling.dimensionality import Dimensionality
 from profiling.sparsity import Sparsity
 from profiling.granularity import Granularity
+from profiling.distribution import Distribution
 
 # ---------------------------------------
 #             DATASET 1  
@@ -52,17 +53,53 @@ granularity.analyse_property_granularity("health indicators", ["GeneralHealth", 
 
 #TODO Sub-Levels of information? SleepHours, SmokerStatus+ECigars
 
+
+
+
 # -- Sparsity -- 
 sparsity = Sparsity(filename, file_tag, data)
 
 sparsity.analyse_property_sparsity("CovidPos")
 print()
 
+
+
+
 # -- Distribution --
+# ainda ranhoso
 
-#summary5: DataFrame = data.describe(include="all")
-#print(summary5)
+summary5: DataFrame = data.describe(include="all")
+print(summary5)
 
+distribution = Distribution(filename, file_tag, data)
+
+#print(distribution.get_numeric_variables())
+#print(distribution.get_symbolic_variables())
+
+# Global Boxplots
+distribution.global_boxplot()
+
+# Single Variable Boxplots
+distribution.boxplots()
+
+#Outliers Study
+distribution.num_standart_outliers_per_variable()
+
+### default ainda
+NR_STDEV:   int   = 2
+IQR_FACTOR: float = 1.5
+distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR) #testar varios valores??
+
+# Histograms
+'''Don't forget to analyse the binary ones too
+Tou confusa de quais histogramas submeter. Todos? Numeric e Symbolic? 
+'''
+
+distribution.histograms_numeric_with_distributions()
+distribution.histograms_symbolic_variables()
+
+# Class Distribution
+distribution.class_distribution()
 
 
 
