@@ -20,7 +20,9 @@ data: DataFrame = read_csv(filename, na_values="")
 
 
 
-# -- Dimensionality --
+# -------------------- #
+# -- Dimensionality -- #
+# -------------------- #
 dim = Dimensionality(filename, file_tag, data)
 
 print('Set1 Data Shape: ', data.shape) # Dimension: (380932, 40)
@@ -36,13 +38,26 @@ dim.missing_values()
 print('Set1 Data Types:\n', data.dtypes)
 print()
 
+
+# -> 'numeric': ['PhysicalHealthDays', 'MentalHealthDays', 'SleepHours', 'HeightInMeters', 'WeightInKilograms', 'BMI'], 
+# -> 'binary':  ['Sex', 'PhysicalActivities', 'HadHeartAttack', 'HadAngina', 'HadStroke', 'HadAsthma', 'HadSkinCancer', 
+# 'HadCOPD', 'HadDepressiveDisorder', 'HadKidneyDisease', 'HadArthritis', 'DeafOrHardOfHearing', 'BlindOrVisionDifficulty', 
+# 'DifficultyConcentrating', 'DifficultyWalking', 'DifficultyDressingBathing', 'DifficultyErrands', 'ChestScan', 'AlcoholDrinkers', 
+# 'HIVTesting', 'FluVaxLast12', 'PneumoVaxEver', 'HighRiskLastYear', 'CovidPos'], 
+# -> 'date': [], 
+# -> 'symbolic': ['State', 'GeneralHealth', 'LastCheckupTime', 'RemovedTeeth', 'HadDiabetes', 'SmokerStatus', 'ECigaretteUsage', 
+# 'RaceEthnicityCategory', 'AgeCategory', 'TetanusLast10Tdap']
+
+
 # Number of variables per type
 dim.num_variables_per_type()
 print()
 
 
 
-# -- Granularity --
+# ----------------- #
+# -- Granularity -- #
+# ----------------- #
 granularity = Granularity(filename, file_tag, data)
 
 #Demographic granularity
@@ -56,7 +71,9 @@ granularity.analyse_property_granularity("health indicators", ["GeneralHealth", 
 
 
 
-# -- Sparsity -- 
+# -------------- #
+# -- Sparsity -- #
+# -------------- #
 sparsity = Sparsity(filename, file_tag, data)
 
 # Scatter plots to project the data along two of its defining variables
@@ -64,11 +81,14 @@ sparsity.analyse_property_sparsity("CovidPos")
 print()
 
 # Correlation Analysis
+#Variable encoding before??
 sparsity.correlation_analysis()
 
 
 
-# -- Distribution --
+# ------------------ #
+# -- Distribution -- #
+# ------------------ #
 # ainda ranhoso
 
 summary5: DataFrame = data.describe(include="all")
@@ -93,16 +113,13 @@ NR_STDEV:   int   = 2
 IQR_FACTOR: float = 1.5
 distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR) #testar varios valores??
 
-# Histograms
-'''Don't forget to analyse the binary ones too
-Tou confusa de quais histogramas submeter. Todos? Numeric e Symbolic? 
-'''
 
+# Histograms
 distribution.histograms_numeric_with_distributions()
 distribution.histograms_symbolic_variables()
 
 # Class Distribution
-distribution.class_distribution()
+distribution.class_distribution("CovidPos")
 
 
 
