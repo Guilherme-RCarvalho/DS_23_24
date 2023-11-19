@@ -1,12 +1,12 @@
-
 '''
 file:       distribution.py
 '''
 
-# Global boxplots           - Done: global_boxplot() dá bronca
+# Global boxplot            - Done: global_boxplot() dá bronca
 # Single variables boxplots - Done: boxplots()
 # Outliers study            - Done: num_outliers_per_variable()
-# Histograms                - Done: todos??
+# Histograms (num and symb) - Done: todos??
+# Distribution for numeric  -
 # Class Distribution        - Done: class_distribution()
 
 

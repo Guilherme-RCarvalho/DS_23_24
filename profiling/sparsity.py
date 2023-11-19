@@ -2,6 +2,9 @@
 file:       sparsity.py
 '''
 
+# Scatter-plots      - Done: ?
+# Correlation        - Done: ?
+
 # Imports
 from numpy import ndarray
 from matplotlib.figure import Figure
