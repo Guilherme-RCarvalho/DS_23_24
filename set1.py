@@ -19,7 +19,7 @@ file_tag = "pos_covid"
 data: DataFrame = read_csv(filename, na_values="") 
 
 
-
+'''
 # -------------------- #
 # -- Dimensionality -- #
 # -------------------- #
@@ -84,10 +84,13 @@ sparsity = Sparsity(filename, file_tag, data)
 #Variable encoding before?? Applied to ordinal / binary variables
 encoded_data = sparsity.encode_pos_covid()
 print(encoded_data)
+
+print(data[''])
+
 print('Encoded Data Shape: ', encoded_data.shape) #aumentou dummification acho
 sparsity.correlation_analysis(encoded_data)
 
-
+'''
 
 # ------------------ #
 # -- Distribution -- #
@@ -106,16 +109,18 @@ distribution = Distribution(filename, file_tag, data)
 #distribution.global_boxplot()
 
 # Single Variable Boxplots
-distribution.boxplots()
+#distribution.boxplots()
 
 # Outliers Study
-distribution.num_standart_outliers_per_variable()
+distribution.num_standart_outliers_per_variable() #2, 1.5
 
 ### default ainda
-NR_STDEV:   int   = 3
-IQR_FACTOR: float = 3.5
-#distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR) #testar varios valores??
+NR_STDEV:   int   = 8
+IQR_FACTOR: float = 9 # a partir de 9 tudo a zero
+distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR) #testar varios valores??
 
+
+'''
 
 # Histograms - nao esta a carregar need help
 #print('histogram numeric')
@@ -126,3 +131,5 @@ print('histogram numeric with distributions')
 
 # Class Distribution
 distribution.class_distribution("CovidPos")
+
+'''
