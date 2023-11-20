@@ -18,7 +18,7 @@ from matplotlib.figure import Figure
 from matplotlib.pyplot import figure, savefig, show, subplots, xticks
 from pandas import Series
 from auxiliar.dslabs_functions import HEIGHT, count_outliers, define_grid, get_variable_types, plot_bar_chart, \
-    plot_multibar_chart, plot_multiline_chart
+    plot_multibar_chart, plot_multiline_chart, set_chart_labels
 from scipy.stats import norm, expon, lognorm
 from auxiliar.dslabs_functions import set_chart_labels
 

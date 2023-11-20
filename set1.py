@@ -14,12 +14,12 @@ from profiling.distribution import Distribution
 # ---------------------------------------
 
 # Load Data
-filename = "data/class_pos_covid.csv"
+filename = "class_pos_covid.csv"
 file_tag = "pos_covid"
 data: DataFrame = read_csv(filename, na_values="") 
 
 
-'''
+
 # -------------------- #
 # -- Dimensionality -- #
 # -------------------- #
@@ -70,7 +70,7 @@ granularity.analyse_property_granularity("health_indicators", ["GeneralHealth", 
 
 
 
-'''
+
 # -------------- #
 # -- Sparsity -- #
 # -------------- #
@@ -80,8 +80,6 @@ sparsity = Sparsity(filename, file_tag, data)
 #sparsity.analyse_property_sparsity("CovidPos")
 #print()
 
-
-
 # Correlation Analysis
 #Variable encoding before?? Applied to ordinal / binary variables
 encoded_data = sparsity.encode_pos_covid()
@@ -90,7 +88,7 @@ print('Encoded Data Shape: ', encoded_data.shape) #aumentou dummification acho
 sparsity.correlation_analysis(encoded_data)
 
 
-'''
+
 # ------------------ #
 # -- Distribution -- #
 # ------------------ #
@@ -108,10 +106,10 @@ distribution = Distribution(filename, file_tag, data)
 #distribution.global_boxplot()
 
 # Single Variable Boxplots
-#distribution.boxplots()
+distribution.boxplots()
 
 # Outliers Study
-#distribution.num_standart_outliers_per_variable()
+distribution.num_standart_outliers_per_variable()
 
 ### default ainda
 NR_STDEV:   int   = 3
@@ -121,20 +119,10 @@ IQR_FACTOR: float = 3.5
 
 # Histograms - nao esta a carregar need help
 #print('histogram numeric')
-#distribution.histogram_numeric()
+distribution.histogram_numeric()
 print('histogram numeric with distributions')
-distribution.helper_numeric_with_distributions()
+#distribution.helper_numeric_with_distributions()
 #distribution.histograms_symbolic_variables()
 
 # Class Distribution
-#distribution.class_distribution("CovidPos")
-
-'''
-
-
-
-
-
-
-
-
+distribution.class_distribution("CovidPos")

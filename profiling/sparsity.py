@@ -71,8 +71,6 @@ class Sparsity:
         # Non-ordinal symbolic variables that don't have a meaningful order are typically not included
         # in this ordinal encoding process.
             ### -> No - 0, Yes - 1 (binary)
-
-    # FALTA HadDiabetes
     
     def encode_pos_covid(self):
         encoded_data = self.data.copy().dropna()        

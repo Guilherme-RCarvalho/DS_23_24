@@ -260,13 +260,13 @@ def dummify(df, vars_to_dummify):
     other_vars = [c for c in df.columns if not c in vars_to_dummify]
 
     enc = OneHotEncoder(handle_unknown='ignore', sparse_output=False, dtype=bool, drop='if_binary')
-    trans = enc.fit_transform(df[vars_to_dummify])
+    trans: ndarray = enc.fit_transform(df[vars_to_dummify])
     print(trans)
 
-    new_vars = enc.get_feature_names_out(vars_to_dummify)
+    new_vars: ndarray = enc.get_feature_names_out(vars_to_dummify)
     dummy = DataFrame(trans, columns=new_vars, index=df.index)
 
-    final_df = concat([df[other_vars], dummy], axis=1)
+    final_df: DataFrame = concat([df[other_vars], dummy], axis=1)
     return final_df
 
 def mvi_by_dropping(data: DataFrame, min_pct_per_variable:float=0.1, min_pct_per_record: float=0.0) -> DataFrame:
