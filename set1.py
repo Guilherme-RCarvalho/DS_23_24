@@ -59,12 +59,12 @@ print()
 # -- Granularity -- #
 # ----------------- #
 granularity = Granularity(filename, file_tag, data)
-
-#Demographic granularity
+#
+##Demographic granularity
 granularity.analyse_property_granularity("demography", ["Sex", "RaceEthnicityCategory", "AgeCategory", "State"])
 
 #Health Indicators #TODO change Days interval?
-granularity.analyse_property_granularity("health indicators", ["GeneralHealth", "PhysicalHealthDays", "MentalHealthDays", "LastCheckupTime"])
+granularity.analyse_property_granularity("health_indicators", ["GeneralHealth", "PhysicalHealthDays", "MentalHealthDays", "LastCheckupTime"])
 
 #TODO Sub-Levels of information? SleepHours, SmokerStatus+ECigars
 
@@ -82,20 +82,10 @@ sparsity = Sparsity(filename, file_tag, data)
 
 # Correlation Analysis
 #Variable encoding before?? Applied to ordinal / binary variables
-#encoded_data = sparsity.encode_pos_covid()
-
-#print(encoded_data["State"].unique())
-#print(encoded_data["RaceEthnicityCategory"].unique())
-#print(encoded_data["HadDiabetes"].unique())
-
-
-
-#print(encoded_data["HadDiabetes"].unique()) #[1 0 'No, pre-diabetes or borderline diabetes' nan 'Yes, but only during pregnancy (female)']
-
-
-#print('Encoded Data Shape: ', encoded_data.shape) #aumentou dummification acho
-
-#sparsity.correlation_analysis(encoded_data)
+encoded_data = sparsity.encode_pos_covid()
+print(encoded_data)
+print('Encoded Data Shape: ', encoded_data.shape) #aumentou dummification acho
+sparsity.correlation_analysis(encoded_data)
 
 
 
@@ -104,8 +94,8 @@ sparsity = Sparsity(filename, file_tag, data)
 # ------------------ #
 # ainda ranhoso
 
-summary5: DataFrame = data.describe(include="all")
-print(summary5)
+#summary5: DataFrame = data.describe(include="all")
+#print(summary5)
 
 distribution = Distribution(filename, file_tag, data)
 
@@ -113,7 +103,7 @@ distribution = Distribution(filename, file_tag, data)
 #print(distribution.get_symbolic_variables())
 
 # Global Boxplots
-distribution.global_boxplot()
+#distribution.global_boxplot()
 
 # Single Variable Boxplots
 distribution.boxplots()
@@ -122,23 +112,17 @@ distribution.boxplots()
 distribution.num_standart_outliers_per_variable()
 
 ### default ainda
-#NR_STDEV:   int   = 3
-#IQR_FACTOR: float = 3.5
+NR_STDEV:   int   = 3
+IQR_FACTOR: float = 3.5
 #distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR) #testar varios valores??
 
 
 # Histograms - nao esta a carregar need help
-#distribution.histograms_numeric_with_distributions()
+#print('histogram numeric')
+distribution.histogram_numeric()
+print('histogram numeric with distributions')
+#distribution.helper_numeric_with_distributions()
 #distribution.histograms_symbolic_variables()
 
 # Class Distribution
 distribution.class_distribution("CovidPos")
-
-
-
-
-
-
-
-
-

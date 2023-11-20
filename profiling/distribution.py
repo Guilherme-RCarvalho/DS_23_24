@@ -196,31 +196,15 @@ class Distribution():
         else:
             print("There are no numeric variables.")
 
-    def histogram_numeric(self):
+    def helper_numeric_with_distributions(self):
         numeric = self.get_numeric_variables()
-        if [] != numeric:
-            rows, cols = define_grid(len(numeric))
-            _, axs = subplots(
-                rows, cols, figsize=(cols * HEIGHT, rows * HEIGHT), squeeze=False
-            )
-            i: int
-            j: int
-            i, j = 0, 0
-            for n in range(len(numeric)):
-                set_chart_labels(
-                    axs[i, j],
-                    title=f"Histogram for {numeric[n]}",
-                    xlabel=numeric[n],
-                    ylabel="nr records",
-                )
-                axs[i, j].hist(self.data[numeric[n]].dropna().values, "auto")
-                i, j = (i + 1, 0) if (n + 1) % cols == 0 else (i, j + 1)
-            savefig(f"images/{self.file_tag}_single_histograms_numeric.png")
-            show()
-        else:
-            print("There are no numeric variables.")
+        for n in range(len(numeric)):
+            print(f'starting historgam with distribution for numeric: {n}\n {self.data[numeric[n]]}')
+            self.histograms_numeric_with_distributions(n)
             
-    def histograms_numeric_with_distributions(self):
+        
+
+    def histograms_numeric_with_distributions(self, idx):
         numeric = self.get_numeric_variables()
         if [] != numeric:
             rows, cols = define_grid(len(numeric))
@@ -230,12 +214,10 @@ class Distribution():
             i: int
             j: int
             i, j = 0, 0
-            for n in range(len(numeric)):
-                print(f'histogram for numeric: {n}\n{self.data[numeric[n]]}')
-                self.histogram_with_distributions(axs[i, j], self.data[numeric[n]].dropna(), numeric[n])
-                i, j = (i + 1, 0) if (n + 1) % cols == 0 else (i, j + 1)
+            self.histogram_with_distributions(axs[i, j], self.data[numeric[idx]].dropna(), numeric[idx])
+            #i, j = (i + 1, 0) if (idx + 1) % cols == 0 else (i, j + 1)
             plt.tight_layout()
-            savefig(f"images/{self.file_tag}_histogram_numeric_distribution.png")
+            savefig(f"images/{self.file_tag}_histogram_numeric_distribution_{idx}.png")
             show()
         else:
             print("There are no numeric variables.")
