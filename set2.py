@@ -77,7 +77,7 @@ print('Symbolic Variables: ', distribution.get_symbolic_variables(), '\n')
 #distribution.global_boxplot2()
 
 # Single Variable Boxplots
-#distribution.boxplots()
+distribution.boxplots()
 
 # Outliers Study
 #distribution.num_standart_outliers_per_variable()
