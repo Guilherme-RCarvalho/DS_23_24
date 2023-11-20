@@ -1,12 +1,12 @@
 '''
 file:       set2.py
 '''
-
+import pandas as pd
 # Imports
 from pandas import read_csv, DataFrame
 from profiling.dimensionality import Dimensionality
 from profiling.distribution import Distribution
-from profiling.sparsity import Sparsity
+#from profiling.sparsity import Sparsity
 #from profiling.granularity import Granularity
 
 # ------------------------------------------------- #
@@ -16,7 +16,7 @@ from profiling.sparsity import Sparsity
 # Load Data
 filename = "data/class_credit_score.csv"
 file_tag = "credit"
-data: DataFrame = read_csv(filename, na_values="", index_col="ID")
+data: DataFrame = read_csv(filename, na_values="")
 
 # -------------------- #
 # -- Dimensionality -- #
@@ -113,8 +113,8 @@ IQR_FACTOR: float = 1.5
 # Scatter-plots (all x all - including class)   -
 # Correlation (all x all - including class)     -
 
-sparsity = Sparsity(filename, file_tag, data)
+#sparsity = Sparsity(filename, file_tag, data)
 
 # Scatter plots to project the data along two of its defining variables
-sparsity.analyse_property_sparsity("Credit_Score")
-print()
+#sparsity.analyse_property_sparsity("Credit_Score")
+#print()
