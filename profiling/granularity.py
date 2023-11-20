@@ -6,8 +6,9 @@ file:       granularity.py
 
 # Imports
 from numpy import ndarray
+import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
-from matplotlib.pyplot import savefig, subplots
+from matplotlib.pyplot import savefig, subplots, show
 from pandas import Series
 from auxiliar.dslabs_functions import HEIGHT, plot_bar_chart, plot_multi_scatters_chart
 
@@ -40,4 +41,6 @@ class Granularity:
                 percentage=False,
             )
         # FIXME plt.tight_layout()? not good solution
+        plt.tight_layout()
         savefig(f"images/{self.file_tag}_{property}_granularity.png")
+        show()

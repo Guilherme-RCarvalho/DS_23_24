@@ -12,13 +12,15 @@ file:       distribution.py
 
 # Imports
 from numpy import ndarray, log
+import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.pyplot import figure, savefig, show, subplots, xticks
 from pandas import Series
 from auxiliar.dslabs_functions import HEIGHT, count_outliers, define_grid, get_variable_types, plot_bar_chart, \
-    plot_multibar_chart, plot_multiline_chart
+    plot_multibar_chart, plot_multiline_chart, set_chart_labels
 from scipy.stats import norm, expon, lognorm
+from auxiliar.dslabs_functions import set_chart_labels
 
 
 class Distribution():
@@ -169,19 +171,53 @@ class Distribution():
             xlabel=var,
             ylabel="",
         )
-
-    def histograms_numeric_with_distributions(self):
+    
+    def histogram_numeric(self):
         numeric = self.get_numeric_variables()
         if [] != numeric:
             rows, cols = define_grid(len(numeric))
             _, axs = subplots(
                 rows, cols, figsize=(cols * HEIGHT, rows * HEIGHT), squeeze=False
             )
+            i: int
+            j: int
             i, j = 0, 0
             for n in range(len(numeric)):
-                self.histogram_with_distributions(axs[i, j], self.data[numeric[n]].dropna(), numeric[n])
+                set_chart_labels(
+                    axs[i, j],
+                    title=f"Histogram for {numeric[n]}",
+                    xlabel=numeric[n],
+                    ylabel="nr records",
+                )
+                axs[i, j].hist(self.data[numeric[n]].dropna().values, "auto")
                 i, j = (i + 1, 0) if (n + 1) % cols == 0 else (i, j + 1)
-            savefig(f"images/{self.file_tag}_histogram_numeric_distribution.png")
+            plt.tight_layout()
+            savefig(f"images/{self.file_tag}_single_histograms_numeric.png")
+        else:
+            print("There are no numeric variables.")
+
+    def helper_numeric_with_distributions(self):
+        numeric = self.get_numeric_variables()
+        for n in range(len(numeric)):
+            print(f'starting historgam with distribution for numeric: {n}\n {self.data[numeric[n]]}')
+            self.histograms_numeric_with_distributions(n)
+            
+        
+
+    def histograms_numeric_with_distributions(self, idx):
+        numeric = self.get_numeric_variables()
+        if [] != numeric:
+            rows, cols = define_grid(len(numeric))
+            _, axs = subplots(
+                rows, cols, figsize=(cols * HEIGHT, rows * HEIGHT), squeeze=False
+            )
+            i: int
+            j: int
+            i, j = 0, 0
+            self.histogram_with_distributions(axs[i, j], self.data[numeric[idx]].dropna(), numeric[idx])
+            #i, j = (i + 1, 0) if (idx + 1) % cols == 0 else (i, j + 1)
+            plt.tight_layout()
+            savefig(f"images/{self.file_tag}_histogram_numeric_distribution_{idx}.png")
             show()
         else:
             print("There are no numeric variables.")
@@ -206,7 +242,8 @@ class Distribution():
                     percentage=False,
                 )
                 i, j = (i + 1, 0) if (n + 1) % cols == 0 else (i, j + 1)
-            savefig(f"images/{self.file_tag}_histograms_symbolic.png")
+            plt.tight_layout()
+            savefig(f"images/{self.file_tag}_histograms_symbolic.png",bbox_inches='tight')
             show()
         else:
             print("There are no symbolic variables.")

@@ -8,6 +8,7 @@ file:       sparsity.py
 # Imports
 from numpy import ndarray
 from matplotlib.pyplot import figure, savefig, show, subplots
+import matplotlib.pyplot as plt
 from pandas import DataFrame, Series
 from auxiliar.dslabs_functions import HEIGHT, plot_bar_chart, plot_multi_scatters_chart
 from seaborn import heatmap
@@ -54,15 +55,15 @@ class Sparsity:
             #yticklabels=numeric,
             annot=False,
             cmap="Blues",
-            vmin=0,
-            vmax=1,
+            #vmin=0,
+            #vmax=1,
         )
         savefig(f"images/{self.file_tag}_correlation_analysis.png")
         show()
 
 
 
-    # VERIFIQUEM Q DEVE TAR MAL
+    # Ta a dar erro, faltam coisas, rever
     # Horroroso tudo hardcoded mas chatgpt <3 
 
     # Ordinal Encoding, Cyclic Variables (nao temos?), Dummification or One-hot Encoding:
@@ -70,23 +71,19 @@ class Sparsity:
         # Non-ordinal symbolic variables that don't have a meaningful order are typically not included
         # in this ordinal encoding process.
             ### -> No - 0, Yes - 1 (binary)
-
+    
     def encode_pos_covid(self):
-        encoded_data = self.data.copy()
-        
+        encoded_data = self.data.copy().dropna()        
+
         encoding = {
             # Symbolic (Ordinal)
             "GeneralHealth": {"Poor": 0, "Fair": 1, "Good": 2, "Very good": 3, "Excellent": 4},
-            "LastCheckupTime": {"Never": 0, "Within past year (anytime less than 12 months ago)": 1, "Over a year ago": 2, "Within past 2 years (1 year but less than 2 years ago)": 3, "Within past 5 years (2 years but less than 5 years ago)": 4, "5 or more years ago": 5 },
+            "LastCheckupTime": {"Within past year (anytime less than 12 months ago)": 0, "Over a year ago": 1, "Within past 2 years (1 year but less than 2 years ago)": 2, "Within past 5 years (2 years but less than 5 years ago)": 3, "5 or more years ago": 4 , "Never": 5},
             "SmokerStatus": {"Never smoked": 0, "Former smoker": 1, "Current smoker - now smokes some days": 2, "Current smoker - now smokes every day": 3},            
-            "AgeCategory": {"Age 40 to 44": 0, "Age 55 to 59": 1, "Age 65 to 69": 2, "Age 70 to 74": 3, "Age 75 to 79": 4, "Age 80 or older": 5},
-            "TetanusLast10Tdap": {"No": 0, "Yes, received tetanus shot but not sure what type": 1, "Yes, received Tdap": 2},
-            "RemovedTeeth": {
-                "None of them": 0,
-                "1 to 5": 1,  
-                "6 or more, but not all": 2,                  
-                "All": 3,  
-            },
+            "AgeCategory": {"Age 18 to 24": 0, "Age 25 to 29": 1, "Age 30 to 34": 2, "Age 35 to 39": 3, "Age 40 to 44": 4, "Age 45 to 49": 5, "Age 50 to 54": 6, "Age 55 to 59": 7, "Age 60 to 64": 8, "Age 65 to 69": 9, "Age 70 to 74": 10, "Age 75 to 79": 11, "Age 80 or older": 12},
+            "TetanusLast10Tdap": {"No, did not receive any tetanus shot in the past 10 years": 0, "Yes, received tetanus shot but not sure what type": 1, "Yes, received tetanus shot, but not Tdap": 2, "Yes, received Tdap": 3},
+            "RemovedTeeth": {"None of them": 0, "1 to 5": 1, "6 or more, but not all": 2,"All": 3},
+            "ECigaretteUsage": {"Never used e-cigarettes in my entire life": 0, "Not at all (right now)": 1, "Use them some days": 2,"Use them every day": 3},
 
             # Binary - mudar c a da prof so yes no Yes No wtv
             "Sex": {"Male": 0, "Female": 1}, 
@@ -100,7 +97,6 @@ class Sparsity:
             "HadDepressiveDisorder": {"No": 0, "Yes": 1},
             "HadKidneyDisease": {"No": 0, "Yes": 1},
             "HadArthritis": {"No": 0, "Yes": 1},
-            "HadDiabetes": {"No": 0, "Yes": 1},
             "DeafOrHardOfHearing": {"No": 0, "Yes": 1},
             "BlindOrVisionDifficulty": {"No": 0, "Yes": 1},
             "DifficultyConcentrating": {"No": 0, "Yes": 1},
@@ -121,12 +117,11 @@ class Sparsity:
         encoded_data.replace(encoding, inplace=True)
     
         # Dummification (One-hot encoding) (non-ordenal) ???????????????
-        # The dummifying 'State' will create separate binary columns for each unique state, increasing the dimensionality of your dataset. - help
-        vars_to_dummify = ["State", "RaceEthnicityCategory"]
-        df_encoded = dummify(encoded_data, vars_to_dummify)
-        
+        # The dummifying 'State' will create separate binary columns for each unique state, increasing the dimensionality of your dataset. - help                
+        vars: list[str] = ["State", "RaceEthnicityCategory", "HadDiabetes"]
+        df_encoded = dummify(encoded_data, vars)
+                
         return df_encoded
-
 
     def encode_credit(self):
         pass
