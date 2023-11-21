@@ -202,7 +202,9 @@ distribution.histogram_numeric()
 
 # Symbolic variables  -
 
-#granularity = Granularity(filename, file_tag, data)
+granularity = Granularity(filename, file_tag, data)
+
+granularity.analyse_property_granularity("credit_history",["Credit_Score", "CreditMix" , "Payment_Behaviour"])
 
 # -------------- #
 # -- Sparsity -- #
