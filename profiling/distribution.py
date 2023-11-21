@@ -174,6 +174,7 @@ class Distribution():
     
     def histogram_numeric(self):
         numeric = self.get_numeric_variables()
+        print(numeric)
         if [] != numeric:
             rows, cols = define_grid(len(numeric))
             _, axs = subplots(
@@ -183,13 +184,14 @@ class Distribution():
             j: int
             i, j = 0, 0
             for n in range(len(numeric)):
+                print(numeric[n])
                 set_chart_labels(
                     axs[i, j],
                     title=f"Histogram for {numeric[n]}",
                     xlabel=numeric[n],
                     ylabel="nr records",
                 )
-                axs[i, j].hist(self.data[numeric[n]].dropna().values, "auto")
+                axs[i, j].hist(self.data[numeric[n]].dropna().values, 50)
                 i, j = (i + 1, 0) if (n + 1) % cols == 0 else (i, j + 1)
             plt.tight_layout()
             savefig(f"images/{self.file_tag}_single_histograms_numeric.png")
