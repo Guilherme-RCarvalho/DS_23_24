@@ -5,10 +5,18 @@ import numpy as np
 import pandas as pd
 # Imports
 from pandas import read_csv, DataFrame
+from sklearn.model_selection import train_test_split
+
 from profiling.dimensionality import Dimensionality
 from profiling.distribution import Distribution
 from profiling.sparsity import Sparsity
 from profiling.granularity import Granularity
+from preparation.variables_encoding import Encoding
+from preparation.mv_and_outliers import MV_out
+from preparation.data_balancing import Balancing
+from preparation.scaling_transf import Scaling
+from preparation.methodology import Methodology
+
 
 # ------------------------------------------------- #
 #                     DATASET 2                     #
@@ -25,11 +33,11 @@ data = data.drop(['ID', 'SSN'], axis=1)
 # --  Data Cleaning -- #
 # -------------------- #
 
-# # Substituir valores não finitos (inf) por NaN
-# data.replace([np.inf, -np.inf], np.nan, inplace=True)
-# # # Substituir células NaN por um valor vazio
-# # data = data.applymap(lambda x: "" if pd.notna(x) else x)
-#
+# Substituir valores não finitos (inf) por NaN
+data.replace([np.inf, -np.inf], np.nan, inplace=True)
+# # Substituir células NaN por um valor vazio
+# data = data.map(lambda x: "" if pd.notna(x) else x)
+
 # Lista de colunas a serem convertidas para int
 cols_to_convert_to_int = [
     'Age', 'Num_Bank_Accounts', 'Num_Credit_Card', 'Interest_Rate',
@@ -37,25 +45,20 @@ cols_to_convert_to_int = [
     'ChangedCreditLimit', 'NumCreditInquiries'
 ]
 
-# cols_to_convert_to_str = [
-#     'Name', 'Month', 'Occupation', 'Type_of_Loan', 'CreditMix', 'Credit_Score'
-# ]
-#
 # Substituir "_" por nada (remover) nas colunas relevantes
 data[cols_to_convert_to_int] = data[cols_to_convert_to_int].replace('_', '', regex=True)
-#
-#
-# # # conversão das colunas para int
-# # data[cols_to_convert_to_int] = data[cols_to_convert_to_int].astype(int)
-#
-# # # conversão das colunas para int
-# # data[cols_to_convert_to_int] = pd.to_numeric(data[cols_to_convert_to_int], errors='raise')
-#
-# Converter para int apenas as células não vazias
-data[cols_to_convert_to_int] = data[cols_to_convert_to_int].applymap(lambda x: pd.to_numeric(x, errors='coerce'))
 
-# Limpar células na coluna 'Age' que estão abaixo de 0 ou acima de 100
-data['Age'] = data['Age'].apply(lambda x: None if x < 0 or x > 100 else x)
+# # conversão das colunas para int
+# data[cols_to_convert_to_int] = data[cols_to_convert_to_int].astype(int)
+
+# # conversão das colunas para int
+# data[cols_to_convert_to_int] = pd.to_numeric(data[cols_to_convert_to_int], errors='raise')
+
+# Converter para int apenas as células não vazias
+data[cols_to_convert_to_int] = data[cols_to_convert_to_int].map(lambda x: pd.to_numeric(x, errors='coerce'))
+
+# # Limpar células na coluna 'Age' que estão abaixo de 0 ou acima de 100
+# data['Age'] = data['Age'].apply(lambda x: None if x < 0 or x > 100 else x)
 
 # Lista de valores válidos para a coluna 'Payment_of_Min_Amount'
 valid_values = ['Yes', 'No']
@@ -94,15 +97,13 @@ data['NumofLoan'] = data['NumofLoan'].apply(lambda x: None if x < 0 else x)
 
 # Limpar células na coluna 'ChangedCreditLimit' que estão abaixo de 0
 data['ChangedCreditLimit'] = data['ChangedCreditLimit'].apply(lambda x: None if x < 0 else x)
-#
-# # conversão das colunas para string
-# data[cols_to_convert_to_str] = data[cols_to_convert_to_str].astype(str)
-#
-# # Converter para string apenas as células não vazias
-# data[cols_to_convert_to_str] = data[cols_to_convert_to_str].applymap(lambda x: str(x) if pd.notna(x) else x)
-#
+
 # Salvar o dataset modificado
 data.to_csv("cleaned_data.csv", index=False)
+
+# ------------------------------------------ #
+#                Data Profiling              #
+# ------------------------------------------ #
 
 # -------------------- #
 # -- Dimensionality -- #
@@ -151,22 +152,22 @@ print('Set2 Data Types:\n', data.dtypes, '\n')
 # Histograms for symbolic               - Done
 # Class Distribution                    - Done (images2submit/credit_class_distribution.png)
 
-summary5: DataFrame = data.describe(include="all")
-print(summary5, '\n')
-
-distribution = Distribution(filename, file_tag, data)
-
-print('Numeric Variables: ', distribution.get_numeric_variables(), '\n')
-print('Symbolic Variables: ', distribution.get_symbolic_variables(), '\n')
-
-valor_monthly_balance = data.loc[5545, 'MonthlyBalance']
-print("Valor da coluna 'MonthlyBalance' para a linha 5545:", valor_monthly_balance)
-
-linha_com_valor_especifico = data[data['MonthlyBalance'] == -3.33333E+26]
-
-# Exibir a linha encontrada
-print("Linha com o valor específico na coluna 'MonthlyBalance':")
-print(linha_com_valor_especifico)
+# summary5: DataFrame = data.describe(include="all")
+# print(summary5, '\n')
+#
+# distribution = Distribution(filename, file_tag, data)
+#
+# print('Numeric Variables: ', distribution.get_numeric_variables(), '\n')
+# print('Symbolic Variables: ', distribution.get_symbolic_variables(), '\n')
+#
+# valor_monthly_balance = data.loc[5545, 'MonthlyBalance']
+# print("Valor da coluna 'MonthlyBalance' para a linha 5545:", valor_monthly_balance)
+#
+# linha_com_valor_especifico = data[data['MonthlyBalance'] == -3.33333E+26]
+#
+# # Exibir a linha encontrada
+# print("Linha com o valor específico na coluna 'MonthlyBalance':")
+# print(linha_com_valor_especifico)
 
 # data['MonthlyBalance'] = data['MonthlyBalance'].replace(-3.33333E+26, "")
 
@@ -184,7 +185,7 @@ IQR_FACTOR: float = 1.5
 #distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR)
 
 # Histograms - numeric
-distribution.histogram_numeric()
+# distribution.histogram_numeric()
 
 # Histograms - symbolic
 #distribution.histograms_symbolic_variables()
@@ -204,7 +205,7 @@ distribution.histogram_numeric()
 
 granularity = Granularity(filename, file_tag, data)
 
-granularity.analyse_property_granularity("credit_history",["Credit_Score", "CreditMix" , "Payment_Behaviour"])
+#granularity.analyse_property_granularity("credit_history",["Credit_Score", "CreditMix" , "Payment_Behaviour"])
 
 # -------------- #
 # -- Sparsity -- #
@@ -225,4 +226,55 @@ print()
 # print(encoded_data)
 # print('Encoded Data Shape: ', encoded_data.shape)
 #sparsity.correlation_analysis(encoded_data)
-sparsity.correlation_analysis_num(data)
+#sparsity.correlation_analysis_num(data)
+
+
+# ------------------------------------------ #
+#             Data Preparation               #
+# ------------------------------------------ #
+
+df_encoded = sparsity.encode_credit()
+target = "Credit_Score"
+features = df_encoded.drop(target, axis=1)
+
+
+# Dividir os dados em conjuntos de treino e teste
+train_data, test_data = train_test_split(df_encoded, test_size=0.3, random_state=42)
+
+# train_data.drop('Customer_ID', axis=1, inplace=True)
+# test_data.drop('Customer_ID', axis=1, inplace=True)
+
+# guardar os conjuntos de treino e teste em CSV
+train_data.to_csv("credit_train.csv", index=False)
+test_data.to_csv("credit_test.csv", index=False)
+
+
+
+# ----------------- #
+# -- Methodology -- #
+# ----------------- #
+methodology = Methodology(filename, file_tag, data)
+
+methodology.evaluate_approach(train_data, test_data, target)
+
+# -------------- #
+# -- Encoding -- #
+# -------------- #
+encoding = Encoding(filename, file_tag, data)
+
+# --------------------- #
+# -- MV and Outliers -- #
+# --------------------- #
+mv = MV_out(filename, file_tag, data)
+
+# -------------------- #
+# -- Data Balancing -- #
+# -------------------- #
+balancing = Balancing(filename, file_tag, data)
+
+# ---------------------------- #
+# -- Scaling Transformation -- #
+# ---------------------------- #
+scaling = Scaling(filename, file_tag, data)
+
+

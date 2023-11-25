@@ -132,6 +132,8 @@ class Sparsity:
             "Payment_Behaviour": {"Low_spent_Small_value_payments": 0, "Low_spent_Medium_value_payments": 1,
                                       "Low_spent_Large_value_payments": 2, "High_spent_Small_value_payments": 3,
                                       "High_spent_Medium_value_payments": 4, "High_spent_Large_value_payments": 5},
+            "Month": {"January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6,
+                      "July": 7, "August": 8, "September": 9, "October": 10, "November": 11, "December": 12},
 
 
             # Binary - mudar c a da prof so yes no Yes No wtv
@@ -144,7 +146,7 @@ class Sparsity:
 
         # Dummification (One-hot encoding) (non-ordenal) ???????????????
         # The dummifying 'State' will create separate binary columns for each unique state, increasing the dimensionality of your dataset. - help
-        vars: list[str] = ["Customer_ID", "Name", "Occupation", "Type_of_Loan", "Month"]
+        vars: list[str] = ["Customer_ID", "Name", "Occupation", "Type_of_Loan"]
         df_encoded = dummify(encoded_data, vars)
 
         return df_encoded
