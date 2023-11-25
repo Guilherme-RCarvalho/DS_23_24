@@ -146,10 +146,11 @@ class Sparsity:
 
         # Dummification (One-hot encoding) (non-ordenal) ???????????????
         # The dummifying 'State' will create separate binary columns for each unique state, increasing the dimensionality of your dataset. - help
-        vars: list[str] = ["Customer_ID", "Name", "Occupation", "Type_of_Loan"]
-        df_encoded = dummify(encoded_data, vars)
+        #vars: list[str] = ["Customer_ID", "Name", "Occupation", "Type_of_Loan"]
+        #df_encoded = dummify(encoded_data, vars)
 
-        return df_encoded
+        #return df_encoded
+        return encoded_data
 
     def correlation_analysis_num(self, encoded_data):
 

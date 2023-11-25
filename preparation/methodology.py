@@ -16,19 +16,7 @@ class Methodology:
         self.data     = data
 
 
-    def evaluate_approach(self, train, test, target, metric: str = "accuracy"):
-        trnY = train.pop(target).values
-        trnX: ndarray = train.values
-        tstY = test.pop(target).values
-        tstX: ndarray = test.values
-        eval: dict[str, list] = {}
-
-        eval_NB: dict[str, float] = run_NB(trnX, trnY, tstX, tstY, metric=metric)
-        eval_KNN: dict[str, float] = run_KNN(trnX, trnY, tstX, tstY, metric=metric)
-        if eval_NB != {} and eval_KNN != {}:
-            for met in CLASS_EVAL_METRICS:
-                eval[met] = [eval_NB[met], eval_KNN[met]]
-
+    def evaluate_approach(self, train, test, target):
         figure()
         eval: dict[str, list] = evaluate_approach(train, test, target=target, metric="recall")
         plot_multibar_chart(
