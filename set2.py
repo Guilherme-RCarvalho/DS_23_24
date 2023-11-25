@@ -184,7 +184,7 @@ IQR_FACTOR: float = 1.5
 #distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR)
 
 # Histograms - numeric
-distribution.histogram_numeric()
+#distribution.histogram_numeric()
 
 # Histograms - symbolic
 #distribution.histograms_symbolic_variables()
@@ -204,7 +204,7 @@ distribution.histogram_numeric()
 
 granularity = Granularity(filename, file_tag, data)
 
-granularity.analyse_property_granularity("credit_history",["Credit_Score", "CreditMix" , "Payment_Behaviour"])
+#granularity.analyse_property_granularity("credit_history",["Credit_Score", "CreditMix" , "Payment_Behaviour"])
 
 # -------------- #
 # -- Sparsity -- #
@@ -225,4 +225,4 @@ print()
 # print(encoded_data)
 # print('Encoded Data Shape: ', encoded_data.shape)
 #sparsity.correlation_analysis(encoded_data)
-sparsity.correlation_analysis_num(data)
+sparsity.correlation_analysis_num()
