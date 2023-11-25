@@ -4,6 +4,7 @@ file:       set1.py
 
 #Imports
 from pandas import read_csv, DataFrame
+from preparation.missingvalues import MissingValues
 from profiling.dimensionality import Dimensionality
 from profiling.sparsity import Sparsity
 from profiling.granularity import Granularity
@@ -18,6 +19,10 @@ filename = "class_pos_covid.csv"
 file_tag = "pos_covid"
 data: DataFrame = read_csv(filename, na_values="") 
 
+
+# ---------------------------------------
+#             Profiling  
+# ---------------------------------------
 
 '''
 # -------------------- #
@@ -90,12 +95,10 @@ print(data[''])
 print('Encoded Data Shape: ', encoded_data.shape) #aumentou dummification acho
 sparsity.correlation_analysis(encoded_data)
 
-'''
 
 # ------------------ #
 # -- Distribution -- #
 # ------------------ #
-# ainda ranhoso
 
 #summary5: DataFrame = data.describe(include="all")
 #print(summary5)
@@ -120,9 +123,7 @@ IQR_FACTOR: float = 9 # a partir de 9 tudo a zero
 distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR) #testar varios valores??
 
 
-'''
-
-# Histograms - nao esta a carregar need help
+# Histograms 
 #print('histogram numeric')
 distribution.histogram_numeric()
 print('histogram numeric with distributions')
@@ -133,3 +134,25 @@ print('histogram numeric with distributions')
 distribution.class_distribution("CovidPos")
 
 '''
+
+# ---------------------------------------
+#             Preparation  
+# ---------------------------------------
+
+# -------------------- #
+# -- Missing Values -- #
+# -------------------- #
+
+missing_values = MissingValues(filename, file_tag, data)
+
+# FIRST APPROACH - Drop All
+
+
+# SECOND APPROACH - Fill (?)
+
+
+# Testing KNN
+
+
+# Testing NB
+

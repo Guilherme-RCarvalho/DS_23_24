@@ -61,10 +61,7 @@ class Sparsity:
         savefig(f"images/{self.file_tag}_correlation_analysis.png")
         show()
 
-
-
-    # Ta a dar erro, faltam coisas, rever
-    # Horroroso tudo hardcoded mas chatgpt <3 
+    
 
     # Ordinal Encoding, Cyclic Variables (nao temos?), Dummification or One-hot Encoding:
         # Ordinal Encoding: O numeric mantem-se, só muda o binary e symbolic (nao ha date), ter em atencao a ordem!
@@ -150,8 +147,6 @@ class Sparsity:
         return df_encoded
 
     def correlation_analysis_num(self, encoded_data):
-
-
         variables_types: dict[str, list] = get_variable_types(encoded_data)
         numeric: list[str] = variables_types["numeric"]
         corr_mtx: DataFrame = encoded_data[numeric].corr().abs()
