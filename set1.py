@@ -5,7 +5,7 @@ file:       set1.py
 #Imports
 from pandas import read_csv, DataFrame
 from sklearn.model_selection import train_test_split
-from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping
+from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping, mvi_by_filling
 from profiling.dimensionality import Dimensionality
 from profiling.sparsity import Sparsity
 from profiling.granularity import Granularity
@@ -34,6 +34,7 @@ dim = Dimensionality(filename, file_tag, data)
 
 print('Set1 Data Shape: ', data.shape) # Dimension: (380932, 40)
 print()
+
 
 # Number of records and variables
 dim.num_records_variables()
@@ -148,28 +149,39 @@ distribution.class_distribution("CovidPos")
 sparsity = Sparsity(filename, file_tag, data)
 encoded_data = sparsity.encode_pos_covid()
 
+
 # -------------------- #
 # -- Missing Values -- #
 # -------------------- #
 
-# FIRST APPROACH - Drop 
-data_MV_drop = mvi_by_dropping(encoded_data)
+# FIRST APPROACH  - Drop a tudo c/ percentagem above 3%, resto fill
 
-print(data_MV_drop.isna().any().any()) #ahn nao deu drop a tudo???
+# Aplicar a funções
+encoded_data_MV1 = mvi_by_dropping(encoded_data, min_pct_per_variable=0.7)
+#encoded_data_MV1 = mvi_by_filling(encoded_data_MV1)
+
+# Find the removed columns
+print(encoded_data == encoded_data_MV1) # PQ E Q TA IGUAL
+
+'''
+train_data_MV1, test_data_MV1 = train_test_split(encoded_data_MV1, test_size=0.3, random_state=42)
+evalMV1 = evaluate_approach(train_data_MV1, test_data_MV1, target, "accuracy")
+
+print(evalMV1)
+'''
 
 
-train_data_MV1, test_data_MV1 = train_test_split(data_MV_drop, test_size=0.3, random_state=42)
-#evalMV1 = evaluate_approach(train_data_MV1, test_data_MV1, target, "accuracy")
-
-#print(evalMV1)
-
-# SECOND APPROACH - Fill 
-#data_MV_fill = mvi_by_filling(encoded_data)
-
-#train_data_MV2, test_data_MV2 = train_test_split(data_MV_fill, test_size=0.3, random_state=42)
-#evalMV2 = evaluate_approach(train_data_MV2, test_data_MV2, target, "accuracy")
+# Verificar contagem de NaNs após o drop
+#print("NaN counts after dropping:")
+#print(encoded_data_MV1.isna().sum())
 
 
-#print(evalMV2)
+# SECOND APPROACH  
+
+
+
+# -------------------- #
+# ----- Scaling ------ #
+# -------------------- #
 
 
