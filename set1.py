@@ -6,6 +6,7 @@ file:       set1.py
 from pandas import read_csv, DataFrame
 from sklearn.model_selection import train_test_split
 from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping
+from preparation.balancing import Balancing
 from preparation.outliers import Outliers
 from profiling.dimensionality import Dimensionality
 from profiling.sparsity import Sparsity
@@ -142,14 +143,14 @@ distribution.class_distribution("CovidPos")
 #             Preparation  
 # ---------------------------------------
 
-'''
+
 # -------------------- #
 # ----- Encoding ----- #
 # -------------------- #
 sparsity = Sparsity(filename, file_tag, data)
 
 encoded_data = sparsity.encode_pos_covid()
-
+'''
 # -------------------- #
 # -- Missing Values -- #
 # -------------------- #
@@ -174,7 +175,7 @@ train_data_MV1, test_data_MV1 = train_test_split(data_MV_drop, test_size=0.3, ra
 
 #print(evalMV2)
 
-'''
+
 # -------------------- #
 # ----- Outliers ----- #
 # -------------------- #
@@ -184,3 +185,13 @@ dataOutliers = Outliers(filename, file_tag, data, NR_STDEV)
 dataOutliers.drop_outliers()
 dataOutliers.median_outliers()
 dataOutliers.truncate_outliers()
+'''
+# -------------------- #
+# ----  Balancing ---- #
+# -------------------- #
+
+dataBalancing = Balancing(filename, file_tag, encoded_data, target)
+
+dataBalancing.check_balance()
+dataBalancing.undersampling()
+dataBalancing.SMOTE()
