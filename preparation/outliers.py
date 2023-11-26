@@ -32,6 +32,7 @@ class Outliers:
             print(f"Data after dropping outliers: {df.shape}")
         else:
             print("There are no numeric variables")
+        return df
             
     def median_outliers(self):
         if [] != self.numeric_vars:
@@ -47,6 +48,7 @@ class Outliers:
             print(df.describe())
         else:
             print("There are no numeric variables")
+        return df
 
     def truncate_outliers(self):
         if [] != self.numeric_vars:
@@ -61,5 +63,6 @@ class Outliers:
             print(df.describe())
         else:
             print("There are no numeric variables")
+        return df
 		
         

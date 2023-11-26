@@ -7,6 +7,8 @@ from pandas import read_csv, DataFrame
 from sklearn.model_selection import train_test_split
 from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping, mvi_by_filling
 from preparation.balancing import Balancing
+from preparation.missingValues import MissingValues
+from preparation.scaling import Scaling
 from profiling.dimensionality import Dimensionality
 from profiling.sparsity import Sparsity
 from profiling.granularity import Granularity
@@ -17,11 +19,11 @@ from profiling.distribution import Distribution
 # ---------------------------------------
 
 # Load Data
-filename = "class_pos_covid.csv"
+filename = "data/class_pos_covid.csv"
 file_tag = "pos_covid"
 target   = "CovidPos" 
 data: DataFrame = read_csv(filename, na_values="") 
-
+NR_STDEV:   int   = 8
 
 # ---------------------------------------
 #             Profiling  
@@ -145,11 +147,6 @@ distribution.class_distribution("CovidPos")
 # ---------------------------------------
 
 
-# ---------------------------------------
-#             Preparation  
-# ---------------------------------------
-
-
 # -------------------- #
 # ----- Encoding ----- #
 # -------------------- #
@@ -160,22 +157,30 @@ encoded_data = sparsity.encode_pos_covid()
 # -------------------- #
 # -- Missing Values -- #
 # -------------------- #
+dataMissingValues = MissingValues(filename,file_tag,encoded_data)
 
-# FIRST APPROACH  - Drop a tudo c/ percentagem above 3%, resto fill
+dataMissingValues.read_mv()
 
+
+# FIRST APPROACH  - drop vars <0.93, records<0.8, fill mean  -> Lost 2 variables [TetanusLast10Tdap,PneumoVaxEver]
 # Aplicar a funções
-encoded_data_MV1 = mvi_by_dropping(encoded_data, min_pct_per_variable=0.7)
-#encoded_data_MV1 = mvi_by_filling(encoded_data_MV1)
+encoded_data_MV1 = mvi_by_dropping(encoded_data, min_pct_per_variable=0.93, min_pct_per_record=0.9)
+encoded_data_MV1 = mvi_by_filling(encoded_data_MV1, strategy="frequent")
+#print(f"mv1's remaining:{encoded_data_MV1.isna().sum()}")
 
-# Find the removed columns
-print(encoded_data == encoded_data_MV1) # PQ E Q TA IGUAL
+# Second approach - 0 drop, fill knn
+encoded_data_MV2 = mvi_by_filling(encoded_data, strategy="knn")
+#print(f"mv2's remaining:{encoded_data_MV2.isna().sum()}")
 
-'''
-train_data_MV1, test_data_MV1 = train_test_split(encoded_data_MV1, test_size=0.3, random_state=42)
-evalMV1 = evaluate_approach(train_data_MV1, test_data_MV1, target, "accuracy")
-
+#Eval MV1
+train_data_1, test_data_1 = train_test_split(encoded_data_MV1, test_size=0.3, random_state=42)
+evalMV1 = evaluate_approach(train_data_1, test_data_1, target, "accuracy")
 print(evalMV1)
-'''
+
+#Eval MV2
+train_data_2, test_data_2 = train_test_split(encoded_data_MV2, test_size=0.3, random_state=42)
+evalMV2 = evaluate_approach(train_data_2, test_data_2, target, "accuracy")
+print(evalMV2)
 
 
 # Verificar contagem de NaNs após o drop
@@ -188,29 +193,69 @@ print(evalMV1)
 
 
 # -------------------- #
-# ----- Scaling ------ #
-# -------------------- #
-
-
-
-
-
-# -------------------- #
 # ----- Outliers ----- #
 # -------------------- #
 '''
-dataOutliers = Outliers(filename, file_tag, data, NR_STDEV)
+dataOutliers = Outliers(filename, file_tag, best_encoded, NR_STDEV)
 
 dataOutliers.drop_outliers()
-dataOutliers.median_outliers()
-dataOutliers.truncate_outliers()
-'''
+outliers1 = dataOutliers.median_outliers()
+outliers2 = dataOutliers.truncate_outliers()
+
+#Eval Outliers1
+train_data_1, test_data_1 = train_test_split(outliers1, test_size=0.3, random_state=42)
+eval1 = evaluate_approach(train_data_1, test_data_1, target, "accuracy")
+print(eval1)
+
+#Eval Outliers2
+train_data_2, test_data_2 = train_test_split(outliers2, test_size=0.3, random_state=42)
+eval2 = evaluate_approach(train_data_2, test_data_2, target, "accuracy")
+print(eval2)
+
+# -------------------- #
+# ----- Scaling ------ #
+# -------------------- #
+dataScaling = Scaling(filename, file_tag, best_outliers)
+
+
+scaling1 = dataScaling.standard_scaler(target)
+scaling2 = dataScaling.min_max_scaler(target)
+
+
+#Eval Scaling1
+train_data_1, test_data_1 = train_test_split(scaling1, test_size=0.3, random_state=42)
+eval1 = evaluate_approach(train_data_1, test_data_1, target, "accuracy")
+print(eval1)
+
+#Eval Scaling2
+train_data_2, test_data_2 = train_test_split(scaling2, test_size=0.3, random_state=42)
+eval2 = evaluate_approach(train_data_2, test_data_2, target, "accuracy")
+print(eval2)
 # -------------------- #
 # ----  Balancing ---- #
 # -------------------- #
 
-dataBalancing = Balancing(filename, file_tag, encoded_data, target)
+dataBalancing = Balancing(filename, file_tag, best_scaling, target)
 
 dataBalancing.check_balance()
-dataBalancing.undersampling()
-dataBalancing.SMOTE()
+undersampling = dataBalancing.undersampling()
+oversampling = dataBalancing.oversampling()
+smote = dataBalancing.SMOTE()
+
+#Eval undersampling
+train_data_1, test_data_1 = train_test_split(undersampling, test_size=0.3, random_state=42)
+eval1 = evaluate_approach(train_data_1, test_data_1, target, "accuracy")
+print(eval1)
+
+#Eval oversampling
+train_data_2, test_data_2 = train_test_split(oversampling, test_size=0.3, random_state=42)
+eval2 = evaluate_approach(train_data_2, test_data_2, target, "accuracy")
+print(eval2)
+
+#Eval smote
+train_data_3, test_data_3 = train_test_split(smote, test_size=0.3, random_state=42)
+eval3 = evaluate_approach(train_data_3, test_data_3, target, "accuracy")
+print(eval3)
+
+
+'''
