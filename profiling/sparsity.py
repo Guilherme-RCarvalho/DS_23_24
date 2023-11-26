@@ -67,7 +67,6 @@ class Sparsity:
         # Ordinal Encoding: O numeric mantem-se, só muda o binary e symbolic (nao ha date), ter em atencao a ordem!
         # Non-ordinal symbolic variables that don't have a meaningful order are typically not included
         # in this ordinal encoding process.
-            ### -> No - 0, Yes - 1 (binary)
     
     def encode_pos_covid(self):
         encoded_data = self.data.copy()        
@@ -108,12 +107,11 @@ class Sparsity:
             "PneumoVaxEver": {"No": 0, "Yes": 1},
             "HighRiskLastYear": {"No": 0, "Yes": 1},
             "CovidPos": {"No": 0, "Yes": 1},                         
-            
         }
 
         # Encoding ordinal variables
         encoded_data.replace(encoding, inplace=True)
-    
+            
         # Dummification (One-hot encoding) (non-ordenal)
         # The dummifying 'State' will create separate binary columns for each unique state, increasing the dimensionality of your dataset.             
         vars: list[str] = ["State", "RaceEthnicityCategory"]
@@ -140,7 +138,7 @@ class Sparsity:
         # Encoding ordinal variables
         encoded_data.replace(encoding, inplace=True)
 
-        # Dummification (One-hot encoding) (non-ordenal) ???????????????
+        # Dummification (One-hot encoding) (non-ordenal)
         # The dummifying 'State' will create separate binary columns for each unique state, increasing the dimensionality of your dataset. - help
         vars: list[str] = ["Customer_ID", "Name", "Occupation", "Type_of_Loan", "Month"]
         df_encoded = dummify(encoded_data, vars)
