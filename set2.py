@@ -9,7 +9,7 @@ import pandas as pd
 from pandas import read_csv, DataFrame
 from sklearn.model_selection import train_test_split
 
-from auxiliar.dslabs_functions import mvi_by_filling
+from auxiliar.dslabs_functions import dummify, evaluate_approach, mvi_by_dropping, mvi_by_filling, count_outliers
 from profiling.dimensionality import Dimensionality
 from profiling.distribution import Distribution
 from profiling.sparsity import Sparsity
@@ -31,9 +31,6 @@ filename = "data/class_credit_score.csv"
 file_tag = "credit"
 data: DataFrame = read_csv(filename, na_values="")
 
-
-
-
 print('Set2 Data Types 1:\n', data.dtypes, '\n')
 
 #data = data.drop(['ID', 'SSN', 'Name', "Occupation", "Type_of_Loan", "MonthlyBalance", "Customer_ID"], axis=1)
@@ -50,8 +47,6 @@ data = data.drop(['ID', 'SSN', 'Name'], axis=1)
 # --  Data Cleaning -- #
 # -------------------- #
 
-
-
 # print("EXEMPLO DA PROF")
 # df: DataFrame = mvi_by_filling(data, strategy="frequent")
 # df.head(10)
@@ -60,6 +55,7 @@ data = data.drop(['ID', 'SSN', 'Name'], axis=1)
 # df.to_csv("DF.csv", index=False)
 
 dim = Dimensionality(filename, file_tag, data)
+
 # Missing Values
 dim.missing_values()
 
@@ -174,6 +170,17 @@ data['Customer_ID'] = data['Customer_ID'].str.replace('CUS_0x', '').apply(lambda
 #
 # # Se ainda houver algum NaN após o preenchimento para o último valor não nulo, preenche com o primeiro valor não nulo
 # data['Age'] = data.groupby('Customer_ID')['Age'].fillna(method='bfill')
+
+def fill_values_id_based():
+
+    variables = ['Occupation','CreditMix','Monthly_Inhand_Salary','Age']
+    for var_type in variables:
+        # Preencher os valores ausentes com base no último valor não nulo dentro de cada grupo de 'Customer_ID'
+        data[var_type] = data.groupby('Customer_ID')[var_type].fillna(method='ffill')
+
+        # Se ainda houver algum NaN após o preenchimento para o último valor não nulo, preenche com o primeiro valor não nulo
+        data[var_type] = data.groupby('Customer_ID')[var_type].fillna(method='bfill')
+
 
 # Função para converter "Years and Months" para meses
 def years_and_months_to_months(years_and_months):
@@ -290,6 +297,35 @@ customer_ids_with_missing_values = data[data['Credit_History_Age_in_Months'].isn
 
 print("Customer IDs with missing values in 'Credit_History_Age_in_Months':")
 print(customer_ids_with_missing_values)
+
+#Cria uma lista em cada registo com os seus loan types
+def create_loan_type_columns(df):
+    # Separar os valores dentro de cada linha usando vírgulas e a palavra "and"
+    #Preeenche os NA com string vazia
+    df['Type_of_Loan'] = df['Type_of_Loan'].fillna('').str.replace('and ', '').str.replace(' ', '').str.split(',')
+
+    existing_loan_types = list()
+
+    # Iterar sobre os tipos de empréstimos e criar uma nova coluna para cada um
+    for loan_list in df['Type_of_Loan']:
+        for loan_type in loan_list:
+           # Verificar se o novo valor já existe na lista
+            if loan_type not in existing_loan_types:
+                # Adicionar o novo valor à lista
+                existing_loan_types.append(loan_type)
+    
+    for loan_type in existing_loan_types:
+        if loan_type != '':
+            df[loan_type] = df['Type_of_Loan'].apply(lambda x: 1 if loan_type in x else 0)           
+    
+    print(existing_loan_types)
+
+    df = df.drop('Type_of_Loan', axis=1)
+    
+    return df
+
+# Aplicar a função para criar colunas para cada tipo de empréstimo
+create_loan_type_columns(data)
 
 # Salvar o dataset modificado
 data.to_csv("cleaned_data.csv", index=False)
@@ -444,7 +480,15 @@ print('Set2 Data Types 3:\n', encoded_data.dtypes, '\n')
 # --------------------- #
 # -- MV and Outliers -- #
 # --------------------- #
-mv = MV_out(filename, file_tag, data)
+
+#fill_values_id_based()
+
+#dataOutliers = MV_out(filename, file_tag, data, 8)
+
+#dataOutliers.drop_outliers()
+#dataOutliers.median_outliers()
+#dataOutliers.truncate_outliers()
+
 
 # -------------------- #
 # -- Data Balancing -- #
@@ -470,5 +514,3 @@ train_data, test_data = train_test_split(encoded_data, test_size=0.3, random_sta
 # guardar os conjuntos de treino e teste em CSV
 train_data.to_csv("credit_train.csv", index=False)
 test_data.to_csv("credit_test.csv", index=False)
-
-
