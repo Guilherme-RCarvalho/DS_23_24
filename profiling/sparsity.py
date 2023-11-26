@@ -70,7 +70,7 @@ class Sparsity:
             ### -> No - 0, Yes - 1 (binary)
     
     def encode_pos_covid(self):
-        encoded_data = self.data.copy().dropna()        
+        encoded_data = self.data.copy()        
 
         encoding = {
             # Symbolic (Ordinal)

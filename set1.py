@@ -4,7 +4,8 @@ file:       set1.py
 
 #Imports
 from pandas import read_csv, DataFrame
-from preparation.missingvalues import MissingValues
+from sklearn.model_selection import train_test_split
+from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping
 from profiling.dimensionality import Dimensionality
 from profiling.sparsity import Sparsity
 from profiling.granularity import Granularity
@@ -17,6 +18,7 @@ from profiling.distribution import Distribution
 # Load Data
 filename = "class_pos_covid.csv"
 file_tag = "pos_covid"
+target   = "CovidPos" 
 data: DataFrame = read_csv(filename, na_values="") 
 
 
@@ -139,20 +141,35 @@ distribution.class_distribution("CovidPos")
 #             Preparation  
 # ---------------------------------------
 
+
+# -------------------- #
+# ----- Encoding ----- #
+# -------------------- #
+sparsity = Sparsity(filename, file_tag, data)
+encoded_data = sparsity.encode_pos_covid()
+
 # -------------------- #
 # -- Missing Values -- #
 # -------------------- #
 
-missing_values = MissingValues(filename, file_tag, data)
+# FIRST APPROACH - Drop 
+data_MV_drop = mvi_by_dropping(encoded_data)
 
-# FIRST APPROACH - Drop All
-
-
-# SECOND APPROACH - Fill (?)
+print(data_MV_drop.isna().any().any()) #ahn nao deu drop a tudo???
 
 
-# Testing KNN
+train_data_MV1, test_data_MV1 = train_test_split(data_MV_drop, test_size=0.3, random_state=42)
+#evalMV1 = evaluate_approach(train_data_MV1, test_data_MV1, target, "accuracy")
+
+#print(evalMV1)
+
+# SECOND APPROACH - Fill 
+#data_MV_fill = mvi_by_filling(encoded_data)
+
+#train_data_MV2, test_data_MV2 = train_test_split(data_MV_fill, test_size=0.3, random_state=42)
+#evalMV2 = evaluate_approach(train_data_MV2, test_data_MV2, target, "accuracy")
 
 
-# Testing NB
+#print(evalMV2)
+
 
