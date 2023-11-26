@@ -6,6 +6,7 @@ file:       set1.py
 from pandas import read_csv, DataFrame
 from sklearn.model_selection import train_test_split
 from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping, mvi_by_filling
+from preparation.balancing import Balancing
 from profiling.dimensionality import Dimensionality
 from profiling.sparsity import Sparsity
 from profiling.granularity import Granularity
@@ -138,3 +139,78 @@ distribution.class_distribution("CovidPos")
 
 '''
 
+
+# ---------------------------------------
+#             Preparation  
+# ---------------------------------------
+
+
+# ---------------------------------------
+#             Preparation  
+# ---------------------------------------
+
+
+# -------------------- #
+# ----- Encoding ----- #
+# -------------------- #
+sparsity = Sparsity(filename, file_tag, data)
+encoded_data = sparsity.encode_pos_covid()
+
+
+# -------------------- #
+# -- Missing Values -- #
+# -------------------- #
+
+# FIRST APPROACH  - Drop a tudo c/ percentagem above 3%, resto fill
+
+# Aplicar a funções
+encoded_data_MV1 = mvi_by_dropping(encoded_data, min_pct_per_variable=0.7)
+#encoded_data_MV1 = mvi_by_filling(encoded_data_MV1)
+
+# Find the removed columns
+print(encoded_data == encoded_data_MV1) # PQ E Q TA IGUAL
+
+'''
+train_data_MV1, test_data_MV1 = train_test_split(encoded_data_MV1, test_size=0.3, random_state=42)
+evalMV1 = evaluate_approach(train_data_MV1, test_data_MV1, target, "accuracy")
+
+print(evalMV1)
+'''
+
+
+# Verificar contagem de NaNs após o drop
+#print("NaN counts after dropping:")
+#print(encoded_data_MV1.isna().sum())
+
+
+# SECOND APPROACH  
+
+
+
+# -------------------- #
+# ----- Scaling ------ #
+# -------------------- #
+
+
+
+
+
+# -------------------- #
+# ----- Outliers ----- #
+# -------------------- #
+'''
+dataOutliers = Outliers(filename, file_tag, data, NR_STDEV)
+
+dataOutliers.drop_outliers()
+dataOutliers.median_outliers()
+dataOutliers.truncate_outliers()
+'''
+# -------------------- #
+# ----  Balancing ---- #
+# -------------------- #
+
+dataBalancing = Balancing(filename, file_tag, encoded_data, target)
+
+dataBalancing.check_balance()
+dataBalancing.undersampling()
+dataBalancing.SMOTE()
