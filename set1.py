@@ -6,6 +6,7 @@ file:       set1.py
 from pandas import read_csv, DataFrame
 from sklearn.model_selection import train_test_split
 from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping
+from preparation.outliers import Outliers
 from profiling.dimensionality import Dimensionality
 from profiling.sparsity import Sparsity
 from profiling.granularity import Granularity
@@ -16,11 +17,11 @@ from profiling.distribution import Distribution
 # ---------------------------------------
 
 # Load Data
-filename = "class_pos_covid.csv"
+filename = "data/class_pos_covid.csv"
 file_tag = "pos_covid"
 target   = "CovidPos" 
 data: DataFrame = read_csv(filename, na_values="") 
-
+NR_STDEV:   int   = 8
 
 # ---------------------------------------
 #             Profiling  
@@ -141,11 +142,12 @@ distribution.class_distribution("CovidPos")
 #             Preparation  
 # ---------------------------------------
 
-
+'''
 # -------------------- #
 # ----- Encoding ----- #
 # -------------------- #
 sparsity = Sparsity(filename, file_tag, data)
+
 encoded_data = sparsity.encode_pos_covid()
 
 # -------------------- #
@@ -172,4 +174,13 @@ train_data_MV1, test_data_MV1 = train_test_split(data_MV_drop, test_size=0.3, ra
 
 #print(evalMV2)
 
+'''
+# -------------------- #
+# ----- Outliers ----- #
+# -------------------- #
 
+dataOutliers = Outliers(filename, file_tag, data, NR_STDEV)
+
+dataOutliers.drop_outliers()
+dataOutliers.median_outliers()
+dataOutliers.truncate_outliers()

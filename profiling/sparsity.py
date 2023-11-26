@@ -81,6 +81,7 @@ class Sparsity:
             "TetanusLast10Tdap": {"No, did not receive any tetanus shot in the past 10 years": 0, "Yes, received tetanus shot but not sure what type": 1, "Yes, received tetanus shot, but not Tdap": 2, "Yes, received Tdap": 3},
             "RemovedTeeth": {"None of them": 0, "1 to 5": 1, "6 or more, but not all": 2,"All": 3},
             "ECigaretteUsage": {"Never used e-cigarettes in my entire life": 0, "Not at all (right now)": 1, "Use them some days": 2,"Use them every day": 3},
+            "HadDiabetes": {"No": 0, "No, pre-diabetes or borderline diabetes": 1, "Yes": 2, "Yes, but only during pregnancy (female)": 3},
 
             # Binary - mudar c a da prof so yes no Yes No wtv
             "Sex": {"Male": 0, "Female": 1}, 
@@ -115,7 +116,7 @@ class Sparsity:
     
         # Dummification (One-hot encoding) (non-ordenal) ???????????????
         # The dummifying 'State' will create separate binary columns for each unique state, increasing the dimensionality of your dataset. - help                
-        vars: list[str] = ["State", "RaceEthnicityCategory", "HadDiabetes"]
+        vars: list[str] = ["State", "RaceEthnicityCategory"]
         df_encoded = dummify(encoded_data, vars)
                 
         return df_encoded
