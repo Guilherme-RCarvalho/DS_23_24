@@ -171,7 +171,7 @@ dataMissingValues = MissingValues(filename,file_tag,encoded_data)
 
 # Second approach - 0 drop, fill knn (takes too long) -> frequent
 encoded_data_MV2 = mvi_by_filling(encoded_data, strategy="frequent")
-print(f"mv2's remaining:{encoded_data_MV2.isna().sum()}")
+#print(f"mv2's remaining:{encoded_data_MV2.isna().sum()}")
 '''
 #Eval MV1
 train_data_1, test_data_1 = train_test_split(encoded_data_MV1, test_size=0.3, random_state=42)
@@ -216,12 +216,12 @@ print(eval2)
 # -------------------- #
 # ----- Scaling ------ #
 # -------------------- #
-dataScaling = Scaling(filename, file_tag, outliers2)
+dataScaling = Scaling(filename, file_tag, outliers2, target)
 
 
-scaling1 = dataScaling.standard_scaler(target)
-scaling2 = dataScaling.min_max_scaler(target)
-
+scaling1 = dataScaling.standard_scaler()
+scaling2 = dataScaling.min_max_scaler()
+dataScaling.scaler_plot(scaling1,scaling2)
 
 #Eval Scaling1
 train_data_1, test_data_1 = train_test_split(scaling1, test_size=0.3, random_state=42)

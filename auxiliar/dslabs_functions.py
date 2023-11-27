@@ -560,8 +560,8 @@ def evaluate_approach(
     tstX: ndarray = test.values
     eval: dict[str, list] = {}
 
-    eval_NB: dict[str, float] | None = run_NB(trnX, trnY, tstX, tstY, metric=metric)
     eval_KNN: dict[str, float] | None = run_KNN(trnX, trnY, tstX, tstY, metric=metric)
+    eval_NB: dict[str, float] | None = run_NB(trnX, trnY, tstX, tstY, metric=metric)
     if eval_NB != {} and eval_KNN != {}:
         for met in CLASS_EVAL_METRICS:
             eval[met] = [eval_NB[met], eval_KNN[met]]
