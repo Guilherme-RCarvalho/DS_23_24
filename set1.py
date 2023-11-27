@@ -9,6 +9,7 @@ from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping, mvi_by
 from preparation.balancing import Balancing
 from preparation.missingValues import MissingValues
 from preparation.scaling import Scaling
+from preparation.outliers import Outliers
 from profiling.dimensionality import Dimensionality
 from profiling.sparsity import Sparsity
 from profiling.granularity import Granularity
@@ -159,19 +160,19 @@ encoded_data = sparsity.encode_pos_covid()
 # -------------------- #
 dataMissingValues = MissingValues(filename,file_tag,encoded_data)
 
-dataMissingValues.read_mv()
+#dataMissingValues.read_mv()
 
 
 # FIRST APPROACH  - drop vars <0.93, records<0.8, fill mean  -> Lost 2 variables [TetanusLast10Tdap,PneumoVaxEver]
 # Aplicar a funções
-encoded_data_MV1 = mvi_by_dropping(encoded_data, min_pct_per_variable=0.93, min_pct_per_record=0.9)
-encoded_data_MV1 = mvi_by_filling(encoded_data_MV1, strategy="frequent")
+#encoded_data_MV1 = mvi_by_dropping(encoded_data, min_pct_per_variable=0.93, min_pct_per_record=0.9)
+#encoded_data_MV1 = mvi_by_filling(encoded_data_MV1, strategy="frequent")
 #print(f"mv1's remaining:{encoded_data_MV1.isna().sum()}")
 
-# Second approach - 0 drop, fill knn
-encoded_data_MV2 = mvi_by_filling(encoded_data, strategy="knn")
-#print(f"mv2's remaining:{encoded_data_MV2.isna().sum()}")
-
+# Second approach - 0 drop, fill knn (takes too long) -> frequent
+encoded_data_MV2 = mvi_by_filling(encoded_data, strategy="frequent")
+print(f"mv2's remaining:{encoded_data_MV2.isna().sum()}")
+'''
 #Eval MV1
 train_data_1, test_data_1 = train_test_split(encoded_data_MV1, test_size=0.3, random_state=42)
 evalMV1 = evaluate_approach(train_data_1, test_data_1, target, "accuracy")
@@ -182,26 +183,23 @@ train_data_2, test_data_2 = train_test_split(encoded_data_MV2, test_size=0.3, ra
 evalMV2 = evaluate_approach(train_data_2, test_data_2, target, "accuracy")
 print(evalMV2)
 
+{'accuracy': [0.6963492522406497, 0.7009663486389641], 'recall': [0.14569616066865096, 0.08123628273353177], 'precision': [0.4369702434625789, 0.43059760956175297], 'auc': [0.5342476846864521, 0.5185298624350151], 'f1': [0.2185294581858357, 0.136685552407932]}
+{'accuracy': [0.6963073153657683, 0.7029838991949597], 'recall': [0.16870120866865598, 0.0797239051149893], 'precision': [0.4399119704472216, 0.43675693527080584], 'auc': [0.5404188138950101, 0.5188331373472066], 'f1': [0.24387799564270152, 0.13483547013993322]} 
+'''
 
-# Verificar contagem de NaNs após o drop
-#print("NaN counts after dropping:")
-#print(encoded_data_MV1.isna().sum())
-
-
-# SECOND APPROACH  
 
 
 
 # -------------------- #
 # ----- Outliers ----- #
 # -------------------- #
-'''
-dataOutliers = Outliers(filename, file_tag, best_encoded, NR_STDEV)
 
-dataOutliers.drop_outliers()
-outliers1 = dataOutliers.median_outliers()
+dataOutliers = Outliers(filename, file_tag, encoded_data_MV2, NR_STDEV)
+
+#dataOutliers.drop_outliers()
+#outliers1 = dataOutliers.median_outliers()
 outliers2 = dataOutliers.truncate_outliers()
-
+'''
 #Eval Outliers1
 train_data_1, test_data_1 = train_test_split(outliers1, test_size=0.3, random_state=42)
 eval1 = evaluate_approach(train_data_1, test_data_1, target, "accuracy")
@@ -212,10 +210,13 @@ train_data_2, test_data_2 = train_test_split(outliers2, test_size=0.3, random_st
 eval2 = evaluate_approach(train_data_2, test_data_2, target, "accuracy")
 print(eval2)
 
+{'accuracy': [0.6963073153657683, 0.7029488974448722], 'recall': [0.16870120866865598, 0.07966362238900443], 'precision': [0.4399119704472216, 0.4364266842800528], 'auc': [0.5404188138950101, 0.5187906659840907], 'f1': [0.24387799564270152, 0.13473351515305995]}
+{'accuracy': [0.6963073153657683, 0.7029838991949597], 'recall': [0.16870120866865598, 0.0797239051149893], 'precision': [0.4399119704472216, 0.43675693527080584], 'auc': [0.5404188138950101, 0.5188331373472066], 'f1': [0.24387799564270152, 0.13483547013993322]}
+'''
 # -------------------- #
 # ----- Scaling ------ #
 # -------------------- #
-dataScaling = Scaling(filename, file_tag, best_outliers)
+dataScaling = Scaling(filename, file_tag, outliers2)
 
 
 scaling1 = dataScaling.standard_scaler(target)
@@ -234,7 +235,7 @@ print(eval2)
 # -------------------- #
 # ----  Balancing ---- #
 # -------------------- #
-
+'''
 dataBalancing = Balancing(filename, file_tag, best_scaling, target)
 
 dataBalancing.check_balance()
@@ -256,6 +257,5 @@ print(eval2)
 train_data_3, test_data_3 = train_test_split(smote, test_size=0.3, random_state=42)
 eval3 = evaluate_approach(train_data_3, test_data_3, target, "accuracy")
 print(eval3)
-
 
 '''
