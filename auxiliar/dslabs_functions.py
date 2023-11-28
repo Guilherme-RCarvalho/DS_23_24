@@ -460,7 +460,9 @@ def mvi_by_filling(data: DataFrame, strategy: str = "frequent") -> DataFrame:
     stg_num, v_num = "mean", -1
     stg_sym, v_sym = "most_frequent", "NA"
     stg_bool, v_bool = "most_frequent", False
+    print("vou entrar no if do knn")
     if strategy != "knn":
+        print("estou in do if do knn")
         lst_dfs: list = []
         if strategy == "constant":
             stg_num, stg_sym, stg_bool = "constant", "constant", "constant"
@@ -486,11 +488,14 @@ def mvi_by_filling(data: DataFrame, strategy: str = "frequent") -> DataFrame:
             )
             lst_dfs.append(tmp_bool)
         df = concat(lst_dfs, axis=1)
+        print("fim if do knn")
     else:
+        print("estou no else")
         imp = KNNImputer(n_neighbors=5)
         imp.fit(data)
         ar: ndarray = imp.transform(data)
         df = DataFrame(ar, columns=data.columns, index=data.index)
+        print("fim do else")
     return df
 
 

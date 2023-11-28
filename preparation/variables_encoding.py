@@ -1,3 +1,6 @@
+from auxiliar.dslabs_functions import dummify
+
+
 class Encoding:
 
     def __init__(self, filename, file_tag, data):
@@ -5,9 +8,12 @@ class Encoding:
         self.file_tag = file_tag
         self.data     = data
 
+
+
     def encode_credit(self):
-        encoded_data = self.data.copy().dropna()
-        #encoded_data = self.data.copy()
+        #encoded_data = self.data.copy().dropna()
+        encoded_data = self.data.copy()
+        #encoded_data = encoded_data1.copy()
 
         encoding = {
             # Symbolic (Ordinal)
@@ -28,8 +34,9 @@ class Encoding:
 
         # Dummification (One-hot encoding) (non-ordenal) ???????????????
         # The dummifying 'State' will create separate binary columns for each unique state, increasing the dimensionality of your dataset. - help
-        # vars: list[str] = ["Occupation", "Type_of_Loan"]
-        # df_encoded = dummify(encoded_data, vars)
+        vars: list[str] = ["Occupation"]
+        df_encoded = dummify(encoded_data, vars)
 
-        # return df_encoded
-        return encoded_data
+        return df_encoded
+        #return encoded_data
+
