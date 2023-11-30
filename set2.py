@@ -254,7 +254,7 @@ print("NOSSO")
 #fill_values_id_based()
 
 # --------------------- #
-# ----- outliers ------ #
+# ----- Outliers ------ #
 # --------------------- #
 
 dataOutliers = MV_out(filename, file_tag, df1, 2)
@@ -287,6 +287,8 @@ dataScaling.scaler_plot(scaling1,scaling2)
 
 #Eval Scaling1
 train_data_1, test_data_1 = train_test_split(scaling1, test_size=0.3, random_state=42)
+print("AAAAAAAAA " + str(test_data_1.dtypes))
+print(test_data_1)
 eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 5, target)
 print(eval1)
 

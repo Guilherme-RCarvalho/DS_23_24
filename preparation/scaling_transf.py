@@ -11,24 +11,24 @@ class Scaling:
         self.file_tag = file_tag
         self.data = data
         self.target = target
-        self.vars: list[str] = self.data.columns.to_list()
         self.target_data: Series = self.data.pop(self.target)
+        self.vars: list[str] = self.data.columns.to_list()
 
     def standard_scaler(self):
         transf: StandardScaler = StandardScaler(with_mean=True, with_std=True, copy=True).fit(
             self.data
         )
         df_zscore = DataFrame(transf.transform(self.data), index=self.data.index)
-        df_zscore[self.target] = self.target_data
         df_zscore.columns = self.vars
+        df_zscore[self.target] = self.target_data
         df_zscore.to_csv(f"data/{self.file_tag}_scaled_zscore.csv", index="id")
         return df_zscore
 
     def min_max_scaler(self):
         transf: MinMaxScaler = MinMaxScaler(feature_range=(0, 1), copy=True).fit(self.data)
         df_minmax = DataFrame(transf.transform(self.data), index=self.data.index)
-        df_minmax[self.target] = self.target_data
         df_minmax.columns = self.vars
+        df_minmax[self.target] = self.target_data
         df_minmax.to_csv(f"data/{self.file_tag}_scaled_minmax.csv", index="id")
         return df_minmax
 

@@ -651,12 +651,14 @@ CLASS_EVAL_METRICS: dict[str, Callable] = {
 
 
 def run_NB(trnX, trnY, tstX, tstY, metric: str = "accuracy") -> dict[str, float]:
-    estimators: dict[str, GaussianNB | MultinomialNB | BernoulliNB] = {
+    #estimators: dict[str, GaussianNB | MultinomialNB | BernoulliNB] = {
+    estimators: dict[str, GaussianNB | BernoulliNB] = {
         "GaussianNB": GaussianNB(),
-        "MultinomialNB": MultinomialNB(),
+      #  "MultinomialNB": MultinomialNB(),
         "BernoulliNB": BernoulliNB(),
     }
-    best_model: GaussianNB | MultinomialNB | BernoulliNB = None  # type: ignore
+    #best_model: GaussianNB | MultinomialNB | BernoulliNB = None  # type: ignore
+    best_model: GaussianNB | BernoulliNB = None  # type: ignore
     best_performance: float = 0.0
     eval: dict[str, float] = {}
 
@@ -807,7 +809,7 @@ def plot_evaluation_results(
 # ---------------------------------------
 
 
-from statsmodels.tsa.seasonal import DecomposeResult, seasonal_decompose
+#from statsmodels.tsa.seasonal import DecomposeResult, seasonal_decompose
 
 
 def plot_ts_multivariate_chart(data: DataFrame, title: str) -> list[Axes]:
