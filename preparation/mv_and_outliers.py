@@ -65,6 +65,85 @@ class MV_out:
             print("There are no numeric variables")
         return df
 
+    # def median_outliers_by_customer(self):
+    #     if not self.numeric_vars:
+    #         print("There are no numeric variables")
+    #         return
+    #
+    #     df = self.data.copy(deep=True)
+    #
+    #     for var in self.numeric_vars:
+    #         grouped = df.groupby("Customer_ID")[var]
+    #         for customer_id, group_data in grouped:
+    #             top, bottom = determine_outlier_thresholds_for_var(
+    #                 group_data, threshold=self.n_std
+    #             )
+    #             median = group_data.median()
+    #             df.loc[df["Customer_ID"] == customer_id, var] = df.loc[
+    #                 df["Customer_ID"] == customer_id, var
+    #             ].apply(lambda x: median if x > top or x < bottom else x)
+    #
+    #     df.to_csv(f"data/{self.file_tag}_replacing_outliers_by_customer.csv", index=True)
+    #     print("Data after replacing outliers:", df.shape)
+    #     print(df.describe())
+    #     return df
+
+    # def median_outliers_by_customer(self):
+    #     if not self.numeric_vars:
+    #         print("There are no numeric variables")
+    #         return
+    #
+    #     df = self.data.copy(deep=True)
+    #
+    #     for var in self.numeric_vars:
+    #         grouped = df.groupby("Customer_ID")[var]
+    #         summary5_by_customer = df.groupby("Customer_ID")[var].describe()
+    #
+    #         for customer_id, group_data in grouped:
+    #             customer_data = df.loc[df["Customer_ID"] == customer_id, var]
+    #             print(f"\nProcessing Customer_ID: {customer_id}")
+    #             print(f"Original data:\n{customer_data}")
+    #
+    #             top, bottom = determine_outlier_thresholds_for_var(
+    #                 summary5_by_customer.loc[customer_id], threshold=self.n_std
+    #             )
+    #             median = customer_data.median()
+    #
+    #             mask = (customer_data > top) | (customer_data < bottom)
+    #
+    #             print(f"Outliers mask:\n{mask}")
+    #
+    #             df.loc[mask & (df["Customer_ID"] == customer_id), var] = median
+    #             print(
+    #                 f"Data after replacing outliers for Customer_ID {customer_id}:\n{df.loc[df['Customer_ID'] == customer_id, var]}")
+    #
+    #     df.to_csv(f"data/{self.file_tag}_replacing_outliers_by_customer.csv", index=True)
+    #     print("\nData after replacing outliers:", df.shape)
+    #     print(df.describe())
+    #     return df
+    #
+    # def truncate_outliers_by_customer(self):
+    #     if not self.numeric_vars:
+    #         print("There are no numeric variables")
+    #         return
+    #
+    #     df = self.data.copy(deep=True)
+    #
+    #     for var in self.numeric_vars:
+    #         grouped = df.groupby("Customer_ID")[var]
+    #         for customer_id, group_data in grouped:
+    #             top, bottom = determine_outlier_thresholds_for_var(
+    #                 group_data, threshold=self.n_std
+    #             )
+    #             df.loc[df["Customer_ID"] == customer_id, var] = df.loc[
+    #                 df["Customer_ID"] == customer_id, var
+    #             ].apply(lambda x: top if x > top else bottom if x < bottom else x)
+    #
+    #     df.to_csv(f"data/{self.file_tag}_truncate_outliers_by_customer.csv", index=True)
+    #     print("Data after truncating outliers:", df.shape)
+    #     print(df.describe())
+    #     return df
+
     def count_nan(self):
         data=self.data
         nan_counts = data.isnull().sum()

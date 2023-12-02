@@ -7,9 +7,14 @@ import numpy as np
 import pandas as pd
 # Imports
 from pandas import read_csv, DataFrame
+from numpy import array, ndarray
 from sklearn.model_selection import train_test_split
+from tqdm import tqdm
 
-from auxiliar.dslabs_functions import dummify, evaluate_approach, mvi_by_dropping, mvi_by_filling, count_outliers
+from auxiliar.dslabs_functions import dummify, evaluate_approach, mvi_by_dropping, mvi_by_filling, count_outliers, \
+    plot_evaluation_results
+from classification.KNN import KNN
+from classification.NBayes import NBayes
 from profiling.dimensionality import Dimensionality
 from profiling.distribution import Distribution
 from profiling.sparsity import Sparsity
@@ -261,22 +266,64 @@ methodology = Methodology(filename, file_tag, encoded_data)
 # ----- Outliers ------ #
 # --------------------- #
 best_approach: DataFrame = read_csv("DF_2_NOSSO.csv", na_values="")
+filename = "DF_2_NOSSO.csv"
 dataOutliers = MV_out(filename, file_tag, best_approach, 2)
 
-#dataOutliers.drop_outliers()
 
 outliers1 = dataOutliers.median_outliers()
 # outliers2 = dataOutliers.truncate_outliers()
+# outliers3 = dataOutliers.median_outliers_by_customer()
+# outliers4 = dataOutliers.truncate_outliers_by_customer()
+# outliers5 = dataOutliers.drop_outliers()
+
+# def corrigir_outliers(data, threshold=2):
+#     data_corrigido = data.copy()
 #
-# #Eval Outliers1
+#     for customer_id in tqdm(data['Customer_ID'].unique(), desc="Processando clientes", unit="cliente"):
+#         cliente_data = data_corrigido[data_corrigido['Customer_ID'] == customer_id]
+#
+#         for coluna in tqdm(cliente_data.select_dtypes(include=np.number).columns, desc="Processando colunas", unit="coluna", leave=False):
+#             z_scores = (cliente_data[coluna] - cliente_data[coluna].mean()) / cliente_data[coluna].std()
+#             outliers = abs(z_scores) > threshold
+#             cliente_data.loc[outliers, coluna] = cliente_data[coluna].mean()
+#
+#         data_corrigido.loc[data_corrigido['Customer_ID'] == customer_id] = cliente_data
+#
+#     return data_corrigido
+
+# # Aplicar a função para corrigir outliers para todas as colunas numéricas para todos os clientes
+# df_corrigido = corrigir_outliers(best_approach)
+#
+# # Salvar o DataFrame corrigido em um arquivo CSV
+# df_corrigido.to_csv('dados_corrigidos.csv', index=False)
+
+#Eval Outliers1
 # train_data_1, test_data_1 = train_test_split(outliers1, test_size=0.3, random_state=42)
 # eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 3, target)
-# print(eval1)
-#
+
+# print("EVAL 1:", eval1)
 # #Eval Outliers2
 # train_data_2, test_data_2 = train_test_split(outliers2, test_size=0.3, random_state=42)
 # eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 4, target)
-# print(eval2)
+#
+# print("EVAL 2:", eval2)
+
+# #Eval Outliers3
+# train_data_3, test_data_3 = train_test_split(outliers3, test_size=0.3, random_state=42)
+# eval3 = methodology.evaluate_approach(train_data_3, test_data_3, 5, target)
+# print("EVAL 3:", eval3)
+#
+# #Eval Outliers4
+# train_data_4, test_data_4 = train_test_split(outliers4, test_size=0.3, random_state=42)
+# eval4 = methodology.evaluate_approach(train_data_4, test_data_4, 6, target)
+# print("EVAL 4:", eval4)
+
+# #Eval Outliers5
+# train_data_5, test_data_5 = train_test_split(df_corrigido, test_size=0.3, random_state=42)
+# eval5 = methodology.evaluate_approach(train_data_5, test_data_5, 7, target)
+# print("EVAL 5:", eval5)
+
+# melhor escolha -> outliers1
 
 
 # ---------------------------- #
@@ -286,61 +333,87 @@ dataScaling = Scaling(filename, file_tag, outliers1, target)
 
 
 scaling1 = dataScaling.standard_scaler()
-scaling2 = dataScaling.min_max_scaler()
-dataScaling.scaler_plot(scaling1,scaling2)
+# scaling2 = dataScaling.min_max_scaler()
+# dataScaling.scaler_plot(scaling1, scaling2)
 
-#Eval Scaling1
-train_data_1, test_data_1 = train_test_split(scaling1, test_size=0.3, random_state=42)
-print("AAAAAAAAA " + str(test_data_1.dtypes))
-print(test_data_1)
-eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 5, target)
-print(eval1)
+# #Eval Scaling1
+# train_data_1, test_data_1 = train_test_split(scaling1, test_size=0.3, random_state=42)
+# print("AAAAAAAAA " + str(test_data_1.dtypes))
+# print(test_data_1)
+# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 8, target)
+# print(eval1)
+#
+# #Eval Scaling2
+# train_data_2, test_data_2 = train_test_split(scaling2, test_size=0.3, random_state=42)
+# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 9, target)
+# print(eval2)
 
-#Eval Scaling2
-train_data_2, test_data_2 = train_test_split(scaling2, test_size=0.3, random_state=42)
-eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 6, target)
-print(eval2)
-
-#best_scaling = scaling1 capaz de ser a primeira
+best_scaling = scaling1
 
 # -------------------- #
 # -- Data Balancing -- #
 # -------------------- #
-# dataBalancing = Balancing(filename, file_tag, best_scaling, target)
-#
+dataBalancing = Balancing(filename, file_tag, best_scaling, target)
+
 # dataBalancing.check_balance()
 # undersampling = dataBalancing.undersampling()
-# oversampling = dataBalancing.oversampling()
+oversampling = dataBalancing.oversampling()
 # smote = dataBalancing.SMOTE()
-#
+
 # #Eval undersampling
 # train_data_1, test_data_1 = train_test_split(undersampling, test_size=0.3, random_state=42)
-# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 7, target)
+# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 10, target = "Credit_Score")
 # print(eval1)
-#
+
 # #Eval oversampling
 # train_data_2, test_data_2 = train_test_split(oversampling, test_size=0.3, random_state=42)
-# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 8, target)
+# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 11, target = "Credit_Score")
 # print(eval2)
-#
+
 # #Eval smote
 # train_data_3, test_data_3 = train_test_split(smote, test_size=0.3, random_state=42)
-# eval3 = methodology.evaluate_approach(train_data_3, test_data_3, 9, target)
+# eval3 = methodology.evaluate_approach(train_data_3, test_data_3, 12, target = "Credit_Score")
 # print(eval3)
 
 
+# {'accuracy': [0.7420541410425886, 0.8372894993965171], 'recall': [0.7224064966258721, 0.8107057074230813], 'precision': [0.753969201384744, 0.8576960309777347], 'auc': [0.7421528786271689, 0.8374230940072893], 'f1': [0.7378504672897197, 0.833539130946081]}
+# {'accuracy': [0.7446364020468522, 0.9259893901694756], 'recall': [0.7182675613532917, 0.8908544882924312], 'precision': [0.7584481220889902, 0.9582576216434484], 'auc': [0.7446487870173533, 0.926005892401347], 'f1': [0.7378111970693851, 0.9233275782408871]}
+# {'accuracy': [0.7463264635463124, 0.9200272287686024], 'recall': [0.7217264700356941, 0.8764324628968627], 'precision': [0.7589016741567485, 0.9600761434377734], 'auc': [0.74631607406055, 0.9200088170889756], 'f1': [0.7398473796971665, 0.9163495298190478]}
 
-# ----------------- #
-# -- Methodology -- #
-# ----------------- #
+#oversample escolhido
 
-methodology = Methodology(filename, file_tag, encoded_data)
+# --------------------------------------- #
+#             Classification              #
+# --------------------------------------- #
+
+classificationData = DataFrame = read_csv("data\credit_balance_oversample.csv", na_values="")
+classificationData.drop(classificationData.columns[0], axis=1, inplace=True)
+strategy: array = classificationData[target].to_list()
+trainData, testData = train_test_split(classificationData, test_size=0.3, stratify=strategy)
+trainData.to_csv(f"data/{file_tag}_train.csv", index=False)
+testData.to_csv(f"data/{file_tag}_test.csv", index=False)
+
+# -------------------- #
+# ------ NBayes ------ #
+# -------------------- #
+
+# classificationNB = NBayes(file_tag,"data/credit_train.csv","data/credit_test.csv",target)
 #
-# # Dividir os dados em conjuntos de treino e teste
-# train_data, test_data = train_test_split(encoded_data, test_size=0.3, random_state=42)
+# # Chama a função naive_Bayes_study para obter o melhor modelo e parâmetros
+# best_model, best_params = classificationNB.naive_Bayes_study()
 #
-# methodology.evaluate_approach(train_data, test_data, target=target)
-#
-# # guardar os conjuntos de treino e teste em CSV
-# train_data.to_csv("credit_train.csv", index=False)
-# test_data.to_csv("credit_test.csv", index=False)
+# # Chama a função performance_analysis com os resultados obtidos
+# classificationNB.performance_analysis(best_model, best_params)
+
+# -------------------- #
+# -------- KNN ------- #
+# -------------------- #
+
+classificationKNN = KNN(file_tag,"data/credit_train.csv","data/credit_test.csv",target)
+
+
+# Chama a função naive_Bayes_study para obter o melhor modelo e parâmetros
+best_model, best_params = classificationKNN.full_metrics_KNN_study()
+
+# Chama a função performance_analysis com os resultados obtidos
+classificationKNN.performance_analysis(best_model, best_params)
