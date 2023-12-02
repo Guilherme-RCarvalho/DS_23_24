@@ -59,6 +59,7 @@ class KNN:
         best_model, params = self.knn_study(self.trnX, self.trnY, self.tstX, self.tstY, k_max=25, metric=eval_metric)
         savefig(f'images/{self.file_tag}_knn_{eval_metric}_study.png')
         show()
+        return best_model, params
 
     def performance_analysis(self, best_model, params):
         prd_trn: array = best_model.predict(self.trnX)
