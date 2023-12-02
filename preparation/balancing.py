@@ -51,6 +51,7 @@ class Balancing:
         print("Minority class=", self.positive_class, ":", len(self.df_positives))
         print("Majority class=", self.negative_class, ":", len(df_neg_sample))
         print("Proportion:", round(len(self.df_positives) / len(df_neg_sample), 2), ": 1")
+        return df_under
 
     def oversampling(self):
         df_pos_sample: DataFrame = DataFrame(self.df_positives.sample(len(self.df_negatives), replace=True))
@@ -60,6 +61,7 @@ class Balancing:
         print("Minority class=", self.positive_class, ":", len(df_pos_sample))
         print("Majority class=", self.negative_class, ":", len(self.df_negatives))
         print("Proportion:", round(len(df_pos_sample) / len(self.df_negatives), 2), ": 1")
+        return df_over
 
     def SMOTE(self):
         smote: SMOTE = SMOTE(sampling_strategy="minority", random_state=self.random_state)
@@ -79,3 +81,4 @@ class Balancing:
             ": 1",
         )
         print(df_smote.shape)
+        return df_smote

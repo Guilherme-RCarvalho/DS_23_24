@@ -559,8 +559,9 @@ def evaluate_approach(
     tstY = test.pop(target).values
     tstX: ndarray = test.values
     eval: dict[str, list] = {}
-
+    print("test KNN")
     eval_KNN: dict[str, float] | None = run_KNN(trnX, trnY, tstX, tstY, metric=metric)
+    print("test NB")
     eval_NB: dict[str, float] | None = run_NB(trnX, trnY, tstX, tstY, metric=metric)
     if eval_NB != {} and eval_KNN != {}:
         for met in CLASS_EVAL_METRICS:
