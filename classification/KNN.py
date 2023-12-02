@@ -68,3 +68,30 @@ class KNN:
         plot_evaluation_results(params, self.trnY, prd_trn, self.tstY, prd_tst, self.labels)
         savefig(f'images/{self.file_tag}_knn_{params["name"]}_best_{params["metric"]}_eval.png')
         show()
+
+    def overfitting_study(self, params, eval_metric):
+        distance: Literal["manhattan", "euclidean", "chebyshev"] = params["params"][1]
+        K_MAX = 25
+        kvalues: list[int] = [i for i in range(1, K_MAX, 2)]
+        y_tst_values: list = []
+        y_trn_values: list = []
+        acc_metric: str = "accuracy"
+        for k in kvalues:
+            clf = KNeighborsClassifier(n_neighbors=k, metric=distance)
+            clf.fit(self.trnX, self.trnY)
+            prd_tst_Y: array = clf.predict(self.tstX)
+            prd_trn_Y: array = clf.predict(self.trnX)
+            y_tst_values.append(CLASS_EVAL_METRICS[acc_metric](self.tstY, prd_tst_Y))
+            y_trn_values.append(CLASS_EVAL_METRICS[acc_metric](self.trnY, prd_trn_Y))
+
+        figure()
+        plot_multiline_chart(
+            kvalues,
+            {"Train": y_trn_values, "Test": y_tst_values},
+            title=f"KNN overfitting study for {distance}",
+            xlabel="K",
+            ylabel=str(eval_metric),
+            percentage=True,
+        )
+        savefig(f"images/{self.file_tag}_knn_overfitting.png")
+        show()
