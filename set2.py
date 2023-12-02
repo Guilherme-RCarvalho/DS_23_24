@@ -34,12 +34,6 @@ data = data.drop(['ID', 'SSN', 'Name'], axis=1)
 print("Fiz agora o primeiro drop")
 mv_out = MV_out("data/class_credit_score.csv", file_tag, data, 2)
 data = mv_out.data_correction()
-# Preencher os valores ausentes com base no último valor não nulo dentro de cada grupo de 'Customer_ID'
-data['Occupation'] = data.groupby('Customer_ID')['Occupation'].fillna(method='ffill')
-
-# Se ainda houver algum NaN após o preenchimento para o último valor não nulo, preenche com o primeiro valor não nulo
-data['Occupation'] = data.groupby('Customer_ID')['Occupation'].fillna(method='bfill')
-
 
 
 # ------------------------------------------ #
@@ -180,14 +174,15 @@ print()
 filename = "cleaned_data.csv"
 encoding = Encoding(filename, file_tag, data)
 
-
-# Cria uma lista em cada registo com os seus loan types
 def create_loan_type_columns():
     print("vou fazer a correção da data")
     print("fiz a correção da data")
-    # Separar os valores dentro de cada linha usando vírgulas e a palavra "and"
-    # Preeenche os NA com string vazia
-    data['Type_of_Loan'] = data['Type_of_Loan'].fillna('').str.replace('and ', '').str.replace(' ', '').str.split(',')
+
+    # Preencher os valores ausentes na coluna 'Type_of_Loan' com uma string vazia
+    data['Type_of_Loan'] = data['Type_of_Loan'].fillna('').astype(str).str.replace('and ', '').str.replace(' ', '').str.split(',')
+
+    # Adicionar uma coluna 'Without_Loan' e atribuir 1 aos clientes com NumofLoan igual a 0 e célula vazia em 'Type_of_Loan'
+    data['Without_Loan'] = data.apply(lambda row: 1 if row['NumofLoan'] == 0 and all(pd.isna(item) or (isinstance(item, str) and item == '') for item in row['Type_of_Loan']) else 0, axis=1)
 
     existing_loan_types = list()
 
@@ -199,6 +194,7 @@ def create_loan_type_columns():
                 # Adicionar o novo valor à lista
                 existing_loan_types.append(loan_type)
 
+    # Iterar sobre os tipos únicos de empréstimos e criar colunas binárias
     for loan_type in existing_loan_types:
         if loan_type != '':
             data[loan_type] = data['Type_of_Loan'].apply(lambda x: 1 if loan_type in x else 0)
@@ -225,54 +221,62 @@ filename = "encoded.csv"
 mv_out = MV_out(filename, file_tag, encoded_data, 2)
 methodology = Methodology(filename, file_tag, encoded_data)
 
-
-#mv_out.read_mv()
-
-# Primeira approach
-print("EXEMPLO DA PROF")
-df1: DataFrame = mvi_by_filling(encoded_data, strategy="frequent")
-# Salvar o dataset modificado
-df1.to_csv("DF_1.csv", index=False)
-
-# Dividir os dados em conjuntos de treino e teste
-train_data, test_data = train_test_split(df1, test_size=0.3, random_state=42)
-
-methodology.evaluate_approach(train_data, test_data, 1, target=target)
-
-# Segunda approach
-print("NOSSO")
-# df2: DataFrame = mv_out.our_mv(encoded_data)
+#
+# #mv_out.read_mv()
+#
+# # Primeira approach
+# print("EXEMPLO DA PROF")
+# df1: DataFrame = mvi_by_filling(encoded_data, strategy="frequent")
 # # Salvar o dataset modificado
-# df2.to_csv("DF_2.csv", index=False)
+# df1.to_csv("DF_1_PROF.csv", index=False)
+#
+# def count_missing_values(data):
+#     missing_values = data.isnull().sum()
+#     return missing_values
+#
+# # Chame a função para obter o número de valores ausentes em cada coluna
+# resultado1 = count_missing_values(df1)
+# print("Resultado MV PROF:\n",resultado1)
 #
 # # Dividir os dados em conjuntos de treino e teste
-# train_data, test_data = train_test_split(df2, test_size=0.3, random_state=42)
+# train_data, test_data = train_test_split(df1, test_size=0.3, random_state=42)
+# methodology.evaluate_approach(train_data, test_data, 1, target=target)
 #
+# # Segunda approach
+# print("NOSSO")
+# df2: DataFrame = mv_out.our_mv(encoded_data)
+# # Salvar o dataset modificado
+# df2.to_csv("DF_2_NOSSO.csv", index=False)
+#
+# resultado2 = count_missing_values(df2)
+# print("Resultado MV NOSSO:\n",resultado2)
+#
+# # # Dividir os dados em conjuntos de treino e teste
+# train_data, test_data = train_test_split(df2, test_size=0.3, random_state=42)
 # methodology.evaluate_approach(train_data, test_data, 2, target=target)
 
-
-#fill_values_id_based()
+#best_approach = df2
 
 # --------------------- #
 # ----- Outliers ------ #
 # --------------------- #
-
-dataOutliers = MV_out(filename, file_tag, df1, 2)
+best_approach: DataFrame = read_csv("DF_2_NOSSO.csv", na_values="")
+dataOutliers = MV_out(filename, file_tag, best_approach, 2)
 
 #dataOutliers.drop_outliers()
 
 outliers1 = dataOutliers.median_outliers()
-outliers2 = dataOutliers.truncate_outliers()
-
-#Eval Outliers1
-train_data_1, test_data_1 = train_test_split(outliers1, test_size=0.3, random_state=42)
-eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 3, target)
-print(eval1)
-
-#Eval Outliers2
-train_data_2, test_data_2 = train_test_split(outliers2, test_size=0.3, random_state=42)
-eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 4, target)
-print(eval2)
+# outliers2 = dataOutliers.truncate_outliers()
+#
+# #Eval Outliers1
+# train_data_1, test_data_1 = train_test_split(outliers1, test_size=0.3, random_state=42)
+# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 3, target)
+# print(eval1)
+#
+# #Eval Outliers2
+# train_data_2, test_data_2 = train_test_split(outliers2, test_size=0.3, random_state=42)
+# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 4, target)
+# print(eval2)
 
 
 # ---------------------------- #
@@ -297,6 +301,7 @@ train_data_2, test_data_2 = train_test_split(scaling2, test_size=0.3, random_sta
 eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 6, target)
 print(eval2)
 
+#best_scaling = scaling1 capaz de ser a primeira
 
 # -------------------- #
 # -- Data Balancing -- #
@@ -310,17 +315,17 @@ print(eval2)
 #
 # #Eval undersampling
 # train_data_1, test_data_1 = train_test_split(undersampling, test_size=0.3, random_state=42)
-# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 7, target, "accuracy")
+# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 7, target)
 # print(eval1)
 #
 # #Eval oversampling
 # train_data_2, test_data_2 = train_test_split(oversampling, test_size=0.3, random_state=42)
-# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 8, target, "accuracy")
+# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 8, target)
 # print(eval2)
 #
 # #Eval smote
 # train_data_3, test_data_3 = train_test_split(smote, test_size=0.3, random_state=42)
-# eval3 = methodology.evaluate_approach(train_data_3, test_data_3, 9, target, "accuracy")
+# eval3 = methodology.evaluate_approach(train_data_3, test_data_3, 9, target)
 # print(eval3)
 
 
@@ -330,12 +335,12 @@ print(eval2)
 # ----------------- #
 
 methodology = Methodology(filename, file_tag, encoded_data)
-
-# Dividir os dados em conjuntos de treino e teste
-train_data, test_data = train_test_split(encoded_data, test_size=0.3, random_state=42)
-
-#methodology.evaluate_approach(train_data, test_data, target=target)
-
-# guardar os conjuntos de treino e teste em CSV
-train_data.to_csv("credit_train.csv", index=False)
-test_data.to_csv("credit_test.csv", index=False)
+#
+# # Dividir os dados em conjuntos de treino e teste
+# train_data, test_data = train_test_split(encoded_data, test_size=0.3, random_state=42)
+#
+# methodology.evaluate_approach(train_data, test_data, target=target)
+#
+# # guardar os conjuntos de treino e teste em CSV
+# train_data.to_csv("credit_train.csv", index=False)
+# test_data.to_csv("credit_test.csv", index=False)

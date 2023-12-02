@@ -163,9 +163,6 @@ class MV_out:
         # Renomear a coluna para "Credit_History_Age_in_Months"
         data = data.rename(columns={'Credit_History_Age': 'Credit_History_Age_in_Months'})
 
-
-
-
         # Salvar o dataset modificado
         data.to_csv("cleaned_data.csv", index=False)
 
@@ -248,43 +245,82 @@ class MV_out:
                                 # Se houver mais de um valor a ser preenchido, calcular a média
                                 df.loc[idx, 'Credit_History_Age_in_Months'] = np.mean(values_to_fill).astype(int)
 
+        preencher_credit_history_age2(data)
         preencher_credit_history_age1(data)
         preencher_credit_history_age2(data)
 
+        def preencher_celulas_vazias(data, coluna):
+            current_customer = None
+            previous_value = None
 
-        # # Preencher os valores ausentes com base no último valor não nulo dentro de cada grupo de 'Customer_ID'
-        # data['Occupation'] = data.groupby('Customer_ID')['Occupation'].fillna(method='ffill')
-        #
-        # # Se ainda houver algum NaN após o preenchimento para o último valor não nulo, preenche com o primeiro valor não nulo
-        # data['Occupation'] = data.groupby('Customer_ID')['Occupation'].fillna(method='bfill')
+            for index, row in data.iterrows():
+                if current_customer != row['Customer_ID']:
+                    # Novo cliente, reinicia o valor anterior
+                    current_customer = row['Customer_ID']
+                    previous_value = None
 
-        # Preencher os valores ausentes com base no último valor não nulo dentro de cada grupo de 'Customer_ID'
-        data['CreditMix'] = data.groupby('Customer_ID')['CreditMix'].fillna(method='ffill')
+                if pd.isna(row[coluna]):
+                    # Valor vazio, preenche com o número seguinte ao valor anterior
+                    if pd.notna(previous_value):
+                        data.at[index, coluna] = previous_value + 1
 
-        # Se ainda houver algum NaN após o preenchimento para o último valor não nulo, preenche com o primeiro valor não nulo
-        data['CreditMix'] = data.groupby('Customer_ID')['CreditMix'].fillna(method='bfill')
+                # Atualiza o valor anterior
+                previous_value = row[coluna]
 
-        # Preencher os valores ausentes com base no último valor não nulo dentro de cada grupo de 'Customer_ID'
-        data['Monthly_Inhand_Salary'] = data.groupby('Customer_ID')['Monthly_Inhand_Salary'].fillna(method='ffill')
+        preencher_celulas_vazias(data, 'Credit_History_Age_in_Months')
 
-        # Se ainda houver algum NaN após o preenchimento para o último valor não nulo, preenche com o primeiro valor não nulo
-        data['Monthly_Inhand_Salary'] = data.groupby('Customer_ID')['Monthly_Inhand_Salary'].fillna(method='bfill')
+        # Chamar a função para preencher as células vazias em 'Credit_History_Age_in_Months'
+        preencher_celulas_vazias(data, 'Credit_History_Age_in_Months')
+        preencher_celulas_vazias(data, 'Credit_History_Age_in_Months')
+        preencher_celulas_vazias(data, 'Credit_History_Age_in_Months')
 
-        # Preencher os valores ausentes com base no último valor não nulo dentro de cada grupo de 'Customer_ID'
-        data['Age'] = data.groupby('Customer_ID')['Age'].fillna(method='ffill')
+        index_to_change = data[(data['Customer_ID'] == 14528) & (data['Month'] == 1)].index[0]
+        # Modificar manualmente o valor da célula
+        data.at[index_to_change, 'Credit_History_Age_in_Months'] = 95.0
 
-        # Se ainda houver algum NaN após o preenchimento para o último valor não nulo, preenche com o primeiro valor não nulo
-        data['Age'] = data.groupby('Customer_ID')['Age'].fillna(method='bfill')
+        preencher_credit_history_age2(data)
+
+        def fill_values_id_based():
+            variables = ['CreditMix', 'Monthly_Inhand_Salary', 'Age', 'Num_Bank_Accounts', 'NumofLoan',
+                        'Occupation_Accountant', 'Occupation_Architect', 'Occupation_Developer',
+                        'Occupation_Doctor', 'Occupation_Engineer', 'Occupation_Entrepreneur',
+                        'Occupation_Journalist', 'Occupation_Lawyer', 'Occupation_Manager',
+                        'Occupation_Mechanic', 'Occupation_Media_Manager', 'Occupation_Musician',
+                        'Occupation_Scientist', 'Occupation_Teacher', 'Occupation_Writer']
+
+            variables_moda = ['NumCreditInquiries', 'Payment_Behaviour', 'Payment_of_Min_Amount']
+
+            variables_media_int = ['Delay_from_due_date', 'NumofDelayedPayment']
+
+            variables_media = ['ChangedCreditLimit', 'MonthlyBalance', 'Amountinvestedmonthly']
+
+            for var_type in variables:
+                print("Estou nos b e f fill: \n", var_type)
+                # Preencher os valores ausentes com base no último valor não nulo dentro de cada grupo de 'Customer_ID'
+                data[var_type] = data.groupby('Customer_ID')[var_type].fillna(method='ffill')
+
+                # Se ainda houver algum NaN após o preenchimento para o último valor não nulo, preenche com o primeiro valor não nulo
+                data[var_type] = data.groupby('Customer_ID')[var_type].fillna(method='bfill')
+
+            for var_type in variables_moda:
+                print("Estou na moda: \n", var_type)
+                # Preencher os valores ausentes com a moda dentro de cada grupo de 'Customer_ID'
+                data[var_type] = data.groupby('Customer_ID')[var_type].transform(lambda x: x.fillna(x.mode()[0]))
+
+            for var_type in variables_media_int:
+                print("Estou na média_int: \n", var_type)
+                # Preencher os valores ausentes com a média arredondada ao inteiro dentro de cada grupo de 'Customer_ID'
+                data[var_type] = data.groupby('Customer_ID')[var_type].transform(lambda x: x.fillna(round(x.mean())))
+
+            for var_type in variables_media:
+                print("Estou na média: \n", var_type)
+                # Preencher os valores ausentes com a média dentro de cada grupo de 'Customer_ID'
+                data[var_type] = data.groupby('Customer_ID')[var_type].transform(lambda x: x.fillna(x.mean()))
+
+        fill_values_id_based()
+
         print("no fim deste manicomio")
 
-        # def fill_values_id_based():
-        #     variables = ['Occupation', 'CreditMix', 'Monthly_Inhand_Salary', 'Age']
-        #     for var_type in variables:
-        #         # Preencher os valores ausentes com base no último valor não nulo dentro de cada grupo de 'Customer_ID'
-        #         data[var_type] = data.groupby('Customer_ID')[var_type].fillna(method='ffill')
-        #
-        #         # Se ainda houver algum NaN após o preenchimento para o último valor não nulo, preenche com o primeiro valor não nulo
-        #         data[var_type] = data.groupby('Customer_ID')[var_type].fillna(method='bfill')
         return data
 
 

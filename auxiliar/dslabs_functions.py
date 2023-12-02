@@ -419,7 +419,7 @@ def dummify(df: DataFrame, vars_to_dummify: list[str]) -> DataFrame:
     other_vars: list[str] = [c for c in df.columns if not c in vars_to_dummify]
 
     enc = OneHotEncoder(
-        handle_unknown="ignore", sparse_output=False, dtype="bool", drop="if_binary"
+        handle_unknown="ignore", sparse_output=False, dtype=int, drop="if_binary"
     )
     trans: ndarray = enc.fit_transform(df[vars_to_dummify])
 
