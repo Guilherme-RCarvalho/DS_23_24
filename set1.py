@@ -4,8 +4,10 @@ file:       set1.py
 
 #Imports
 from pandas import read_csv, DataFrame
+from numpy import array, ndarray
 from sklearn.model_selection import train_test_split
 from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping, mvi_by_filling
+from classification.NBayes import NBayes
 from preparation.balancing import Balancing
 from preparation.missingValues import MissingValues
 from preparation.scaling import Scaling
@@ -239,31 +241,51 @@ print(eval2)
 # -------------------- #
 # ----  Balancing ---- #
 # -------------------- #
-'''
+
 scaling2 = DataFrame = read_csv("data\pos_covid_scaled_minmax.csv",na_values="")
 scaling2.drop(scaling2.columns[0], axis=1, inplace=True)
 dataBalancing = Balancing(filename, file_tag, scaling2, target)#TODO change for the best scalling
 
-dataBalancing.check_balance()
-undersampling = dataBalancing.undersampling()
+#dataBalancing.check_balance()
+#undersampling = dataBalancing.undersampling()
 oversampling = dataBalancing.oversampling()
-smote = dataBalancing.SMOTE()
+#smote = dataBalancing.SMOTE()
 
 #Eval undersampling
-train_data_1, test_data_1 = train_test_split(undersampling, test_size=0.3, random_state=42)
-eval1 = evaluate_approach(train_data_1, test_data_1, target, "accuracy")
-print(eval1)
+#train_data_1, test_data_1 = train_test_split(undersampling, test_size=0.3, random_state=42)
+#eval1 = evaluate_approach(train_data_1, test_data_1, target, "accuracy")
+#print(eval1)
 
 #Eval oversampling
-train_data_2, test_data_2 = train_test_split(oversampling, test_size=0.3, random_state=42)
-eval2 = evaluate_approach(train_data_2, test_data_2, target, "accuracy")
-print(eval2)
+#train_data_2, test_data_2 = train_test_split(oversampling, test_size=0.3, random_state=42)
+#eval2 = evaluate_approach(train_data_2, test_data_2, target, "accuracy")
+#print(eval2)
 
 #Eval smote
-train_data_3, test_data_3 = train_test_split(smote, test_size=0.3, random_state=42)
-eval3 = evaluate_approach(train_data_3, test_data_3, target, "accuracy")
-print(eval3)
-'''
+#train_data_3, test_data_3 = train_test_split(smote, test_size=0.3, random_state=42)
+#eval3 = evaluate_approach(train_data_3, test_data_3, target, "accuracy")
+#print(eval3)
+
+
 {'accuracy': [0.5836427315225398, 0.5822147398800487], 'recall': [0.5802304830464898, 0.6072714073984453], 'precision': [0.5812325778693491, 0.5754865709289994], 'auc': [0.5836220842890371, 0.5823663557042427], 'f1': [0.5807310981609021, 0.5909519043974805]}
 {'accuracy': [0.5882937426326736, 0.789765047860621], 'recall': [0.5915400927113128, 0.885269750468488], 'precision': [0.5882908288376655, 0.7436027546212396], 'auc': [0.5882899114092272, 0.7896523367090157], 'f1': [0.5899109865250319, 0.8082756912824958]}
+{'accuracy': [0.6261440570747934, 0.7647763109983768], 'recall': [0.6036628316506222, 0.9034614006253012], 'precision': [0.6314993406934354, 0.7069750800205007], 'auc': [0.6261175880316431, 0.7649395966535126], 'f1': [0.6172674143105354, 0.7932317774450448]}
 '''
+# ---------------------------------------
+#             Classification  
+# ---------------------------------------
+
+classificationData = DataFrame = read_csv("data\pos_covid_balance_oversample.csv", na_values="")
+classificationData.drop(classificationData.columns[0], axis=1, inplace=True)
+strategy: array = classificationData[target].to_list()
+trainData, testData = train_test_split(classificationData, test_size=0.3, stratify=strategy)
+trainData.to_csv(f"data/{file_tag}_train.csv", index=False)
+testData.to_csv(f"data/{file_tag}_test.csv", index=False)
+
+# -------------------- #
+# ------ NBayes ------ #
+# -------------------- #
+
+classificationNB = NBayes(file_tag,"data/pos_covid_train.csv","data/pos_covid_test.csv",target)
+
+classificationNB.full_metrics_NB_study()
