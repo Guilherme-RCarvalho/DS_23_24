@@ -248,7 +248,7 @@ class MV_out:
         return data
 
     def our_mv(self, encoded_data):
-        print("Estou no our mv")
+        print("Filling MV with our fuction")
         data = encoded_data
         def preencher_credit_history_age2(df):
 
@@ -398,7 +398,7 @@ class MV_out:
 
         fill_values_id_based()
 
-        print("no fim deste manicomio")
+        print("End of fill values")
 
         return data
 
