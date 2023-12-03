@@ -56,7 +56,7 @@ class KNN:
         print("estou aqui 4")
         eval_metric = 'accuracy'
         figure()
-        best_model, params = self.knn_study(self.trnX, self.trnY, self.tstX, self.tstY, k_max=25, metric=eval_metric)
+        best_model, params = self.knn_study(self.trnX, self.trnY, self.tstX, self.tstY, k_max=5, metric=eval_metric)
         savefig(f'images/{self.file_tag}_knn_{eval_metric}_study.png')
         show()
         return best_model, params

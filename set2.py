@@ -417,3 +417,6 @@ best_model, best_params = classificationKNN.full_metrics_KNN_study()
 
 # Chama a função performance_analysis com os resultados obtidos
 classificationKNN.performance_analysis(best_model, best_params)
+
+classificationKNN.overfitting_study(best_params, "accuracy")
+
