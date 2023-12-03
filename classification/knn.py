@@ -27,7 +27,7 @@ class Knn:
         for d in dist:
             y_tst_values: list = []
             for k in kvalues:
-                clf = KNeighborsClassifier(n_neighbors=k, metric=d)
+                clf = KNeighborsClassifier(n_neighbors=k, metric=d, n_jobs=-1)
                 clf.fit(self.trnX, self.trnY)
                 prdY: array = clf.predict(self.tstX)
                 eval: float = CLASS_EVAL_METRICS[metric](self.tstY, prdY)
@@ -43,11 +43,11 @@ class Knn:
 
         return best_model, best_params
 
-    def full_metrics_knn_study(self):
+    def full_metrics_knn_study(self, k_max, lag):
         eval_metrics = ["accuracy","recall","precision","auc","f1"]
         for eval_metric in eval_metrics:
             figure()
-            best_model, params = self.knn_study(eval_metric)
+            best_model, params = self.knn_study(k_max, lag, eval_metric)
             plt.tight_layout()
             savefig(f"images/classification/{self.file_tag}_knn_{eval_metric}_study.png")
 
