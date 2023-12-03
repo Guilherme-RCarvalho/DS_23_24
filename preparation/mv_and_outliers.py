@@ -241,6 +241,7 @@ class MV_out:
 
         # Renomear a coluna para "Credit_History_Age_in_Months"
         data = data.rename(columns={'Credit_History_Age': 'Credit_History_Age_in_Months'})
+        # data['MonthlyBalance'] = data['MonthlyBalance'].replace(-3.33333E+26, "")
 
         # Salvar o dataset modificado
         data.to_csv("cleaned_data.csv", index=False)

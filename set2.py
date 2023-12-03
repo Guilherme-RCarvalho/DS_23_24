@@ -69,7 +69,7 @@ print('Set2 Columns Names: ', data.columns)
 #       dtype='object')
 
 # Number of records and variables
-#dim.num_records_variables()
+# dim.num_records_variables()
 
 # Missing Values
 # dim.missing_values()
@@ -219,7 +219,7 @@ methodology = Methodology(filename, file_tag, encoded_data)
 #
 # # Divide os dados em conjuntos de treino e teste
 # train_data, test_data = train_test_split(df1, test_size=0.3, random_state=42)
-# methodology.evaluate_approach(train_data, test_data, 1, target=target)
+# methodology.evaluate_approach(train_data, test_data, "mvi_by_filling_first_approach", target=target)
 #
 # # Second approach
 # print("Our filling")
@@ -231,7 +231,7 @@ methodology = Methodology(filename, file_tag, encoded_data)
 #
 # # Divide os dados em conjuntos de treino e teste
 # train_data, test_data = train_test_split(df2, test_size=0.3, random_state=42)
-# methodology.evaluate_approach(train_data, test_data, 2, target=target)
+# methodology.evaluate_approach(train_data, test_data, "our_mv_second_approach", target=target)
 
 #best_approach = df2
 
@@ -249,51 +249,29 @@ outliers1 = dataOutliers.median_outliers()
 # outliers4 = dataOutliers.truncate_outliers_by_customer()
 # outliers5 = dataOutliers.drop_outliers()
 
-# def corrigir_outliers(data, threshold=2):
-#     data_corrigido = data.copy()
-#
-#     for customer_id in tqdm(data['Customer_ID'].unique(), desc="Processando clientes", unit="cliente"):
-#         cliente_data = data_corrigido[data_corrigido['Customer_ID'] == customer_id]
-#
-#         for coluna in tqdm(cliente_data.select_dtypes(include=np.number).columns, desc="Processando colunas", unit="coluna", leave=False):
-#             z_scores = (cliente_data[coluna] - cliente_data[coluna].mean()) / cliente_data[coluna].std()
-#             outliers = abs(z_scores) > threshold
-#             cliente_data.loc[outliers, coluna] = cliente_data[coluna].mean()
-#
-#         data_corrigido.loc[data_corrigido['Customer_ID'] == customer_id] = cliente_data
-#
-#     return data_corrigido
-
-# # Aplicar a função para corrigir outliers para todas as colunas numéricas para todos os clientes
-# df_corrigido = corrigir_outliers(best_approach)
-#
-# # Salvar o DataFrame corrigido em um arquivo CSV
-# df_corrigido.to_csv('dados_corrigidos.csv', index=False)
-
 # # Eval Outliers1
 # train_data_1, test_data_1 = train_test_split(outliers1, test_size=0.3, random_state=42)
-# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 3, target)
-
+# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, "median_outliers1", target)
 # print("EVAL 1:", eval1)
+
 # # Eval Outliers2
 # train_data_2, test_data_2 = train_test_split(outliers2, test_size=0.3, random_state=42)
-# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 4, target)
-#
+# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, "truncate_outliers2", target)
 # print("EVAL 2:", eval2)
 
 # # Eval Outliers3
 # train_data_3, test_data_3 = train_test_split(outliers3, test_size=0.3, random_state=42)
-# eval3 = methodology.evaluate_approach(train_data_3, test_data_3, 5, target)
+# eval3 = methodology.evaluate_approach(train_data_3, test_data_3, "median_outliers3_by_customer", target)
 # print("EVAL 3:", eval3)
 #
 # # Eval Outliers4
 # train_data_4, test_data_4 = train_test_split(outliers4, test_size=0.3, random_state=42)
-# eval4 = methodology.evaluate_approach(train_data_4, test_data_4, 6, target)
+# eval4 = methodology.evaluate_approach(train_data_4, test_data_4, "truncate_outliers4_by_customer", target)
 # print("EVAL 4:", eval4)
 
 # # Eval Outliers5
-# train_data_5, test_data_5 = train_test_split(df_corrigido, test_size=0.3, random_state=42)
-# eval5 = methodology.evaluate_approach(train_data_5, test_data_5, 7, target)
+# train_data_5, test_data_5 = train_test_split(outliers5, test_size=0.3, random_state=42)
+# eval5 = methodology.evaluate_approach(train_data_5, test_data_5, "drop_outliers5", target)
 # print("EVAL 5:", eval5)
 
 # melhor escolha -> outliers1
@@ -308,14 +286,14 @@ scaling1 = dataScaling.standard_scaler()
 # scaling2 = dataScaling.min_max_scaler()
 # dataScaling.scaler_plot(scaling1, scaling2)
 
-# #E val Scaling1
+# #Eval Scaling1
 # train_data_1, test_data_1 = train_test_split(scaling1, test_size=0.3, random_state=42)
-# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 8, target)
+# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, "standard_scaler", target)
 # print(eval1)
 #
 # # Eval Scaling2
 # train_data_2, test_data_2 = train_test_split(scaling2, test_size=0.3, random_state=42)
-# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 9, target)
+# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, "min_max_scaler", target)
 # print(eval2)
 
 best_scaling = scaling1
@@ -332,17 +310,17 @@ oversampling = dataBalancing.oversampling()
 
 # # Eval undersampling
 # train_data_1, test_data_1 = train_test_split(undersampling, test_size=0.3, random_state=42)
-# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 10, target = "Credit_Score")
+# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, "undersampling", target = "Credit_Score")
 # print(eval1)
 
 # # Eval oversampling
 # train_data_2, test_data_2 = train_test_split(oversampling, test_size=0.3, random_state=42)
-# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 11, target = "Credit_Score")
+# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, "oversampling", target = "Credit_Score")
 # print(eval2)
 
 # # Eval smote
 # train_data_3, test_data_3 = train_test_split(smote, test_size=0.3, random_state=42)
-# eval3 = methodology.evaluate_approach(train_data_3, test_data_3, 12, target = "Credit_Score")
+# eval3 = methodology.evaluate_approach(train_data_3, test_data_3, "SMOTE", target = "Credit_Score")
 # print(eval3)
 
 
