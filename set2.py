@@ -15,6 +15,7 @@ from auxiliar.dslabs_functions import dummify, evaluate_approach, mvi_by_droppin
     plot_evaluation_results
 from classification.KNN import KNN
 from classification.NBayes import NBayes
+from classification.decisionTrees import decisionTrees
 from profiling.dimensionality import Dimensionality
 from profiling.distribution import Distribution
 from profiling.sparsity import Sparsity
@@ -24,6 +25,7 @@ from preparation.mv_and_outliers import MV_out
 from preparation.data_balancing import Balancing
 from preparation.scaling_transf import Scaling
 from preparation.methodology import Methodology
+
 
 
 # ------------------------------------------------- #
@@ -411,7 +413,6 @@ testData.to_csv(f"data/{file_tag}_test.csv", index=False)
 
 classificationKNN = KNN(file_tag,"data/credit_train.csv","data/credit_test.csv",target)
 
-
 # Chama a função naive_Bayes_study para obter o melhor modelo e parâmetros
 best_model, best_params = classificationKNN.full_metrics_KNN_study()
 
@@ -420,3 +421,14 @@ classificationKNN.performance_analysis(best_model, best_params)
 
 classificationKNN.overfitting_study(best_params, "accuracy")
 
+# -------------------- #
+# -------- DT -------- #
+# -------------------- #
+
+decisionTrees = decisionTrees(file_tag,"data/credit_train.csv","data/credit_test.csv",target)
+
+best_model, best_params = decisionTrees.full_metrics_DT_study()
+
+decisionTrees.performance_analysis(best_model, best_params)
+
+# TODO resto decision trees
