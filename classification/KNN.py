@@ -35,7 +35,7 @@ class KNN:
         for d in dist:
             y_tst_values: list = []
             for k in kvalues:
-                clf = KNeighborsClassifier(n_neighbors=k, metric=d)
+                clf = KNeighborsClassifier(n_neighbors=k, metric=d, n_jobs=-1)
                 clf.fit(trnX, trnY)
                 prdY: array = clf.predict(tstX)
                 eval: float = CLASS_EVAL_METRICS[metric](tstY, prdY)
@@ -56,9 +56,9 @@ class KNN:
         print("estou aqui 4")
         eval_metric = 'accuracy'
         figure()
-        best_model, params = self.knn_study(self.trnX, self.trnY, self.tstX, self.tstY, k_max=5, metric=eval_metric)
-        savefig(f'images/{self.file_tag}_knn_{eval_metric}_study.png')
-        show()
+        best_model, params = self.knn_study(self.trnX, self.trnY, self.tstX, self.tstY, 25, metric=eval_metric)
+        savefig(f'images/classification/{self.file_tag}_knn_{eval_metric}_study.png')
+        #show()
         return best_model, params
 
     def performance_analysis(self, best_model, params):
@@ -66,8 +66,8 @@ class KNN:
         prd_tst: array = best_model.predict(self.tstX)
         figure()
         plot_evaluation_results(params, self.trnY, prd_trn, self.tstY, prd_tst, self.labels)
-        savefig(f'images/{self.file_tag}_knn_{params["name"]}_best_{params["metric"]}_eval.png')
-        show()
+        savefig(f'images/classification/{self.file_tag}_knn_{params["name"]}_best_{params["metric"]}_eval.png')
+        #show()
 
     def overfitting_study(self, params, eval_metric):
         distance: Literal["manhattan", "euclidean", "chebyshev"] = params["params"][1]
@@ -93,5 +93,5 @@ class KNN:
             ylabel=str(eval_metric),
             percentage=True,
         )
-        savefig(f"images/{self.file_tag}_knn_overfitting.png")
-        show()
+        savefig(f"images/classification/{self.file_tag}_knn_overfitting.png")
+        #show()

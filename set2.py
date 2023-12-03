@@ -367,13 +367,14 @@ testData.to_csv(f"data/{file_tag}_test.csv", index=False)
 # ------ NBayes ------ #
 # -------------------- #
 
-# classificationNB = NBayes(file_tag,"data/credit_train.csv","data/credit_test.csv",target)
-#
-# # Chama a função naive_Bayes_study para obter o melhor modelo e parâmetros
-# best_model, best_params = classificationNB.naive_Bayes_study()
-#
-# # Chama a função performance_analysis com os resultados obtidos
-# classificationNB.performance_analysis(best_model, best_params)
+classificationNB = NBayes(file_tag,"data/credit_train.csv","data/credit_test.csv",target)
+
+# Chama a função naive_Bayes_study para obter o melhor modelo e parâmetros
+best_model, best_params = classificationNB.naive_Bayes_study()
+classificationNB.full_metrics_NB_study()
+
+# Chama a função performance_analysis com os resultados obtidos
+classificationNB.performance_analysis(best_model, best_params)
 
 # -------------------- #
 # -------- KNN ------- #
@@ -397,6 +398,15 @@ decisionTrees = decisionTrees(file_tag,"data/credit_train.csv","data/credit_test
 
 best_model, best_params = decisionTrees.full_metrics_DT_study()
 
+#DT best with gini and d=24
+
 decisionTrees.performance_analysis(best_model, best_params)
 
-# TODO resto decision trees
+decisionTrees.variables_importance(best_model, "accuracy")
+
+decisionTrees.simple_tree(best_model)
+
+decisionTrees.tree_importance(best_model, "accuracy")
+
+decisionTrees.overfitting_study("accuracy", best_params)
+

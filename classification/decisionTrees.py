@@ -25,7 +25,7 @@ class decisionTrees:
                                                                                                         target)
 
     def trees_study(
-        trnX: ndarray, trnY: array, tstX: ndarray, tstY: array, d_max: int=10, lag:int=2, metric='accuracy'
+        self, trnX: ndarray, trnY: array, tstX: ndarray, tstY: array, d_max, lag: int = 2, metric='accuracy'
         ) -> tuple:
         criteria: list[Literal['entropy', 'gini']] = ['entropy', 'gini']
         depths: list[int] = [i for i in range(2, d_max+1, lag)]
@@ -47,7 +47,7 @@ class decisionTrees:
                     best_performance = eval
                     best_params['params'] = (c, d)
                     best_model = clf
-                # print(f'DT {c} and d={d}')
+                print(f'DT {c} and d={d}')
             values[c] = y_tst_values
         print(f'DT best with {best_params["params"][0]} and d={best_params["params"][1]}')
         plot_multiline_chart(depths, values, title=f'DT Models ({metric})', xlabel='d', ylabel=metric, percentage=True)
@@ -57,9 +57,9 @@ class decisionTrees:
     def full_metrics_DT_study(self):
         eval_metric = 'accuracy'
         figure()
-        best_model, params = trees_study(self.trnX, self.trnY, self.tstX, self.tstY, d_max=25, metric=eval_metric)
-        savefig(f'images/{self.file_tag}_dt_{eval_metric}_study.png')
-        show()
+        best_model, params = self.trees_study(self.trnX, self.trnY, self.tstX, self.tstY, 25, metric=eval_metric)
+        savefig(f'images/classification/{self.file_tag}_dt_{eval_metric}_study.png')
+        #show()
         return best_model, params
     
     def performance_analysis(self, best_model, params):
@@ -68,10 +68,10 @@ class decisionTrees:
         figure()
         plot_evaluation_results(params, self.trnY, prd_trn, self.tstY, prd_tst, self.labels)
         savefig(f'images/classification/{self.file_tag}_dt_{params["name"]}_best_{params["metric"]}_eval.png')
-        show()
+        #show()
 
     def variables_importance(self, best_model, eval_metric):
-        tree_filename: str = f"images/{self.file_tag}_dt_{eval_metric}_best_tree"
+        tree_filename: str = f"images/classification/{self.file_tag}_dt_{eval_metric}_best_tree"
         max_depth2show = 3
         st_labels: list[str] = [str(value) for value in self.labels]
 
@@ -79,7 +79,7 @@ class decisionTrees:
             best_model,
             out_file=tree_filename + ".dot",
             max_depth=max_depth2show,
-            feature_names=vars,
+            feature_names=self.vars,
             class_names=st_labels,
             filled=True,
             rounded=True,
@@ -89,37 +89,38 @@ class decisionTrees:
         )
         # Convert to png
         call(
-            ["dot", "-Tpng", tree_filename + ".dot", "-o", tree_filename + ".png", "-Gdpi=600"]
+            ["C:\\Program Files\\Graphviz\\bin\\dot.exe", "-Tpng", tree_filename + ".dot", "-o", tree_filename + ".png", "-Gdpi=600"]
         )
 
         figure(figsize=(14, 6))
         imshow(imread(tree_filename + ".png"))
         axis("off")
-        show()
+        #show()
 
-    def simple_tree(self, best_model, tree_filename):
+    def simple_tree(self, best_model):
         figure(figsize=(14, 6))
         max_depth2show = 3
         st_labels: list[str] = [str(value) for value in self.labels]
         plot_tree(
             best_model,
             max_depth=max_depth2show,
-            feature_names=vars,
+            feature_names=self.vars,
             class_names=st_labels,
             filled=True,
             rounded=True,
             impurity=False,
             precision=2,
         )
-        savefig(tree_filename + ".png")
+        savefig(f"images/classification/{self.file_tag}_simple_tree.png")
+        #show()
 
     def tree_importance(self, best_model, eval_metric):
         importances = best_model.feature_importances_
         indices: list[int] = argsort(importances)[::-1]
         elems: list[str] = []
         imp_values: list[float] = []
-        for f in range(len(vars)):
-            elems += [vars[indices[f]]]
+        for f in range(len(self.vars)):
+            elems += [self.vars[indices[f]]]
             imp_values += [importances[indices[f]]]
             print(f"{f+1}. {elems[f]} ({importances[indices[f]]})")
 
@@ -132,7 +133,8 @@ class decisionTrees:
             ylabel="variables",
             percentage=True,
         )
-        savefig(f"images/{self.file_tag}_dt_{eval_metric}_vars_ranking.png")
+        savefig(f"images/classification/{self.file_tag}_dt_{eval_metric}_vars_ranking.png")
+        #show()
 
     def overfitting_study(self, eval_metric, params):
         crit: Literal["entropy", "gini"] = params["params"][0]
@@ -158,4 +160,5 @@ class decisionTrees:
             ylabel=str(eval_metric),
             percentage=True,
         )
-        savefig(f"images/{self.file_tag}_dt_{eval_metric}_overfitting.png")
+        savefig(f"images/classification/{self.file_tag}_dt_{eval_metric}_overfitting.png")
+        #show()
