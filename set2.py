@@ -1,16 +1,15 @@
 '''
 file:       set2.py
 '''
-import os
 
+# Imports
+import os
 import numpy as np
 import pandas as pd
-# Imports
 from pandas import read_csv, DataFrame
 from numpy import array, ndarray
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
-
 from auxiliar.dslabs_functions import dummify, evaluate_approach, mvi_by_dropping, mvi_by_filling, count_outliers, \
     plot_evaluation_results
 from classification.KNN import KNN
@@ -27,20 +26,19 @@ from preparation.scaling_transf import Scaling
 from preparation.methodology import Methodology
 
 
-
 # ------------------------------------------------- #
 #                     DATASET 2                     #
 # ------------------------------------------------- #
-
 
 # Load Data
 filename = "data/class_credit_score.csv"
 file_tag = "credit"
 data: DataFrame = read_csv(filename, na_values="")
 data = data.drop(['ID', 'SSN', 'Name'], axis=1)
-print("Fiz agora o primeiro drop")
+print("Drop of ID, SSN and Name")
 mv_out = MV_out("data/class_credit_score.csv", file_tag, data, 2)
 data = mv_out.data_correction()
+print("Data Cleaned")
 
 
 # ------------------------------------------ #
@@ -74,13 +72,13 @@ print('Set2 Columns Names: ', data.columns)
 #dim.num_records_variables()
 
 # Missing Values
-dim.missing_values()
+# dim.missing_values()
 
 # Variables Type
 print('Set2 Data Types 2:\n', data.dtypes, '\n')
 
 # Number of variables per type
-#dim.num_variables_per_type()
+# dim.num_variables_per_type()
 
 # ------------------ #
 # -- Distribution -- #
@@ -101,49 +99,39 @@ print('Set2 Data Types 2:\n', data.dtypes, '\n')
 #
 # print('Numeric Variables: ', distribution.get_numeric_variables(), '\n')
 # print('Symbolic Variables: ', distribution.get_symbolic_variables(), '\n')
-#
-# valor_monthly_balance = data.loc[5545, 'MonthlyBalance']
-# print("Valor da coluna 'MonthlyBalance' para a linha 5545:", valor_monthly_balance)
-#
-# linha_com_valor_especifico = data[data['MonthlyBalance'] == -3.33333E+26]
-#
-# # Exibir a linha encontrada
-# print("Linha com o valor específico na coluna 'MonthlyBalance':")
-# print(linha_com_valor_especifico)
 
 # data['MonthlyBalance'] = data['MonthlyBalance'].replace(-3.33333E+26, "")
 
 # Global Boxplot
-#distribution.global_boxplot2()
+# distribution.global_boxplot2()
 
 # Single Variable Boxplots
-#distribution.boxplots()
+# distribution.boxplots()
 
 # Outliers Study
-#distribution.num_standart_outliers_per_variable()
+# distribution.num_standart_outliers_per_variable()
 
 NR_STDEV: int = 2
 IQR_FACTOR: float = 1.5
-#distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR)
+# distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR)
 
 # Histograms - numeric
 # distribution.histogram_numeric()
 
 # Histograms - symbolic
-#distribution.histograms_symbolic_variables()
+# distribution.histograms_symbolic_variables()
 
 # Distribution for numeric
-#distribution.histograms_numeric_with_distributions()
-
+# distribution.histograms_numeric_with_distributions()
 
 # Class Distribution
-#distribution.class_distribution(target='Credit_Score')
+# distribution.class_distribution(target='Credit_Score')
 
 # ----------------- #
 # -- Granularity -- #
 # ----------------- #
 
-# Symbolic variables  -
+# Symbolic variables
 
 granularity = Granularity(filename, file_tag, data)
 
@@ -159,16 +147,12 @@ granularity = Granularity(filename, file_tag, data)
 sparsity = Sparsity(filename, file_tag, data)
 
 # Scatter plots to project the data along two of its defining variables
-#sparsity.analyse_property_sparsity("Credit_Score")
-print()
+# sparsity.analyse_property_sparsity("Credit_Score")
 
-# print(data["Payment_Behaviour"].unique())
-#
 # encoded_data = sparsity.encode_credit()
-# print(encoded_data)
 # print('Encoded Data Shape: ', encoded_data.shape)
-#sparsity.correlation_analysis(encoded_data)
-#sparsity.correlation_analysis_num(data)
+# sparsity.correlation_analysis(encoded_data)
+# sparsity.correlation_analysis_num(data)
 
 
 # ------------------------------------------ #
@@ -182,9 +166,6 @@ filename = "cleaned_data.csv"
 encoding = Encoding(filename, file_tag, data)
 
 def create_loan_type_columns():
-    print("vou fazer a correção da data")
-    print("fiz a correção da data")
-
     # Preencher os valores ausentes na coluna 'Type_of_Loan' com uma string vazia
     data['Type_of_Loan'] = data['Type_of_Loan'].fillna('').astype(str).str.replace('and ', '').str.replace(' ', '').str.split(',')
 
@@ -206,19 +187,14 @@ def create_loan_type_columns():
         if loan_type != '':
             data[loan_type] = data['Type_of_Loan'].apply(lambda x: 1 if loan_type in x else 0)
 
-print("vou às colunas")
 create_loan_type_columns()
-print("sai das colunas")
 data.drop('Type_of_Loan', axis=1, inplace=True)
-print("type of loan apagado")
 
-#encoded_data1 = encoding.create_loan_type_columns()
-print("vou dar encode")
 encoded_data = encoding.encode_credit()
-print("encode feito")
+print("Encode done")
 target = "Credit_Score"
 encoded_data.to_csv("encoded.csv", index=False)
-print("encode to csv")
+print("Encode to .csv")
 
 
 # --------------------- #
@@ -228,37 +204,32 @@ filename = "encoded.csv"
 mv_out = MV_out(filename, file_tag, encoded_data, 2)
 methodology = Methodology(filename, file_tag, encoded_data)
 
-#
-# #mv_out.read_mv()
-#
-# # Primeira approach
-# print("EXEMPLO DA PROF")
+# # First approach
+# print("Prof Filling")
 # df1: DataFrame = mvi_by_filling(encoded_data, strategy="frequent")
-# # Salvar o dataset modificado
 # df1.to_csv("DF_1_PROF.csv", index=False)
 #
 # def count_missing_values(data):
 #     missing_values = data.isnull().sum()
 #     return missing_values
 #
-# # Chame a função para obter o número de valores ausentes em cada coluna
+# # Chama a função para obter o número de valores ausentes em cada coluna
 # resultado1 = count_missing_values(df1)
-# print("Resultado MV PROF:\n",resultado1)
+# print("Result MV PROF:\n", resultado1)
 #
-# # Dividir os dados em conjuntos de treino e teste
+# # Divide os dados em conjuntos de treino e teste
 # train_data, test_data = train_test_split(df1, test_size=0.3, random_state=42)
 # methodology.evaluate_approach(train_data, test_data, 1, target=target)
 #
-# # Segunda approach
-# print("NOSSO")
+# # Second approach
+# print("Our filling")
 # df2: DataFrame = mv_out.our_mv(encoded_data)
-# # Salvar o dataset modificado
 # df2.to_csv("DF_2_NOSSO.csv", index=False)
 #
 # resultado2 = count_missing_values(df2)
-# print("Resultado MV NOSSO:\n",resultado2)
+# print("Result MV Our:\n", resultado2)
 #
-# # # Dividir os dados em conjuntos de treino e teste
+# # Divide os dados em conjuntos de treino e teste
 # train_data, test_data = train_test_split(df2, test_size=0.3, random_state=42)
 # methodology.evaluate_approach(train_data, test_data, 2, target=target)
 
@@ -267,10 +238,10 @@ methodology = Methodology(filename, file_tag, encoded_data)
 # --------------------- #
 # ----- Outliers ------ #
 # --------------------- #
+
 best_approach: DataFrame = read_csv("DF_2_NOSSO.csv", na_values="")
 filename = "DF_2_NOSSO.csv"
 dataOutliers = MV_out(filename, file_tag, best_approach, 2)
-
 
 outliers1 = dataOutliers.median_outliers()
 # outliers2 = dataOutliers.truncate_outliers()
@@ -299,28 +270,28 @@ outliers1 = dataOutliers.median_outliers()
 # # Salvar o DataFrame corrigido em um arquivo CSV
 # df_corrigido.to_csv('dados_corrigidos.csv', index=False)
 
-#Eval Outliers1
+# # Eval Outliers1
 # train_data_1, test_data_1 = train_test_split(outliers1, test_size=0.3, random_state=42)
 # eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 3, target)
 
 # print("EVAL 1:", eval1)
-# #Eval Outliers2
+# # Eval Outliers2
 # train_data_2, test_data_2 = train_test_split(outliers2, test_size=0.3, random_state=42)
 # eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 4, target)
 #
 # print("EVAL 2:", eval2)
 
-# #Eval Outliers3
+# # Eval Outliers3
 # train_data_3, test_data_3 = train_test_split(outliers3, test_size=0.3, random_state=42)
 # eval3 = methodology.evaluate_approach(train_data_3, test_data_3, 5, target)
 # print("EVAL 3:", eval3)
 #
-# #Eval Outliers4
+# # Eval Outliers4
 # train_data_4, test_data_4 = train_test_split(outliers4, test_size=0.3, random_state=42)
 # eval4 = methodology.evaluate_approach(train_data_4, test_data_4, 6, target)
 # print("EVAL 4:", eval4)
 
-# #Eval Outliers5
+# # Eval Outliers5
 # train_data_5, test_data_5 = train_test_split(df_corrigido, test_size=0.3, random_state=42)
 # eval5 = methodology.evaluate_approach(train_data_5, test_data_5, 7, target)
 # print("EVAL 5:", eval5)
@@ -333,19 +304,16 @@ outliers1 = dataOutliers.median_outliers()
 # ---------------------------- #
 dataScaling = Scaling(filename, file_tag, outliers1, target)
 
-
 scaling1 = dataScaling.standard_scaler()
 # scaling2 = dataScaling.min_max_scaler()
 # dataScaling.scaler_plot(scaling1, scaling2)
 
-# #Eval Scaling1
+# #E val Scaling1
 # train_data_1, test_data_1 = train_test_split(scaling1, test_size=0.3, random_state=42)
-# print("AAAAAAAAA " + str(test_data_1.dtypes))
-# print(test_data_1)
 # eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 8, target)
 # print(eval1)
 #
-# #Eval Scaling2
+# # Eval Scaling2
 # train_data_2, test_data_2 = train_test_split(scaling2, test_size=0.3, random_state=42)
 # eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 9, target)
 # print(eval2)
@@ -362,17 +330,17 @@ dataBalancing = Balancing(filename, file_tag, best_scaling, target)
 oversampling = dataBalancing.oversampling()
 # smote = dataBalancing.SMOTE()
 
-# #Eval undersampling
+# # Eval undersampling
 # train_data_1, test_data_1 = train_test_split(undersampling, test_size=0.3, random_state=42)
 # eval1 = methodology.evaluate_approach(train_data_1, test_data_1, 10, target = "Credit_Score")
 # print(eval1)
 
-# #Eval oversampling
+# # Eval oversampling
 # train_data_2, test_data_2 = train_test_split(oversampling, test_size=0.3, random_state=42)
 # eval2 = methodology.evaluate_approach(train_data_2, test_data_2, 11, target = "Credit_Score")
 # print(eval2)
 
-# #Eval smote
+# # Eval smote
 # train_data_3, test_data_3 = train_test_split(smote, test_size=0.3, random_state=42)
 # eval3 = methodology.evaluate_approach(train_data_3, test_data_3, 12, target = "Credit_Score")
 # print(eval3)
@@ -413,7 +381,7 @@ testData.to_csv(f"data/{file_tag}_test.csv", index=False)
 
 classificationKNN = KNN(file_tag,"data/credit_train.csv","data/credit_test.csv",target)
 
-# Chama a função naive_Bayes_study para obter o melhor modelo e parâmetros
+# Chama a função full_metrics_KNN_study para obter o melhor modelo e parâmetros
 best_model, best_params = classificationKNN.full_metrics_KNN_study()
 
 # Chama a função performance_analysis com os resultados obtidos
