@@ -58,7 +58,7 @@ class NBayes:
             figure()
             best_model, params = self.naive_Bayes_study(eval_metric)
             plt.tight_layout()
-            savefig(f"images/classification/{self.file_tag}_nb_{eval_metric}_study.png")
+            savefig(f"images/classification/NB/{self.file_tag}_nb_{eval_metric}_study.png")
             #show()
             #return best_model, params
 
@@ -67,5 +67,5 @@ class NBayes:
         prd_tst: array = best_model.predict(self.tstX)
         figure()
         plot_evaluation_results(params, self.trnY, prd_trn, self.tstY, prd_tst, self.labels)
-        savefig(f'images/classification/{self.file_tag}_{params["name"]}_best_{params["metric"]}_eval.png')
+        savefig(f'images/classification/NB/{self.file_tag}_{params["name"]}_best_{params["metric"]}_eval.png')
         #show()

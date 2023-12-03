@@ -58,7 +58,7 @@ class decisionTrees:
         eval_metric = 'accuracy'
         figure()
         best_model, params = self.trees_study(self.trnX, self.trnY, self.tstX, self.tstY, 25, metric=eval_metric)
-        savefig(f'images/classification/{self.file_tag}_dt_{eval_metric}_study.png')
+        savefig(f'images/classification/DT/{self.file_tag}_dt_{eval_metric}_study.png')
         #show()
         return best_model, params
     
@@ -67,11 +67,11 @@ class decisionTrees:
         prd_tst: array = best_model.predict(self.tstX)
         figure()
         plot_evaluation_results(params, self.trnY, prd_trn, self.tstY, prd_tst, self.labels)
-        savefig(f'images/classification/{self.file_tag}_dt_{params["name"]}_best_{params["metric"]}_eval.png')
+        savefig(f'images/classification/DT/{self.file_tag}_dt_{params["name"]}_best_{params["metric"]}_eval.png')
         #show()
 
     def variables_importance(self, best_model, eval_metric):
-        tree_filename: str = f"images/classification/{self.file_tag}_dt_{eval_metric}_best_tree"
+        tree_filename: str = f"images/classification/DT/{self.file_tag}_dt_{eval_metric}_best_tree"
         max_depth2show = 3
         st_labels: list[str] = [str(value) for value in self.labels]
 
@@ -111,7 +111,7 @@ class decisionTrees:
             impurity=False,
             precision=2,
         )
-        savefig(f"images/classification/{self.file_tag}_simple_tree.png")
+        savefig(f"images/classification/DT/{self.file_tag}_simple_tree.png")
         #show()
 
     def tree_importance(self, best_model, eval_metric):
@@ -133,7 +133,7 @@ class decisionTrees:
             ylabel="variables",
             percentage=True,
         )
-        savefig(f"images/classification/{self.file_tag}_dt_{eval_metric}_vars_ranking.png")
+        savefig(f"images/classification/DT/{self.file_tag}_dt_{eval_metric}_vars_ranking.png")
         #show()
 
     def overfitting_study(self, eval_metric, params):
@@ -160,5 +160,5 @@ class decisionTrees:
             ylabel=str(eval_metric),
             percentage=True,
         )
-        savefig(f"images/classification/{self.file_tag}_dt_{eval_metric}_overfitting.png")
+        savefig(f"images/classification/DT/{self.file_tag}_dt_{eval_metric}_overfitting.png")
         #show()

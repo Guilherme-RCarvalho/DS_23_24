@@ -57,7 +57,7 @@ class KNN:
         eval_metric = 'accuracy'
         figure()
         best_model, params = self.knn_study(self.trnX, self.trnY, self.tstX, self.tstY, 25, metric=eval_metric)
-        savefig(f'images/classification/{self.file_tag}_knn_{eval_metric}_study.png')
+        savefig(f'images/classification/KNN/{self.file_tag}_knn_{eval_metric}_study.png')
         #show()
         return best_model, params
 
@@ -66,7 +66,7 @@ class KNN:
         prd_tst: array = best_model.predict(self.tstX)
         figure()
         plot_evaluation_results(params, self.trnY, prd_trn, self.tstY, prd_tst, self.labels)
-        savefig(f'images/classification/{self.file_tag}_knn_{params["name"]}_best_{params["metric"]}_eval.png')
+        savefig(f'images/classification/KNN/{self.file_tag}_knn_{params["name"]}_best_{params["metric"]}_eval.png')
         #show()
 
     def overfitting_study(self, params, eval_metric):
@@ -93,5 +93,5 @@ class KNN:
             ylabel=str(eval_metric),
             percentage=True,
         )
-        savefig(f"images/classification/{self.file_tag}_knn_overfitting.png")
+        savefig(f"images/classification/KNN/{self.file_tag}_knn_overfitting.png")
         #show()
