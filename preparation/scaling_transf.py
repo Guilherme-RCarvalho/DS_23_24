@@ -40,4 +40,4 @@ class Scaling:
         df_zscore.boxplot(ax=axs[0, 1])
         axs[0, 2].set_title("MinMax normalization")
         df_minmax.boxplot(ax=axs[0, 2])
-        savefig(f"images/{self.file_tag}_scaling_boxplot.png")
+        savefig(f"images/preparation/{self.file_tag}_scaling_boxplot.png")

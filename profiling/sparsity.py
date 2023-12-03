@@ -34,7 +34,7 @@ class Sparsity:
                 for j in range(i + 1, len(vars)):
                     var2: str = vars[j]
                     plot_multi_scatters_chart(clean_data, var1, var2, target_variable, ax=axs[i, j - 1])
-            savefig(f"images/{self.file_tag}_sparsity_study.png")
+            savefig(f"images/profiling/{self.file_tag}_sparsity_study.png")
         else:
             print("Sparsity class: there are no variables.")
 
@@ -58,7 +58,7 @@ class Sparsity:
             #vmin=0,
             #vmax=1,
         )
-        savefig(f"images/{self.file_tag}_correlation_analysis.png")
+        savefig(f"images/profiling/{self.file_tag}_correlation_analysis.png")
         show()
 
 

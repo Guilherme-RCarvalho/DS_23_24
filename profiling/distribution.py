@@ -44,7 +44,7 @@ class Distribution():
         numeric = self.get_numeric_variables()
         if [] != numeric:
             self.data[numeric].boxplot(rot=45)
-            savefig(f"images/{self.file_tag}_global_boxplot.png")
+            savefig(f"images/profiling/{self.file_tag}_global_boxplot.png")
             show()
         else:
             print("There are no numeric variables.")
@@ -63,7 +63,7 @@ class Distribution():
             ax.set_title(f"Global Boxplot for Numeric Variables")
             ax.set_ylabel("Values")
             ax.set_xlabel("Variables")
-            savefig(f"images/{self.file_tag}_global_boxplot.png")
+            savefig(f"images/profiling/{self.file_tag}_global_boxplot.png")
             show()
         else:
             print("There are no numeric variables.")
@@ -78,7 +78,7 @@ class Distribution():
         if [] != numeric:
             fig, ax = subplots(figsize=(12, HEIGHT))
             self.data_temp[numeric].boxplot(ax=ax, rot=45)
-            savefig(f"images/{self.file_tag}_global_boxplot3.png")
+            savefig(f"images/profiling/{self.file_tag}_global_boxplot3.png")
             show()
         else:
             print("There are no numeric variables.")
@@ -99,7 +99,7 @@ class Distribution():
                 axs[i, j].set_title("Boxplot for %s" % numeric[n])
                 axs[i, j].boxplot(self.data[numeric[n]].dropna().values)
                 i, j = (i + 1, 0) if (n + 1) % cols == 0 else (i, j + 1)
-            savefig(f"images/{self.file_tag}_single_boxplots.png")
+            savefig(f"images/profiling/{self.file_tag}_single_boxplots.png")
             show()
         else:
             print("There are no numeric variables.")
@@ -120,7 +120,7 @@ class Distribution():
                 percentage=False,
             )
             xticks(rotation=45, ha="right")
-            savefig(f"images/{self.file_tag}_outliers_standard.png")
+            savefig(f"images/profiling/{self.file_tag}_outliers_standard.png")
             show()
         else:
             print("There are no numeric variables.")
@@ -139,7 +139,7 @@ class Distribution():
                 percentage=False,
             )
             xticks(rotation=45, ha="right")
-            savefig(f"images/{self.file_tag}_outliers.png")
+            savefig(f"images/profiling/{self.file_tag}_outliers.png")
             show()
         else:
             print("There are no numeric variables.")
@@ -194,7 +194,7 @@ class Distribution():
                 axs[i, j].hist(self.data[numeric[n]].dropna().values, 50)
                 i, j = (i + 1, 0) if (n + 1) % cols == 0 else (i, j + 1)
             plt.tight_layout()
-            savefig(f"images/{self.file_tag}_single_histograms_numeric.png")
+            savefig(f"images/profiling/{self.file_tag}_single_histograms_numeric.png")
         else:
             print("There are no numeric variables.")
 
@@ -219,7 +219,7 @@ class Distribution():
             self.histogram_with_distributions(axs[i, j], self.data[numeric[idx]].dropna(), numeric[idx])
             #i, j = (i + 1, 0) if (idx + 1) % cols == 0 else (i, j + 1)
             plt.tight_layout()
-            savefig(f"images/{self.file_tag}_histogram_numeric_distribution_{idx}.png")
+            savefig(f"images/profiling/{self.file_tag}_histogram_numeric_distribution_{idx}.png")
             show()
         else:
             print("There are no numeric variables.")
@@ -245,7 +245,7 @@ class Distribution():
                 )
                 i, j = (i + 1, 0) if (n + 1) % cols == 0 else (i, j + 1)
             plt.tight_layout()
-            savefig(f"images/{self.file_tag}_histograms_symbolic.png",bbox_inches='tight')
+            savefig(f"images/profiling/{self.file_tag}_histograms_symbolic.png",bbox_inches='tight')
             show()
         else:
             print("There are no symbolic variables.")
@@ -260,5 +260,5 @@ class Distribution():
             values.to_list(),
             title=f"Target distribution (target={target})",
         )
-        savefig(f"images/{self.file_tag}_class_distribution.png")
+        savefig(f"images/profiling/{self.file_tag}_class_distribution.png")
         show()

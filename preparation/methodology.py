@@ -22,7 +22,7 @@ class Methodology:
         plot_multibar_chart(
             ["NB", "KNN"], eval, title=f"{self.file_tag} evaluation", percentage=True
         )
-        savefig(f"images/{self.file_tag}_eval{num}.png")
+        savefig(f"images/preparation/{self.file_tag}_eval{num}.png")
         show()
         return eval
 

@@ -42,5 +42,5 @@ class Granularity:
             )
         # FIXME plt.tight_layout()? not good solution
         plt.tight_layout()
-        savefig(f"images/{self.file_tag}_{property}_granularity.png")
+        savefig(f"images/profiling/{self.file_tag}_{property}_granularity.png")
         show()

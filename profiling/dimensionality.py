@@ -23,7 +23,7 @@ class Dimensionality:
         plot_bar_chart(
             list(values.keys()), list(values.values()), title="Nr of records vs nr variables"
         )
-        savefig(f"images/{self.file_tag}_records_variables.png")        
+        savefig(f"images/profiling/{self.file_tag}_records_variables.png")
 
     def missing_values(self):
         mv: dict[str, int] = {}
@@ -40,7 +40,7 @@ class Dimensionality:
             xlabel="variables",
             ylabel="nr missing values",
         )
-        savefig(f"images/{self.file_tag}_mv.png")
+        savefig(f"images/profiling/{self.file_tag}_mv.png")
 
 
     def num_variables_per_type(self):
@@ -54,5 +54,5 @@ class Dimensionality:
         plot_bar_chart(
             list(counts.keys()), list(counts.values()), title="Nr of variables per type"
         )
-        savefig(f"images/{self.file_tag}_variable_types.png")        
+        savefig(f"images/profiling/{self.file_tag}_variable_types.png")
     
