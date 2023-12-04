@@ -42,6 +42,7 @@ class NBayes:
                 best_model = estimators[clf]
             yvalues.append(eval)
             print(f'NB {clf}')
+        print("Best Model: ", best_model, f"| Metric: {metric}: {best_params[metric]}")
         plot_bar_chart(
             xvalues,
             yvalues,
@@ -56,11 +57,17 @@ class NBayes:
         eval_metrics = ["accuracy", "recall", "precision", "auc", "f1"]
         for eval_metric in eval_metrics:
             figure()
-            best_model, params = self.naive_Bayes_study(eval_metric)
+            self.naive_Bayes_study(eval_metric)
             plt.tight_layout()
             savefig(f"images/classification/NB/{self.file_tag}_nb_{eval_metric}_study.png")
-            #show()
-            #return best_model, params
+            show()
+
+    def specific_metric_naive_Bayes_study(self, eval_metric):
+        figure()
+        best_model, params = self.naive_Bayes_study(eval_metric)
+        savefig(f'images/classification/NB/{self.file_tag}_nb_{eval_metric}_specific_study.png')
+        show()
+        return best_model, params
 
     def performance_analysis(self, best_model, params):
         prd_trn: array = best_model.predict(self.trnX)

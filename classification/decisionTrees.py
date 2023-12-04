@@ -13,6 +13,7 @@ from subprocess import call
 from sklearn.tree import plot_tree
 from numpy import argsort
 from auxiliar.dslabs_functions import plot_horizontal_bar_chart
+import matplotlib.pyplot as plt
 
 
 class decisionTrees:
@@ -25,10 +26,10 @@ class decisionTrees:
                                                                                                         target)
 
     def trees_study(
-        self, trnX: ndarray, trnY: array, tstX: ndarray, tstY: array, d_max, lag: int = 2, metric='accuracy'
-        ) -> tuple:
+            self, trnX: ndarray, trnY: array, tstX: ndarray, tstY: array, d_max, lag: int = 2,
+            metric='accuracy') -> tuple:
         criteria: list[Literal['entropy', 'gini']] = ['entropy', 'gini']
-        depths: list[int] = [i for i in range(2, d_max+1, lag)]
+        depths: list[int] = [i for i in range(2, d_max + 1, lag)]
 
         best_model: DecisionTreeClassifier | None = None
         best_params: dict = {'name': 'DT', 'metric': metric, 'params': ()}
@@ -51,24 +52,32 @@ class decisionTrees:
             values[c] = y_tst_values
         print(f'DT best with {best_params["params"][0]} and d={best_params["params"][1]}')
         plot_multiline_chart(depths, values, title=f'DT Models ({metric})', xlabel='d', ylabel=metric, percentage=True)
-
+        print("Best Model: ", best_model, " | Best params: ", best_params)
         return best_model, best_params
-    
+
     def full_metrics_DT_study(self):
-        eval_metric = 'accuracy'
+        eval_metrics = ["accuracy", "recall", "precision", "auc", "f1"]
+        for eval_metric in eval_metrics:
+            figure()
+            self.trees_study(self.trnX, self.trnY, self.tstX, self.tstY, 25, metric=eval_metric)
+            plt.tight_layout()
+            savefig(f"images/classification/DT/{self.file_tag}_dt_{eval_metric}_study.png")
+            show()
+
+    def specific_metric_DT_study(self, eval_metric):
         figure()
         best_model, params = self.trees_study(self.trnX, self.trnY, self.tstX, self.tstY, 25, metric=eval_metric)
-        savefig(f'images/classification/DT/{self.file_tag}_dt_{eval_metric}_study.png')
-        #show()
+        savefig(f'images/classification/DT/{self.file_tag}_dt_{eval_metric}_specific_study.png')
+        show()
         return best_model, params
-    
+
     def performance_analysis(self, best_model, params):
         prd_trn: array = best_model.predict(self.trnX)
         prd_tst: array = best_model.predict(self.tstX)
         figure()
         plot_evaluation_results(params, self.trnY, prd_trn, self.tstY, prd_tst, self.labels)
         savefig(f'images/classification/DT/{self.file_tag}_dt_{params["name"]}_best_{params["metric"]}_eval.png')
-        #show()
+        # show()
 
     def variables_importance(self, best_model, eval_metric):
         tree_filename: str = f"images/classification/DT/{self.file_tag}_dt_{eval_metric}_best_tree"
@@ -89,13 +98,14 @@ class decisionTrees:
         )
         # Convert to png
         call(
-            ["C:\\Program Files\\Graphviz\\bin\\dot.exe", "-Tpng", tree_filename + ".dot", "-o", tree_filename + ".png", "-Gdpi=600"]
+            ["C:\\Program Files\\Graphviz\\bin\\dot.exe", "-Tpng", tree_filename + ".dot", "-o", tree_filename + ".png",
+             "-Gdpi=600"]
         )
 
         figure(figsize=(14, 6))
         imshow(imread(tree_filename + ".png"))
         axis("off")
-        #show()
+        # show()
 
     def simple_tree(self, best_model):
         figure(figsize=(14, 6))
@@ -112,7 +122,7 @@ class decisionTrees:
             precision=2,
         )
         savefig(f"images/classification/DT/{self.file_tag}_simple_tree.png")
-        #show()
+        # show()
 
     def tree_importance(self, best_model, eval_metric):
         importances = best_model.feature_importances_
@@ -122,7 +132,7 @@ class decisionTrees:
         for f in range(len(self.vars)):
             elems += [self.vars[indices[f]]]
             imp_values += [importances[indices[f]]]
-            print(f"{f+1}. {elems[f]} ({importances[indices[f]]})")
+            print(f"{f + 1}. {elems[f]} ({importances[indices[f]]})")
 
         figure()
         plot_horizontal_bar_chart(
@@ -134,7 +144,7 @@ class decisionTrees:
             percentage=True,
         )
         savefig(f"images/classification/DT/{self.file_tag}_dt_{eval_metric}_vars_ranking.png")
-        #show()
+        # show()
 
     def overfitting_study(self, eval_metric, params):
         crit: Literal["entropy", "gini"] = params["params"][0]
@@ -161,4 +171,4 @@ class decisionTrees:
             percentage=True,
         )
         savefig(f"images/classification/DT/{self.file_tag}_dt_{eval_metric}_overfitting.png")
-        #show()
+        # show()
