@@ -276,7 +276,7 @@ oversampling = dataBalancing.oversampling()
 # ---------------------------------------
 #             Classification  
 # ---------------------------------------
-
+'''
 classificationData = DataFrame = read_csv("data\pos_covid_balance_oversample.csv", na_values="")
 classificationData.drop(classificationData.columns[0], axis=1, inplace=True)
 strategy: array = classificationData[target].to_list()
@@ -300,7 +300,7 @@ classificationNB.full_metrics_NB_study()
 # -------------------- #
 # ------- KNN -------- #
 # -------------------- #
-K_MAX = 25
+K_MAX = 15
 lag   = 2 # step size
 
 classificationKnn = Knn(file_tag,"data/pos_covid_train.csv","data/pos_covid_test.csv",target)
@@ -308,13 +308,13 @@ classificationKnn = Knn(file_tag,"data/pos_covid_train.csv","data/pos_covid_test
 # Testar Parâmetros:
 # --- K = [1 ... 25] 
 classificationKnn.full_metrics_knn_study(K_MAX, lag)
-
+'''
 
 
 # -------------------- #
 # -- Decision Trees -- #
 # -------------------- #
-D_MAX = 10
+D_MAX = 50
 lag   = 2 
 
 classificationDT = DecisionTree(file_tag,"data/pos_covid_train.csv","data/pos_covid_test.csv",target)
@@ -324,5 +324,3 @@ classificationDT = DecisionTree(file_tag,"data/pos_covid_train.csv","data/pos_co
 classificationDT.full_metrics_decision_tree_study(D_MAX, lag)
 
 
-# Overfitting
-#classificationDT.dt_overfitting_study(params, eval_metric, D_MAX)

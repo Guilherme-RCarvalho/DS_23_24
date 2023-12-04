@@ -27,6 +27,7 @@ class DecisionTree:
 
         values: dict = {}
         for c in criteria:
+            print(f"criteria: {c}")
             y_tst_values: list[float] = []
             for d in depths:
                 clf = DecisionTreeClassifier(max_depth=d, criterion=c, min_impurity_decrease=0)
@@ -38,9 +39,9 @@ class DecisionTree:
                     best_performance = eval
                     best_params['params'] = (c, d)
                     best_model = clf
-                # print(f'DT {c} and d={d}')
+                print(f'DT {c} and d={d}')
             values[c] = y_tst_values
-        print(f'DT best with {best_params['params'][0]} and d={best_params['params'][1]}')
+        print(f'DT best with {best_params["params"][0]} and d={best_params["params"][1]}')
         plot_multiline_chart(depths, values, title=f'DT Models ({metric})', xlabel='d', ylabel=metric, percentage=True)
 
         return best_model, best_params
@@ -53,6 +54,11 @@ class DecisionTree:
             best_model, params = self.trees_study(d_max, lag, metric=eval_metric)
             plt.tight_layout()
             savefig(f"images/classification/{self.file_tag}_dt_{eval_metric}_study.png")
+            if eval_metric == "accuracy":
+                self.performance_analysis(best_model,params)
+                self.visualize_tree_simplified(best_model,params)
+                self.visualize_variable_importance(best_model,eval_metric)
+                self.dt_overfitting_study(params,eval_metric)
 
 
     def performance_analysis(self, best_model, params):
@@ -105,7 +111,6 @@ class DecisionTree:
             precision=2,
         )
         savefig(tree_filename + ".png")
-        #show()
 
     def visualize_variable_importance(self, best_model, eval_metric): # passei eval_metric
         importances = best_model.feature_importances_
@@ -127,7 +132,6 @@ class DecisionTree:
             percentage=True,
         )
         savefig(f"images/classification/{self.file_tag}_dt_{eval_metric}_vars_ranking.png")
-        show()
 
 
     def dt_overfitting_study(self, params, eval_metric, d_max=25): # passei eval_metric
@@ -153,4 +157,4 @@ class DecisionTree:
             ylabel=str(eval_metric), # tinha eval_metric pus acc_metric
             percentage=True,
         )
-        savefig(f"images/{self.file_tag}_dt_{eval_metric}_overfitting.png")
+        savefig(f"images/classification/{self.file_tag}_dt_{eval_metric}_overfitting.png")

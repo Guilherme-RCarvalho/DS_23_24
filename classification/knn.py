@@ -25,6 +25,7 @@ class Knn:
 
         values: dict[str, list] = {}
         for d in dist:
+            print(f"new distance: {d}")
             y_tst_values: list = []
             for k in kvalues:
                 clf = KNeighborsClassifier(n_neighbors=k, metric=d, n_jobs=-1)
@@ -36,9 +37,9 @@ class Knn:
                     best_performance: float = eval
                     best_params['params'] = (k, d)
                     best_model = clf
-                # print(f'KNN {d} k={k}')
+                print(f'KNN {d} k={k}')
             values[d] = y_tst_values
-        print(f'KNN best with k={best_params['params'][0]} and {best_params['params'][1]}')
+        print(f'KNN best with k={best_params["params"][0]} and {best_params["params"][1]}')
         plot_multiline_chart(kvalues, values, title=f'KNN Models ({metric})', xlabel='k', ylabel=metric, percentage=True)
 
         return best_model, best_params
@@ -47,6 +48,7 @@ class Knn:
         eval_metrics = ["accuracy","recall","precision","auc","f1"]
         for eval_metric in eval_metrics:
             figure()
+            print(f"new metric: {eval_metric}")
             best_model, params = self.knn_study(k_max, lag, eval_metric)
             plt.tight_layout()
             savefig(f"images/classification/{self.file_tag}_knn_{eval_metric}_study.png")
