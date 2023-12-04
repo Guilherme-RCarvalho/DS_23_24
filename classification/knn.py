@@ -45,13 +45,17 @@ class Knn:
         return best_model, best_params
 
     def full_metrics_knn_study(self, k_max, lag):
-        eval_metrics = ["accuracy","recall","precision","auc","f1"]
+        #eval_metrics = ["accuracy","recall","precision","auc","f1"]
+        eval_metrics = ["accuracy"]
         for eval_metric in eval_metrics:
             figure()
             print(f"new metric: {eval_metric}")
             best_model, params = self.knn_study(k_max, lag, eval_metric)
             plt.tight_layout()
-            savefig(f"images/classification/{self.file_tag}_knn_{eval_metric}_study.png")
+            savefig(f"images/classification/{self.file_tag}_knn-{k_max}_{eval_metric}_study.png")
+            if eval_metric == "accuracy":
+                self.performance_analysis(best_model,params)
+                self.knn_overfitting_study(params)
 
     def performance_analysis(self, best_model, params):
         prd_trn: array = best_model.predict(self.trnX)
