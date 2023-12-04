@@ -55,6 +55,8 @@ class NBayes:
             best_model, params = self.naive_Bayes_study(eval_metric)
             plt.tight_layout()
             savefig(f"images/classification/{self.file_tag}_nb_{eval_metric}_study.png")
+            if eval_metric == "accuracy":
+                self.performance_analysis(best_model,params)
 
     def performance_analysis(self, best_model, params):
         prd_trn: array = best_model.predict(self.trnX)
