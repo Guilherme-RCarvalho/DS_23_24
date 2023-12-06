@@ -81,7 +81,10 @@ class Sparsity:
             "RemovedTeeth": {"None of them": 0, "1 to 5": 1, "6 or more, but not all": 2,"All": 3},
             "ECigaretteUsage": {"Never used e-cigarettes in my entire life": 0, "Not at all (right now)": 1, "Use them some days": 2,"Use them every day": 3},
             "HadDiabetes": {"No": 0, "No, pre-diabetes or borderline diabetes": 1, "Yes": 2, "Yes, but only during pregnancy (female)": 3},
-
+            #ordered by gdp/capita
+            "State" : {'Alabama': 54753, 'Alaska': 86722, 'Arizona': 62365, 'Arkansas': 54259, 'California': 92190, 'Colorado': 82954, 'Connecticut': 88760, 'Delaware': 85977, 'District of Columbia': 242853, 'Florida': 62446, 'Georgia': 69253, 'Hawaii': 68207, 'Idaho': 56496, 'Illinois': 82126, 'Indiana': 66698, 'Iowa': 72221, 'Kansas': 71729, 'Kentucky': 57653, 'Louisiana': 61313, 'Maine': 61008, 'Maryland': 76279, 'Massachusetts': 98609, 'Michigan': 61859, 'Minnesota': 78100, 'Mississippi': 47190, 'Missouri': 63126, 'Montana': 57945, 'Nebraska': 82207, 'Nevada': 67962, 'New Hampshire': 75565, 'New Jersey': 80490, 'New Mexico': 57792, 'New York': 104344, 'North Carolina': 68243, 'North Dakota': 94021, 'Ohio': 69978, 'Oklahoma': 59894, 'Oregon': 70548, 'Pennsylvania': 71160, 'Rhode Island': 65362, 'South Carolina': 56066, 'South Dakota': 74268, 'Tennessee': 67473, 'Texas': 78456, 'Utah': 73424, 'Vermont': 62771, 'Virginia': 74789, 'Washington': 93193, 'West Virginia': 53852, 'Wisconsin': 68192, 'Wyoming': 81586, 'Guam': 35904, 'Puerto Rico': 35208, 'Virgin Islands': 39552},
+            #based on similarities between ethnicities
+            "RaceEthnicityCategory" : {'White only, Non-Hispanic': 1, 'Other race only, Non-Hispanic': 2, 'Multiracial, Non-Hispanic': 3, 'Hispanic': 4, 'Black only, Non-Hispanic': 5},
             # Binary - mudar c a da prof so yes no Yes No wtv
             "Sex": {"Male": 0, "Female": 1}, 
             "PhysicalActivities": {"No": 0, "Yes": 1},
@@ -114,10 +117,10 @@ class Sparsity:
             
         # Dummification (One-hot encoding) (non-ordenal)
         # The dummifying 'State' will create separate binary columns for each unique state, increasing the dimensionality of your dataset.             
-        vars: list[str] = ["State", "RaceEthnicityCategory"]
-        df_encoded = dummify(encoded_data, vars)
+        #vars: list[str] = ["RaceEthnicityCategory"]
+        #df_encoded = dummify(encoded_data, vars)
                 
-        return df_encoded
+        return encoded_data
 
     def encode_credit(self):
         encoded_data = self.data.copy().dropna()

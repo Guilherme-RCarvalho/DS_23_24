@@ -23,8 +23,7 @@ class Scaling:
         df_zscore = DataFrame(transf.transform(self.data), index=self.data.index)
         df_zscore.columns = self.vars
         df_zscore[self.target] = self.target_data
-        print(self.target_data)
-        df_zscore.to_csv(f"data/{self.file_tag}_scaled_zscore.csv", index="id")
+        df_zscore.to_csv(f"data/{self.file_tag}_scaled_zscore.csv", index=False)
         return df_zscore
 
 
@@ -34,7 +33,7 @@ class Scaling:
         df_minmax = DataFrame(transf.transform(self.data), index=self.data.index)
         df_minmax.columns = self.vars
         df_minmax[self.target] = self.target_data
-        df_minmax.to_csv(f"data/{self.file_tag}_scaled_minmax.csv", index="id")
+        df_minmax.to_csv(f"data/{self.file_tag}_scaled_minmax.csv", index=False)
         return df_minmax
         
     def scaler_plot(self, df_zscore, df_minmax):
