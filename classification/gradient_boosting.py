@@ -72,7 +72,7 @@ class GradientBoosting:
 
     
 
-    def full_metrics_random_forests_study(self, nr_max_trees, lag):
+    def full_metrics_gradient_boosting_study(self, nr_max_trees, lag):
         #eval_metrics = ["accuracy","recall","precision","auc","f1"]
         eval_metrics = ["accuracy"]
         for eval_metric in eval_metrics:
