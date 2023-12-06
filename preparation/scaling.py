@@ -12,7 +12,6 @@ class Scaling:
         self.data     = data
         self.target   = target
         self.target_data: Series = self.data.pop(self.target)
-        print(self.target_data)
         self.vars: list[str] = self.data.columns.to_list()
 
     def standard_scaler(self):

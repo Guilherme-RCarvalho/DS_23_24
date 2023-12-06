@@ -157,12 +157,12 @@ distribution.class_distribution("CovidPos")
 
 '''
 
-'''
+
 # ---------------------------------------
 #             Preparation  
 # ---------------------------------------
 
-
+'''
 # -------------------- #
 # ----- Encoding ----- #
 # -------------------- #
@@ -230,6 +230,7 @@ evaluate(eval1, file_tag, "Outliers_truncate")
 {'accuracy': [0.6963073153657683, 0.7029488974448722], 'recall': [0.16870120866865598, 0.07966362238900443], 'precision': [0.4399119704472216, 0.4364266842800528], 'auc': [0.5404188138950101, 0.5187906659840907], 'f1': [0.24387799564270152, 0.13473351515305995]}
 {'accuracy': [0.6963073153657683, 0.7029838991949597], 'recall': [0.16870120866865598, 0.0797239051149893], 'precision': [0.4399119704472216, 0.43675693527080584], 'auc': [0.5404188138950101, 0.5188331373472066], 'f1': [0.24387799564270152, 0.13483547013993322]}
 '''
+
 # -------------------- #
 # ----- Scaling ------ #
 # -------------------- #
@@ -264,24 +265,24 @@ scaling2.drop(scaling2.columns[0], axis=1, inplace=True)
 dataBalancing = Balancing(filename, file_tag, scaling2, target)#TODO change for the best scalling
 
 #dataBalancing.check_balance()
-#undersampling = dataBalancing.undersampling()
+undersampling = dataBalancing.undersampling()
 oversampling = dataBalancing.oversampling()
-#smote = dataBalancing.SMOTE()
+smote = dataBalancing.SMOTE()
 
 #Eval undersampling
-#train_data_1, test_data_1 = train_test_split(undersampling, test_size=0.3, random_state=42)
-#eval1 = evaluate_approach(train_data_1, test_data_1, target, "accuracy")
-#print(eval1)
+train_data_1, test_data_1 = train_test_split(undersampling, test_size=0.3, random_state=42)
+eval1 = evaluate_approach(train_data_1, test_data_1, target, "accuracy")
+print(eval1)
 
 #Eval oversampling
-#train_data_2, test_data_2 = train_test_split(oversampling, test_size=0.3, random_state=42)
-#eval2 = evaluate_approach(train_data_2, test_data_2, target, "accuracy")
-#print(eval2)
+train_data_2, test_data_2 = train_test_split(oversampling, test_size=0.3, random_state=42)
+eval2 = evaluate_approach(train_data_2, test_data_2, target, "accuracy")
+print(eval2)
 
 #Eval smote
-#train_data_3, test_data_3 = train_test_split(smote, test_size=0.3, random_state=42)
-#eval3 = evaluate_approach(train_data_3, test_data_3, target, "accuracy")
-#print(eval3)
+train_data_3, test_data_3 = train_test_split(smote, test_size=0.3, random_state=42)
+eval3 = evaluate_approach(train_data_3, test_data_3, target, "accuracy")
+print(eval3)
 
 
 {'accuracy': [0.5836427315225398, 0.5822147398800487], 'recall': [0.5802304830464898, 0.6072714073984453], 'precision': [0.5812325778693491, 0.5754865709289994], 'auc': [0.5836220842890371, 0.5823663557042427], 'f1': [0.5807310981609021, 0.5909519043974805]}

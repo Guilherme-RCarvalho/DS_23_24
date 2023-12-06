@@ -43,9 +43,8 @@ class Outliers:
                 )
                 median: float = df[var].median()
                 df[var] = df[var].apply(lambda x: median if x > top or x < bottom else x)
-            df.to_csv(f"data/{self.file_tag}_replacing_outliers.csv", index=True)
+            df.to_csv(f"data/{self.file_tag}_replacing_outliers.csv", index=False)
             #print("Data after replacing outliers:", df.shape)
-            print(df.describe())
         else:
             print("There are no numeric variables")
         return df
@@ -58,7 +57,7 @@ class Outliers:
                 df[var] = df[var].apply(
                     lambda x: top if x > top else bottom if x < bottom else x
                 )
-            df.to_csv(f"data/{self.file_tag}_truncate_outliers.csv", index=True)
+            df.to_csv(f"data/{self.file_tag}_truncate_outliers.csv", index=False)
             #print("Data after truncating outliers:", df.shape)
         else:
             print("There are no numeric variables")
