@@ -17,7 +17,7 @@ class NBayes:
     def naive_Bayes_study(self, metric: str = "accuracy") -> tuple:
         estimators: dict = {
             "GaussianNB": GaussianNB(),
-            "MultinomialNB": MultinomialNB(),
+            #"MultinomialNB": MultinomialNB(),
             "BernoulliNB": BernoulliNB(),
         }
 

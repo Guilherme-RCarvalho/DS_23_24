@@ -56,6 +56,7 @@ class DecisionTree:
             savefig(f"images/classification/{self.file_tag}_dt_{eval_metric}_study.png")
             if eval_metric == "accuracy":
                 self.performance_analysis(best_model,params)
+                self.visualize_tree(best_model,params)
                 self.visualize_tree_simplified(best_model,params)
                 self.visualize_variable_importance(best_model,eval_metric)
                 self.dt_overfitting_study(params,eval_metric)

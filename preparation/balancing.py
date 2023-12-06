@@ -2,7 +2,7 @@
 file:       balancing.py
 '''
 
-from pandas import read_csv, concat, DataFrame, Series
+from pandas import concat, DataFrame, Series
 from numpy import ndarray
 from matplotlib.pyplot import figure, show
 from auxiliar.dslabs_functions import plot_bar_chart
@@ -46,23 +46,19 @@ class Balancing:
     def undersampling(self): 
         df_neg_sample: DataFrame = DataFrame(self.df_negatives.sample(len(self.df_positives)))
         df_under: DataFrame = concat([self.df_positives, df_neg_sample], axis=0)
-        df_under.to_csv(f"data/{self.file_tag}_under.csv", index=False)
-
         print("Minority class=", self.positive_class, ":", len(self.df_positives))
         print("Majority class=", self.negative_class, ":", len(df_neg_sample))
         print("Proportion:", round(len(self.df_positives) / len(df_neg_sample), 2), ": 1")
-        df_under.to_csv(f"data/{self.file_tag}_balance_undersample.csv", index=True)
+        df_under.to_csv(f"data/{self.file_tag}_balance_undersample.csv", index=False)
         return df_under
 
     def oversampling(self):
         df_pos_sample: DataFrame = DataFrame(self.df_positives.sample(len(self.df_negatives), replace=True))
         df_over: DataFrame = concat([df_pos_sample, self.df_negatives], axis=0)
-        df_over.to_csv(f"data/{self.file_tag}_over.csv", index=False)
-
         print("Minority class=", self.positive_class, ":", len(df_pos_sample))
         print("Majority class=", self.negative_class, ":", len(self.df_negatives))
         print("Proportion:", round(len(df_pos_sample) / len(self.df_negatives), 2), ": 1")
-        df_over.to_csv(f"data/{self.file_tag}_balance_oversample.csv", index=True)
+        df_over.to_csv(f"data/{self.file_tag}_balance_oversample.csv", index=False)
         return df_over
 
     def SMOTE(self):
@@ -72,8 +68,6 @@ class Balancing:
         smote_X, smote_y = smote.fit_resample(X, y)
         df_smote: DataFrame = concat([DataFrame(smote_X), DataFrame(smote_y)], axis=1)
         df_smote.columns = list(self.original.columns) + [self.target]
-        df_smote.to_csv(f"data/{self.file_tag}_smote.csv", index=False)
-
         smote_target_count: Series = Series(smote_y).value_counts()
         print("Minority class=", self.positive_class, ":", smote_target_count[self.positive_class])
         print("Majority class=", self.negative_class, ":", smote_target_count[self.negative_class])
@@ -82,6 +76,5 @@ class Balancing:
             round(smote_target_count[self.positive_class] / smote_target_count[self.negative_class], 2),
             ": 1",
         )
-        print(df_smote.shape)
-        df_smote.to_csv(f"data/{self.file_tag}_balance_smote.csv", index=True)
+        df_smote.to_csv(f"data/{self.file_tag}_balance_smote.csv", index=False)
         return df_smote

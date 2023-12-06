@@ -45,8 +45,7 @@ class Knn:
         return best_model, best_params
 
     def full_metrics_knn_study(self, k_max, lag):
-        #eval_metrics = ["accuracy","recall","precision","auc","f1"]
-        eval_metrics = ["accuracy"]
+        eval_metrics = ["accuracy","recall","precision","auc","f1"]
         for eval_metric in eval_metrics:
             figure()
             print(f"new metric: {eval_metric}")

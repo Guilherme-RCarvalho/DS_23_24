@@ -229,7 +229,7 @@ evaluate(eval1, file_tag, "Outliers_truncate")
 
 {'accuracy': [0.6963073153657683, 0.7029488974448722], 'recall': [0.16870120866865598, 0.07966362238900443], 'precision': [0.4399119704472216, 0.4364266842800528], 'auc': [0.5404188138950101, 0.5187906659840907], 'f1': [0.24387799564270152, 0.13473351515305995]}
 {'accuracy': [0.6963073153657683, 0.7029838991949597], 'recall': [0.16870120866865598, 0.0797239051149893], 'precision': [0.4399119704472216, 0.43675693527080584], 'auc': [0.5404188138950101, 0.5188331373472066], 'f1': [0.24387799564270152, 0.13483547013993322]}
-'''
+
 
 # -------------------- #
 # ----- Scaling ------ #
@@ -251,58 +251,58 @@ evaluate(eval1, file_tag, "Scaling_standard")
 train_data_2, test_data_2 = train_test_split(scaling2, test_size=0.3, random_state=42)
 eval2 = evaluate_approach(train_data_2, test_data_2, target, "accuracy")
 print(eval2)
-evaluate(eval1, file_tag, "Scaling_min-max")
+evaluate(eval2, file_tag, "Scaling_min-max")
 
 {'accuracy': [0.7096867343367168, 0.7042527126356318], 'recall': [0.0, 0.06700424993218193], 'precision': [0.0, 0.43872113676731794], 'auc': [0.5, 0.5159688647907584], 'f1': [0.0, 0.1162535299654848]}
 {'accuracy': [0.7074641232061603, 0.7047602380119006], 'recall': [0.07236941254483528, 0.06516562678964342], 'precision': [0.47488132911392406, 0.44239819930427665], 'auc': [0.5198166311087369, 0.5157831882268255], 'f1': [0.125598305129077, 0.11359815048339639]}
-'''
+
 # -------------------- #
 # ----  Balancing ---- #
 # -------------------- #
+#TODO RUN THIS ONLY ONE TIME TO HAVE NEW DATASET!
+scaling = DataFrame = read_csv("data\pos_covid_scaled_zscore.csv",na_values="")
+strategy: array = scaling[target].to_list()
+trainData, testData = train_test_split(scaling, test_size=0.3, random_state=42, stratify=strategy)
+trainData.to_csv(f"data/{file_tag}_train.csv", index=False)
+testData.to_csv(f"data/{file_tag}_test.csv", index=False)
 
-scaling2 = DataFrame = read_csv("data\pos_covid_scaled_minmax.csv",na_values="")
-scaling2.drop(scaling2.columns[0], axis=1, inplace=True)
-dataBalancing = Balancing(filename, file_tag, scaling2, target)#TODO change for the best scalling
+trainData = DataFrame = read_csv("data\pos_covid_train.csv")
+testData = DataFrame = read_csv("data\pos_covid_test.csv")
+dataBalancing = Balancing(filename, file_tag, trainData, target)
 
 #dataBalancing.check_balance()
+
 undersampling = dataBalancing.undersampling()
 oversampling = dataBalancing.oversampling()
 smote = dataBalancing.SMOTE()
+oversampling.to_csv(f"data/{file_tag}_train.csv", index=False)
 
 #Eval undersampling
-train_data_1, test_data_1 = train_test_split(undersampling, test_size=0.3, random_state=42)
-eval1 = evaluate_approach(train_data_1, test_data_1, target, "accuracy")
+eval1 = evaluate_approach(undersampling, testData.copy(), target, "accuracy")
 print(eval1)
-
+evaluate(eval1, file_tag, "Balancing_undersampling")
 #Eval oversampling
-train_data_2, test_data_2 = train_test_split(oversampling, test_size=0.3, random_state=42)
-eval2 = evaluate_approach(train_data_2, test_data_2, target, "accuracy")
+eval2 = evaluate_approach(oversampling, testData.copy(), target, "accuracy")
 print(eval2)
-
+evaluate(eval2, file_tag, "Balancing_oversampling")
 #Eval smote
-train_data_3, test_data_3 = train_test_split(smote, test_size=0.3, random_state=42)
-eval3 = evaluate_approach(train_data_3, test_data_3, target, "accuracy")
+eval3 = evaluate_approach(smote, testData.copy(), target, "accuracy")
 print(eval3)
+evaluate(eval3, file_tag, "Balancing_SMOTE")
 
-
-{'accuracy': [0.5836427315225398, 0.5822147398800487], 'recall': [0.5802304830464898, 0.6072714073984453], 'precision': [0.5812325778693491, 0.5754865709289994], 'auc': [0.5836220842890371, 0.5823663557042427], 'f1': [0.5807310981609021, 0.5909519043974805]}
-{'accuracy': [0.5882937426326736, 0.789765047860621], 'recall': [0.5915400927113128, 0.885269750468488], 'precision': [0.5882908288376655, 0.7436027546212396], 'auc': [0.5882899114092272, 0.7896523367090157], 'f1': [0.5899109865250319, 0.8082756912824958]}
-{'accuracy': [0.6261440570747934, 0.7647763109983768], 'recall': [0.6036628316506222, 0.9034614006253012], 'precision': [0.6314993406934354, 0.7069750800205007], 'auc': [0.6261175880316431, 0.7649395966535126], 'f1': [0.6172674143105354, 0.7932317774450448]}
+#{'accuracy': [0.5847917395869794, 0.6007000350017501], 'recall': [0.5995719926455074, 0.4569430629653073], 'precision': [0.3679819449839984, 0.35441262419637637], 'auc': [0.5891587692164815, 0.5582250547801889], 'f1': [0.4560607102735172, 0.3991994944175269]}
+#{'accuracy': [0.5846692334616731, 0.6171946097304866], 'recall': [0.6004762335352805, 0.30732133707086234], 'precision': [0.3680331048752101, 0.3293068923196176], 'auc': [0.5893396296586554, 0.5256382772552072], 'f1': [0.45636138727264397, 0.3179344860381359]}
+#{'accuracy': [0.5851855092754638, 0.5815453272663633], 'recall': [0.5952014950116045, 0.40503963589233505], 'precision': [0.36757752875916755, 0.32365125240847786], 'auc': [0.5881448704112435, 0.5293942862149122], 'f1': [0.4544816396045984, 0.359800259715919]}
 '''
 # ---------------------------------------
 #             Classification  
 # ---------------------------------------
-'''
-classificationData = DataFrame = read_csv("data\pos_covid_balance_oversample.csv", na_values="")
-classificationData.drop(classificationData.columns[0], axis=1, inplace=True)
-strategy: array = classificationData[target].to_list()
 
 #Buscar Dados (treino, teste e validação)    
-trainData, testData = train_test_split(classificationData, test_size=0.3, stratify=strategy)
+
 #trainData, validationData = train_test_split(trainData, test_size=0.3, stratify=strategy)
 
-trainData.to_csv(f"data/{file_tag}_train.csv", index=False)
-testData.to_csv(f"data/{file_tag}_test.csv", index=False)
+
 
 # -------------------- #
 # ------ NBayes ------ #
@@ -312,22 +312,19 @@ classificationNB = NBayes(file_tag,"data/pos_covid_train.csv","data/pos_covid_te
 
 classificationNB.full_metrics_NB_study()
 
-'''
-'''
+
 # -------------------- #
 # ------- KNN -------- #
 # -------------------- #
-K_MAX = 1
-lag   = 1 # step size
+K_MAX = 25
+lag   = 2 # step size
 
 classificationKnn = Knn(file_tag,"data/pos_covid_train.csv","data/pos_covid_test.csv",target)
 
 # Testar Parâmetros:
 # --- K = [1 ... 25] 
 classificationKnn.full_metrics_knn_study(K_MAX, lag)
-'''
 
-'''
 # -------------------- #
 # -- Decision Trees -- #
 # -------------------- #
@@ -339,4 +336,4 @@ classificationDT = DecisionTree(file_tag,"data/pos_covid_train.csv","data/pos_co
 # Testar Parâmetros:
 # --- D = [2, 4, 6, 8, 10] 
 classificationDT.full_metrics_decision_tree_study(D_MAX, lag)
-'''
+
