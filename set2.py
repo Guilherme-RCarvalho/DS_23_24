@@ -15,6 +15,9 @@ from auxiliar.dslabs_functions import dummify, evaluate_approach, mvi_by_droppin
 from classification.KNN import KNN
 from classification.NBayes import NBayes
 from classification.decisionTrees import decisionTrees
+from classification.gradient_boosting import GradientBoosting
+from classification.mlp import MultiLayerPerceptron
+from classification.random_forest import RandomForests
 from profiling.dimensionality import Dimensionality
 from profiling.distribution import Distribution
 from profiling.sparsity import Sparsity
@@ -163,47 +166,47 @@ sparsity = Sparsity(filename, file_tag, data)
 # -------------- #
 # -- Encoding -- #
 # -------------- #
-# filename = "cleaned_data.csv"
-# encoding = Encoding(filename, file_tag, data)
-#
-# def create_loan_type_columns():
-#     # Preencher os valores ausentes na coluna 'Type_of_Loan' com uma string vazia
-#     data['Type_of_Loan'] = data['Type_of_Loan'].fillna('').astype(str).str.replace('and ', '').str.replace(' ', '').str.split(',')
-#
-#     # Adicionar uma coluna 'Without_Loan' e atribuir 1 aos clientes com NumofLoan igual a 0 e célula vazia em 'Type_of_Loan'
-#     data['Without_Loan'] = data.apply(lambda row: 1 if row['NumofLoan'] == 0 and all(pd.isna(item) or (isinstance(item, str) and item == '') for item in row['Type_of_Loan']) else 0, axis=1)
-#
-#     existing_loan_types = list()
-#
-#     # Iterar sobre os tipos de empréstimos e criar uma nova coluna para cada um
-#     for loan_list in data['Type_of_Loan']:
-#         for loan_type in loan_list:
-#             # Verificar se o novo valor já existe na lista
-#             if loan_type not in existing_loan_types:
-#                 # Adicionar o novo valor à lista
-#                 existing_loan_types.append(loan_type)
-#
-#     # Iterar sobre os tipos únicos de empréstimos e criar colunas binárias
-#     for loan_type in existing_loan_types:
-#         if loan_type != '':
-#             data[loan_type] = data['Type_of_Loan'].apply(lambda x: 1 if loan_type in x else 0)
-#
-# create_loan_type_columns()
-# data.drop('Type_of_Loan', axis=1, inplace=True)
-#
-# encoded_data = encoding.encode_credit()
-# print("Encode done")
-# target = "Credit_Score"
-# encoded_data.to_csv("encoded.csv", index=False)
-# print("Encode to .csv")
+filename = "cleaned_data.csv"
+encoding = Encoding(filename, file_tag, data)
+
+def create_loan_type_columns():
+    # Preencher os valores ausentes na coluna 'Type_of_Loan' com uma string vazia
+    data['Type_of_Loan'] = data['Type_of_Loan'].fillna('').astype(str).str.replace('and ', '').str.replace(' ', '').str.split(',')
+
+    # Adicionar uma coluna 'Without_Loan' e atribuir 1 aos clientes com NumofLoan igual a 0 e célula vazia em 'Type_of_Loan'
+    data['Without_Loan'] = data.apply(lambda row: 1 if row['NumofLoan'] == 0 and all(pd.isna(item) or (isinstance(item, str) and item == '') for item in row['Type_of_Loan']) else 0, axis=1)
+
+    existing_loan_types = list()
+
+    # Iterar sobre os tipos de empréstimos e criar uma nova coluna para cada um
+    for loan_list in data['Type_of_Loan']:
+        for loan_type in loan_list:
+            # Verificar se o novo valor já existe na lista
+            if loan_type not in existing_loan_types:
+                # Adicionar o novo valor à lista
+                existing_loan_types.append(loan_type)
+
+    # Iterar sobre os tipos únicos de empréstimos e criar colunas binárias
+    for loan_type in existing_loan_types:
+        if loan_type != '':
+            data[loan_type] = data['Type_of_Loan'].apply(lambda x: 1 if loan_type in x else 0)
+
+create_loan_type_columns()
+data.drop('Type_of_Loan', axis=1, inplace=True)
+
+encoded_data = encoding.encode_credit()
+print("Encode done")
+target = "Credit_Score"
+encoded_data.to_csv("encoded.csv", index=False)
+print("Encode to .csv")
 
 
 # --------------------- #
 # --------- MV -------- #
 # --------------------- #
-# filename = "encoded.csv"
-# mv_out = MV_out(filename, file_tag, encoded_data, 2)
-# methodology = Methodology(filename, file_tag, encoded_data)
+filename = "encoded.csv"
+mv_out = MV_out(filename, file_tag, encoded_data, 2)
+methodology = Methodology(filename, file_tag, encoded_data)
 
 # # First approach
 # print("Prof Filling")
@@ -224,8 +227,8 @@ sparsity = Sparsity(filename, file_tag, data)
 #
 # # Second approach
 # print("Our filling")
-# df2: DataFrame = mv_out.our_mv(encoded_data)
-# df2.to_csv("DF_2_NOSSO.csv", index=False)
+df2: DataFrame = mv_out.our_mv(encoded_data)
+df2.to_csv("DF_2_NOSSO.csv", index=False)
 #
 # resultado2 = count_missing_values(df2)
 # print("Result MV Our:\n", resultado2)
@@ -234,17 +237,17 @@ sparsity = Sparsity(filename, file_tag, data)
 # train_data, test_data = train_test_split(df2, test_size=0.3, random_state=42)
 # methodology.evaluate_approach(train_data, test_data, "our_mv_second_approach", target=target)
 
-#best_approach = df2
+best_approach = df2
 
 # --------------------- #
 # ----- Outliers ------ #
 # --------------------- #
 
-# best_approach: DataFrame = read_csv("DF_2_NOSSO.csv", na_values="")
-# filename = "DF_2_NOSSO.csv"
-# dataOutliers = MV_out(filename, file_tag, best_approach, 2)
+best_approach: DataFrame = read_csv("DF_2_NOSSO.csv", na_values="")
+filename = "DF_2_NOSSO.csv"
+dataOutliers = MV_out(filename, file_tag, best_approach, 2)
 #
-# outliers1 = dataOutliers.median_outliers()
+outliers1 = dataOutliers.median_outliers()
 # outliers2 = dataOutliers.truncate_outliers()
 # outliers3 = dataOutliers.median_outliers_by_customer()
 # outliers4 = dataOutliers.truncate_outliers_by_customer()
@@ -281,9 +284,9 @@ sparsity = Sparsity(filename, file_tag, data)
 # ---------------------------- #
 # -- Scaling Transformation -- #
 # ---------------------------- #
-# dataScaling = Scaling(filename, file_tag, outliers1, target)
+dataScaling = Scaling(filename, file_tag, outliers1, target)
 
-# scaling1 = dataScaling.standard_scaler()
+scaling1 = dataScaling.standard_scaler()
 # scaling2 = dataScaling.min_max_scaler()
 # dataScaling.scaler_plot(scaling1, scaling2)
 
@@ -297,17 +300,25 @@ sparsity = Sparsity(filename, file_tag, data)
 # eval2 = methodology.evaluate_approach(train_data_2, test_data_2, "min_max_scaler", target)
 # print(eval2)
 
-# best_scaling = scaling1
+best_scaling = scaling1
 
 # -------------------- #
 # -- Data Balancing -- #
 # -------------------- #
 # dataBalancing = Balancing(filename, file_tag, best_scaling, target)
 
+strategy: array = best_scaling[target].to_list()
+trainData, testData = train_test_split(best_scaling, test_size=0.3, random_state=42, stratify=strategy)
+trainData.to_csv(f"data/{file_tag}_train.csv", index=False)
+testData.to_csv(f"data/{file_tag}_test.csv", index=False)
+
+dataBalancing = Balancing(filename, file_tag, trainData, target)
+
 # dataBalancing.check_balance()
 # undersampling = dataBalancing.undersampling()
-# oversampling = dataBalancing.oversampling()
+oversampling = dataBalancing.oversampling()
 # smote = dataBalancing.SMOTE()
+
 
 # # Eval undersampling
 # train_data_1, test_data_1 = train_test_split(undersampling, test_size=0.3, random_state=42)
@@ -330,17 +341,15 @@ sparsity = Sparsity(filename, file_tag, data)
 # {'accuracy': [0.7463264635463124, 0.9200272287686024], 'recall': [0.7217264700356941, 0.8764324628968627], 'precision': [0.7589016741567485, 0.9600761434377734], 'auc': [0.74631607406055, 0.9200088170889756], 'f1': [0.7398473796971665, 0.9163495298190478]}
 
 #oversample escolhido
+oversampling.to_csv(f"data/{file_tag}_train.csv", index=False)
 
 # --------------------------------------- #
 #             Classification              #
 # --------------------------------------- #
 
-classificationData = DataFrame = read_csv("data\credit_balance_oversample.csv", na_values="")
-classificationData.drop(classificationData.columns[0], axis=1, inplace=True)
-strategy: array = classificationData[target].to_list()
-trainData, testData = train_test_split(classificationData, test_size=0.3, stratify=strategy)
-trainData.to_csv(f"data/{file_tag}_train.csv", index=False)
-testData.to_csv(f"data/{file_tag}_test.csv", index=False)
+# uso o de teste antes do balancing
+# só o de treino é que vem do balancing
+
 
 # -------------------- #
 # ------ NBayes ------ #
@@ -356,13 +365,13 @@ classificationNB = NBayes(file_tag, "data/credit_train.csv", "data/credit_test.c
 # auc -> Best Model:  BernoulliNB() | Metric: auc: 0.7436035866860712
 # f1 -> Best Model:  BernoulliNB() | Metric: f1: 0.7366601027808463
 
-# NB_metric = "accuracy"
-#
-# # Chama a função naive_Bayes_study para obter o melhor modelo e parâmetros
-# best_model, best_params = classificationNB.specific_metric_naive_Bayes_study(NB_metric)
-#
-# # Chama a função performance_analysis com os resultados obtidos
-# classificationNB.performance_analysis(best_model, best_params)
+NB_metric = "accuracy"
+
+# Chama a função naive_Bayes_study para obter o melhor modelo e parâmetros
+best_model, best_params = classificationNB.specific_metric_naive_Bayes_study(NB_metric)
+
+# Chama a função performance_analysis com os resultados obtidos
+classificationNB.performance_analysis(best_model, best_params)
 
 # -------------------- #
 # -------- KNN ------- #
@@ -370,7 +379,7 @@ classificationNB = NBayes(file_tag, "data/credit_train.csv", "data/credit_test.c
 
 classificationKNN = KNN(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
 
-classificationKNN.full_metrics_KNN_study()
+# classificationKNN.full_metrics_KNN_study()
 
 # KNN_metric = "accuracy"
 #
@@ -397,11 +406,11 @@ decisionTrees = decisionTrees(file_tag, "data/credit_train.csv", "data/credit_te
 # auc -> DT best with gini and d=24
 # f1 -> DT best with gini and d=24
 
-dt_metric = "accuracy"
-
-best_model, best_params = decisionTrees.specific_metric_DT_study(dt_metric)
-
-decisionTrees.performance_analysis(best_model, best_params)
+# dt_metric = "accuracy"
+#
+# best_model, best_params = decisionTrees.specific_metric_DT_study(dt_metric)
+#
+# decisionTrees.performance_analysis(best_model, best_params)
 
 # decisionTrees.variables_importance(best_model, dt_metric)
 #
@@ -410,4 +419,40 @@ decisionTrees.performance_analysis(best_model, best_params)
 # decisionTrees.tree_importance(best_model, dt_metric)
 #
 # decisionTrees.overfitting_study(dt_metric, best_params)
+
+
+# -------------------- #
+# ------- MLP -------- #
+# -------------------- #
+classificationMLP = MultiLayerPerceptron(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
+
+# Testar Parâmetros:
+N_MAX_INTER = 2500 # default
+lag = 2
+
+classificationMLP.full_metrics_mlp_study(N_MAX_INTER, lag) # only accuracy
+
+
+# --------------------- #
+# - Gradient Boosting - #
+# --------------------- #
+classificationGB = GradientBoosting(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
+
+# Testar Parâmetros:
+NR_MAX_TREES_GB = 2500 # default
+lag = 2
+
+classificationGB.full_metrics_gradient_boosting_study(NR_MAX_TREES_GB, lag) # only accuracy
+
+
+# --------------------- #
+# --- Random Forest --- #
+# --------------------- #
+classificationRF = RandomForests(file_tag, "data/credit_train.csv" , "data/credit_test.csv", target)
+
+# Testar Parâmetros:
+NR_MAX_TREES_RF = 2500 # default
+lag = 2
+
+classificationRF.full_metrics_random_forests_study(NR_MAX_TREES_RF, lag) # only accuracy
 

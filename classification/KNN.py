@@ -53,15 +53,18 @@ class KNN:
 
     def full_metrics_KNN_study(self):
         print("full_metrics_KNN_study()")
-        eval_metrics = ["accuracy", "recall", "precision", "auc", "f1"]
+        eval_metrics = ["recall", "precision", "auc", "f1"]
         for eval_metric in eval_metrics:
             print("Metric: ", eval_metric)
             figure()
             best_model, best_params = self.knn_study(self.trnX, self.trnY, self.tstX, self.tstY, 25, metric=eval_metric)
             savefig(f'images/classification/KNN/{self.file_tag}_knn_{eval_metric}_study.png')
             #show()
+            print("study feito")
             self.performance_analysis(best_model, best_params)
+            print("performance_analysis feito")
             self.overfitting_study(best_params, eval_metric)
+            print("overfitting_study feito")
 
     def specific_metric_KNN_study(self, eval_metric):
         figure()
@@ -72,14 +75,17 @@ class KNN:
 
 
     def performance_analysis(self, best_model, params):
+        print("performance_analysis")
         prd_trn: array = best_model.predict(self.trnX)
         prd_tst: array = best_model.predict(self.tstX)
         figure()
         plot_evaluation_results(params, self.trnY, prd_trn, self.tstY, prd_tst, self.labels)
         savefig(f'images/classification/KNN/{self.file_tag}_knn_{params["name"]}_best_{params["metric"]}_eval.png')
+        print("performance_analysis feito 2")
         #show()
 
     def overfitting_study(self, params, eval_metric):
+        print("overfitting_study")
         distance: Literal["manhattan", "euclidean", "chebyshev"] = params["params"][1]
         K_MAX = 25
         kvalues: list[int] = [i for i in range(1, K_MAX, 2)]
@@ -104,4 +110,5 @@ class KNN:
             percentage=True,
         )
         savefig(f"images/classification/KNN/{self.file_tag}_{eval_metric}_knn_overfitting.png")
+        print("overfitting_study feito 2")
         #show()
