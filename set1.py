@@ -305,7 +305,7 @@ evaluate(eval3, file_tag, "Balancing_SMOTE")
 
 #trainData, validationData = train_test_split(trainData, test_size=0.3, stratify=strategy)
 
-
+'''
 
 # -------------------- #
 # ------ NBayes ------ #
@@ -341,7 +341,7 @@ classificationDT = DecisionTree(file_tag,"data/pos_covid_train.csv","data/pos_co
 classificationDT.full_metrics_decision_tree_study(D_MAX, lag)
 
 
-
+'''
 # -------------------- #
 # ------- MLP -------- #
 # -------------------- #

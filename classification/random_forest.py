@@ -76,17 +76,17 @@ class RandomForests:
 
     def full_metrics_random_forests_study(self, nr_max_trees, lag):
         #eval_metrics = ["accuracy","recall","precision","auc","f1"]
-        eval_metrics = ["accuracy"]
+        eval_metrics = ["accuracy","recall"]
         for eval_metric in eval_metrics:
             figure()
             print(f"new metric: {eval_metric}")
             best_model, params = self.random_forests_study(nr_max_trees, lag, eval_metric)
             plt.tight_layout()
             savefig(f"images/classification/{self.file_tag}_rf_{nr_max_trees}_{eval_metric}_study.png")
+            self.performance_analysis(best_model,params)
+            self.visualize_variable_importance(best_model,eval_metric)                
             if eval_metric == "accuracy":
-                self.performance_analysis(best_model,params)
                 self.rf_overfitting_study(params)                
-                self.visualize_variable_importance(best_model,eval_metric)                
                 self.visualize_tree(best_model,params)                                   
 
     def visualize_variable_importance(self, best_model, eval_metric): # passei eval_metric

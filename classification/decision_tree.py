@@ -48,17 +48,18 @@ class DecisionTree:
     
 
     def full_metrics_decision_tree_study(self, d_max, lag):
-        eval_metrics = ["accuracy","recall","precision","auc","f1"]
+        #eval_metrics = ["accuracy","recall","precision","auc","f1"]
+        eval_metrics = ["accuracy","recall"]
         for eval_metric in eval_metrics:
             figure()
             best_model, params = self.trees_study(d_max, lag, metric=eval_metric)
             plt.tight_layout()
             savefig(f"images/classification/{self.file_tag}_dt_{eval_metric}_study.png")
+            self.performance_analysis(best_model,params)
+            #self.visualize_tree(best_model,params)
+            self.visualize_tree_simplified(best_model,params)
+            self.visualize_variable_importance(best_model,eval_metric)
             if eval_metric == "accuracy":
-                self.performance_analysis(best_model,params)
-                self.visualize_tree(best_model,params)
-                self.visualize_tree_simplified(best_model,params)
-                self.visualize_variable_importance(best_model,eval_metric)
                 self.dt_overfitting_study(params,eval_metric)
 
 

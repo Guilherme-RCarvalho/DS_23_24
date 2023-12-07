@@ -76,17 +76,17 @@ class GradientBoosting:
 
     def full_metrics_gradient_boosting_study(self, nr_max_trees, lag):
         #eval_metrics = ["accuracy","recall","precision","auc","f1"]
-        eval_metrics = ["accuracy"]
+        eval_metrics = ["accuracy","recall"]
         for eval_metric in eval_metrics:
             figure()
             print(f"new metric: {eval_metric}")
             best_model, params = self.gradient_boosting_study(nr_max_trees, lag, eval_metric)
             plt.tight_layout()
             savefig(f"images/classification/{self.file_tag}_gb_{nr_max_trees}_{eval_metric}_study.png")
+            self.performance_analysis(best_model,params)
+            self.visualize_variable_importance(best_model,eval_metric)                
             if eval_metric == "accuracy":
-                self.performance_analysis(best_model,params)
                 self.gb_overfitting_study(params)                                
-                self.visualize_variable_importance(best_model,eval_metric)                
                 self.visualize_tree(best_model,params) 
 
         

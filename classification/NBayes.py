@@ -17,7 +17,7 @@ class NBayes:
     def naive_Bayes_study(self, metric: str = "accuracy") -> tuple:
         estimators: dict = {
             "GaussianNB": GaussianNB(),
-            #"MultinomialNB": MultinomialNB(),
+            "MultinomialNB": MultinomialNB(),
             "BernoulliNB": BernoulliNB(),
         }
 
@@ -49,14 +49,15 @@ class NBayes:
         return best_model, best_params
     
     def full_metrics_NB_study(self):
-        eval_metrics = ["accuracy","recall","precision","auc","f1"]
+        #eval_metrics = ["accuracy","recall","precision","auc","f1"]
+        eval_metrics = ["accuracy","recall"]
         for eval_metric in eval_metrics:
             figure()
             best_model, params = self.naive_Bayes_study(eval_metric)
             plt.tight_layout()
             savefig(f"images/classification/{self.file_tag}_nb_{eval_metric}_study.png")
-            if eval_metric == "accuracy":
-                self.performance_analysis(best_model,params)
+            #if eval_metric == "accuracy":
+            self.performance_analysis(best_model,params)
 
     def performance_analysis(self, best_model, params):
         prd_trn: array = best_model.predict(self.trnX)
