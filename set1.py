@@ -255,16 +255,16 @@ evaluate(eval2, file_tag, "Scaling_min-max")
 
 {'accuracy': [0.7096867343367168, 0.7042527126356318], 'recall': [0.0, 0.06700424993218193], 'precision': [0.0, 0.43872113676731794], 'auc': [0.5, 0.5159688647907584], 'f1': [0.0, 0.1162535299654848]}
 {'accuracy': [0.7074641232061603, 0.7047602380119006], 'recall': [0.07236941254483528, 0.06516562678964342], 'precision': [0.47488132911392406, 0.44239819930427665], 'auc': [0.5198166311087369, 0.5157831882268255], 'f1': [0.125598305129077, 0.11359815048339639]}
-
+'''
 # -------------------- #
 # ----  Balancing ---- #
 # -------------------- #
 #TODO RUN THIS ONLY ONE TIME TO HAVE NEW DATASET!
-scaling = DataFrame = read_csv("data\pos_covid_scaled_zscore.csv",na_values="")
-strategy: array = scaling[target].to_list()
-trainData, testData = train_test_split(scaling, test_size=0.3, random_state=42, stratify=strategy)
-trainData.to_csv(f"data/{file_tag}_train.csv", index=False)
-testData.to_csv(f"data/{file_tag}_test.csv", index=False)
+#scaling = DataFrame = read_csv("data\pos_covid_scaled_minmax.csv",na_values="")
+#strategy: array = scaling[target].to_list()
+#trainData, testData = train_test_split(scaling, test_size=0.3, random_state=42, stratify=strategy)
+#trainData.to_csv(f"data/{file_tag}_train.csv", index=False)
+#testData.to_csv(f"data/{file_tag}_test.csv", index=False)
 
 trainData = DataFrame = read_csv("data\pos_covid_train.csv")
 testData = DataFrame = read_csv("data\pos_covid_test.csv")
@@ -273,10 +273,10 @@ dataBalancing = Balancing(filename, file_tag, trainData, target)
 #dataBalancing.check_balance()
 
 undersampling = dataBalancing.undersampling()
-oversampling = dataBalancing.oversampling()
-smote = dataBalancing.SMOTE()
-oversampling.to_csv(f"data/{file_tag}_train.csv", index=False)
-
+#oversampling = dataBalancing.oversampling()
+#smote = dataBalancing.SMOTE()
+undersampling.to_csv(f"data/{file_tag}_train.csv", index=False)
+'''
 #Eval undersampling
 eval1 = evaluate_approach(undersampling, testData.copy(), target, "accuracy")
 print(eval1)
@@ -293,6 +293,7 @@ evaluate(eval3, file_tag, "Balancing_SMOTE")
 #{'accuracy': [0.5847917395869794, 0.6007000350017501], 'recall': [0.5995719926455074, 0.4569430629653073], 'precision': [0.3679819449839984, 0.35441262419637637], 'auc': [0.5891587692164815, 0.5582250547801889], 'f1': [0.4560607102735172, 0.3991994944175269]}
 #{'accuracy': [0.5846692334616731, 0.6171946097304866], 'recall': [0.6004762335352805, 0.30732133707086234], 'precision': [0.3680331048752101, 0.3293068923196176], 'auc': [0.5893396296586554, 0.5256382772552072], 'f1': [0.45636138727264397, 0.3179344860381359]}
 #{'accuracy': [0.5851855092754638, 0.5815453272663633], 'recall': [0.5952014950116045, 0.40503963589233505], 'precision': [0.36757752875916755, 0.32365125240847786], 'auc': [0.5881448704112435, 0.5293942862149122], 'f1': [0.4544816396045984, 0.359800259715919]}
+'''
 '''
 # ---------------------------------------
 #             Classification  
@@ -336,4 +337,4 @@ classificationDT = DecisionTree(file_tag,"data/pos_covid_train.csv","data/pos_co
 # Testar Parâmetros:
 # --- D = [2, 4, 6, 8, 10] 
 classificationDT.full_metrics_decision_tree_study(D_MAX, lag)
-
+'''

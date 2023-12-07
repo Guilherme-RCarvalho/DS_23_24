@@ -89,5 +89,4 @@ class Knn:
             percentage=True,
         )
         savefig(f"images/{self.file_tag}_knn_overfitting.png")
-        show()
 
