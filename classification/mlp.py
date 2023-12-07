@@ -79,9 +79,7 @@ class MultiLayerPerceptron:
             f'MLP best for {best_params["params"][2]} iterations (lr_type={best_params["params"][0]} and lr={best_params["params"][1]}'
         )
 
-        return best_model, best_params
-    
-
+        return best_model, best_params    
 
 
     def full_metrics_mlp_study(self, nr_max_iterations, lag):
@@ -92,7 +90,7 @@ class MultiLayerPerceptron:
             print(f"new metric: {eval_metric}")
             best_model, params = self.mlp_study(nr_max_iterations, lag, eval_metric)
             plt.tight_layout()
-            savefig(f"images/classification/{self.file_tag}_mlp-{nr_max_iterations}_{eval_metric}_study.png")
+            savefig(f"images/classification/{self.file_tag}_mlp_{nr_max_iterations}_{eval_metric}_study.png")
             if eval_metric == "accuracy":
                 self.performance_analysis(best_model,params)
                 self.mlp_overfitting_study(params)                

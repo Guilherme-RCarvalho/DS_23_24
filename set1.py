@@ -9,7 +9,10 @@ from sklearn.model_selection import train_test_split
 from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping, mvi_by_filling, plot_multibar_chart
 from classification.NBayes import NBayes
 from classification.decision_tree import DecisionTree
+from classification.gradient_boosting import GradientBoosting
 from classification.knn import Knn
+from classification.mlp import MultiLayerPerceptron
+from classification.random_forest import RandomForests
 from preparation.balancing import Balancing
 from preparation.missingValues import MissingValues
 from preparation.scaling import Scaling
@@ -337,3 +340,39 @@ classificationDT = DecisionTree(file_tag,"data/pos_covid_train.csv","data/pos_co
 # --- D = [2, 4, 6, 8, 10] 
 classificationDT.full_metrics_decision_tree_study(D_MAX, lag)
 
+
+
+# -------------------- #
+# ------- MLP -------- #
+# -------------------- #
+classificationMLP = MultiLayerPerceptron(file_tag,"data/pos_covid_train.csv","data/pos_covid_test.csv",target)
+
+# Testar Parâmetros:
+N_MAX_INTER = 2500 # default
+lag = 2
+
+classificationMLP.full_metrics_mlp_study(N_MAX_INTER, lag) # only accuracy
+
+
+# -------------------- #
+# - GradientBoosting - #
+# -------------------- #
+classificationGB = GradientBoosting(file_tag,"data/pos_covid_train.csv","data/pos_covid_test.csv",target)
+
+# Testar Parâmetros:
+NR_MAX_TREES_GB = 2500 # default
+lag = 2
+
+classificationGB.full_metrics_gradient_boosting_study(NR_MAX_TREES_GB, lag) # only accuracy
+
+
+# -------------------- #
+# --- RandomForest --- #
+# -------------------- #
+classificationRF = RandomForests(file_tag,"data/pos_covid_train.csv","data/pos_covid_test.csv",target)
+
+# Testar Parâmetros:
+NR_MAX_TREES_RF = 2500 # default
+lag = 2
+
+classificationRF.full_metrics_random_forests_study(NR_MAX_TREES_RF, lag) # only accuracy

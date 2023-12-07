@@ -1,7 +1,9 @@
+from subprocess import call
 from numpy import argsort, array, ndarray, std
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import subplots, figure, savefig, show
+from matplotlib.pyplot import imread, imshow, subplots, figure, savefig, show, axis
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import export_graphviz, plot_tree
 from auxiliar.dslabs_functions import (
     CLASS_EVAL_METRICS,
     DELTA_IMPROVE,
@@ -84,7 +86,8 @@ class RandomForests:
             if eval_metric == "accuracy":
                 self.performance_analysis(best_model,params)
                 self.rf_overfitting_study(params)                
-
+                self.visualize_variable_importance(best_model,eval_metric)                
+                self.visualize_tree(best_model,params)                                   
 
     def visualize_variable_importance(self, best_model, eval_metric): # passei eval_metric
         stdevs: list[float] = list(
@@ -141,4 +144,46 @@ class RandomForests:
         savefig(f"images/classification/{self.file_tag}_rf_{acc_metric}_overfitting.png")
 
 
-        
+    # Iguais aos do Decision Tree
+    def visualize_tree(self, best_model, params, max_depth2show=3):
+        tree_filename = f"images/classification/{self.file_tag}_dt_{params['metric']}_best_tree"
+        st_labels = [str(value) for value in self.labels]
+
+        dot_data = export_graphviz(
+            best_model,
+            out_file=tree_filename + ".dot",
+            max_depth=max_depth2show,
+            feature_names=self.vars,
+            class_names=st_labels,
+            filled=True,
+            rounded=True,
+            impurity=False,
+            special_characters=True,
+            precision=2,
+        )
+        # Convert to png
+        call(
+            ["dot", "-Tpng", tree_filename + ".dot", "-o", tree_filename + ".png", "-Gdpi=600"]
+        )
+
+        figure(figsize=(14, 6))
+        imshow(imread(tree_filename + ".png"))
+        axis("off")
+        #show()
+
+    def visualize_tree_simplified(self, best_model, params, max_depth2show=3):
+        tree_filename = f"images/classification/{self.file_tag}_dt_{params['metric']}_best_tree_simplified"
+        st_labels = [str(value) for value in self.labels]
+
+        figure(figsize=(14, 6))
+        plot_tree(
+            best_model,
+            max_depth=max_depth2show,
+            feature_names=self.vars,
+            class_names=st_labels,
+            filled=True,
+            rounded=True,
+            impurity=False,
+            precision=2,
+        )
+        savefig(tree_filename + ".png")
