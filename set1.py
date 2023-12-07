@@ -9,7 +9,10 @@ from sklearn.model_selection import train_test_split
 from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping, mvi_by_filling, plot_multibar_chart
 from classification.NBayes import NBayes
 from classification.decision_tree import DecisionTree
+from classification.gradient_boosting import GradientBoosting
 from classification.knn import Knn
+from classification.mlp import MultiLayerPerceptron
+from classification.random_forest import RandomForests
 from preparation.balancing import Balancing
 from preparation.missingValues import MissingValues
 from preparation.scaling import Scaling
@@ -255,7 +258,7 @@ evaluate(eval2, file_tag, "Scaling_min-max")
 
 {'accuracy': [0.7096867343367168, 0.7042527126356318], 'recall': [0.0, 0.06700424993218193], 'precision': [0.0, 0.43872113676731794], 'auc': [0.5, 0.5159688647907584], 'f1': [0.0, 0.1162535299654848]}
 {'accuracy': [0.7074641232061603, 0.7047602380119006], 'recall': [0.07236941254483528, 0.06516562678964342], 'precision': [0.47488132911392406, 0.44239819930427665], 'auc': [0.5198166311087369, 0.5157831882268255], 'f1': [0.125598305129077, 0.11359815048339639]}
-'''
+
 # -------------------- #
 # ----  Balancing ---- #
 # -------------------- #
@@ -276,7 +279,7 @@ undersampling = dataBalancing.undersampling()
 #oversampling = dataBalancing.oversampling()
 #smote = dataBalancing.SMOTE()
 undersampling.to_csv(f"data/{file_tag}_train.csv", index=False)
-'''
+
 #Eval undersampling
 eval1 = evaluate_approach(undersampling, testData.copy(), target, "accuracy")
 print(eval1)
@@ -293,7 +296,6 @@ evaluate(eval3, file_tag, "Balancing_SMOTE")
 #{'accuracy': [0.5847917395869794, 0.6007000350017501], 'recall': [0.5995719926455074, 0.4569430629653073], 'precision': [0.3679819449839984, 0.35441262419637637], 'auc': [0.5891587692164815, 0.5582250547801889], 'f1': [0.4560607102735172, 0.3991994944175269]}
 #{'accuracy': [0.5846692334616731, 0.6171946097304866], 'recall': [0.6004762335352805, 0.30732133707086234], 'precision': [0.3680331048752101, 0.3293068923196176], 'auc': [0.5893396296586554, 0.5256382772552072], 'f1': [0.45636138727264397, 0.3179344860381359]}
 #{'accuracy': [0.5851855092754638, 0.5815453272663633], 'recall': [0.5952014950116045, 0.40503963589233505], 'precision': [0.36757752875916755, 0.32365125240847786], 'auc': [0.5881448704112435, 0.5293942862149122], 'f1': [0.4544816396045984, 0.359800259715919]}
-'''
 '''
 # ---------------------------------------
 #             Classification  
@@ -337,4 +339,40 @@ classificationDT = DecisionTree(file_tag,"data/pos_covid_train.csv","data/pos_co
 # Testar Parâmetros:
 # --- D = [2, 4, 6, 8, 10] 
 classificationDT.full_metrics_decision_tree_study(D_MAX, lag)
-'''
+
+
+
+# -------------------- #
+# ------- MLP -------- #
+# -------------------- #
+classificationMLP = MultiLayerPerceptron(file_tag,"data/pos_covid_train.csv","data/pos_covid_test.csv",target)
+
+# Testar Parâmetros:
+N_MAX_INTER = 2500 # default
+lag = 2
+
+classificationMLP.full_metrics_mlp_study(N_MAX_INTER, lag) # only accuracy
+
+
+# -------------------- #
+# - GradientBoosting - #
+# -------------------- #
+classificationGB = GradientBoosting(file_tag,"data/pos_covid_train.csv","data/pos_covid_test.csv",target)
+
+# Testar Parâmetros:
+NR_MAX_TREES_GB = 2500 # default
+lag = 2
+
+classificationGB.full_metrics_gradient_boosting_study(NR_MAX_TREES_GB, lag) # only accuracy
+
+
+# -------------------- #
+# --- RandomForest --- #
+# -------------------- #
+classificationRF = RandomForests(file_tag,"data/pos_covid_train.csv","data/pos_covid_test.csv",target)
+
+# Testar Parâmetros:
+NR_MAX_TREES_RF = 2500 # default
+lag = 2
+
+classificationRF.full_metrics_random_forests_study(NR_MAX_TREES_RF, lag) # only accuracy
