@@ -50,7 +50,7 @@ class RandomForests:
                         best_performance = eval
                         best_params["params"] = (d, f, n)
                         best_model = clf
-                    # print(f'RF d={d} f={f} n={n}')
+                    print(f'RF d={d} f={f} n={n}')
                 values[f] = y_tst_values
             plot_multiline_chart(
                 n_estimators,
@@ -71,23 +71,26 @@ class RandomForests:
         prd_tst: array = best_model.predict(self.tstX)
         figure()
         plot_evaluation_results(params, self.trnY, prd_trn, self.tstY, prd_tst, self.labels)
-        savefig(f'images/classification/{self.file_tag}_rf_{params["name"]}_best_{params["metric"]}_eval.png')
+        savefig(f'images/classification/RF/{self.file_tag}_rf_{params["name"]}_best_{params["metric"]}_eval.png')
 
 
     def full_metrics_random_forests_study(self, nr_max_trees, lag):
-        #eval_metrics = ["accuracy","recall","precision","auc","f1"]
-        eval_metrics = ["accuracy"]
+        eval_metrics = ["accuracy","recall","precision","auc","f1"]
         for eval_metric in eval_metrics:
             figure()
             print(f"new metric: {eval_metric}")
             best_model, params = self.random_forests_study(nr_max_trees, lag, eval_metric)
             plt.tight_layout()
-            savefig(f"images/classification/{self.file_tag}_rf_{nr_max_trees}_{eval_metric}_study.png")
-            if eval_metric == "accuracy":
-                self.performance_analysis(best_model,params)
-                self.rf_overfitting_study(params)
-                self.visualize_variable_importance(best_model,eval_metric)
-                self.visualize_tree(best_model,params)
+            savefig(f"images/classification/RF/{self.file_tag}_rf_{nr_max_trees}_{eval_metric}_study.png")
+
+
+    def specific_metric_random_forests_study(self, nr_max_trees, lag, eval_metric):
+        figure()
+        best_model, params = self.random_forests_study(nr_max_trees, lag, eval_metric)
+        plt.tight_layout()
+        savefig(f"images/classification/RF/{self.file_tag}_rf_{nr_max_trees}_{eval_metric}_study.png")
+        #show()
+        return best_model, params
 
     def visualize_variable_importance(self, best_model, eval_metric): # passei eval_metric
         stdevs: list[float] = list(
@@ -112,7 +115,7 @@ class RandomForests:
             ylabel="variables",
             percentage=True,
         )
-        savefig(f"images/classification/{self.file_tag}_rf_{eval_metric}_vars_ranking.png")
+        savefig(f"images/classification/RF/{self.file_tag}_rf_{eval_metric}_vars_ranking.png")
 
 
     def rf_overfitting_study(self,  params):
@@ -141,12 +144,12 @@ class RandomForests:
             ylabel=str(acc_metric), #eval_metric
             percentage=True,
         )
-        savefig(f"images/classification/{self.file_tag}_rf_{acc_metric}_overfitting.png")
+        savefig(f"images/classification/RF/{self.file_tag}_rf_{acc_metric}_overfitting.png")
 
 
     # Iguais aos do Decision Tree
     def visualize_tree(self, best_model, params, max_depth2show=3):
-        tree_filename = f"images/classification/{self.file_tag}_dt_{params['metric']}_best_tree"
+        tree_filename = f"images/classification/DT/{self.file_tag}_dt_{params['metric']}_best_tree"
         st_labels = [str(value) for value in self.labels]
 
         dot_data = export_graphviz(
@@ -172,7 +175,7 @@ class RandomForests:
         #show()
 
     def visualize_tree_simplified(self, best_model, params, max_depth2show=3):
-        tree_filename = f"images/classification/{self.file_tag}_dt_{params['metric']}_best_tree_simplified"
+        tree_filename = f"images/classification/DT/{self.file_tag}_dt_{params['metric']}_best_tree_simplified"
         st_labels = [str(value) for value in self.labels]
 
         figure(figsize=(14, 6))

@@ -55,7 +55,7 @@ class GradientBoosting:
                         best_performance = eval
                         best_params["params"] = (d, lr, n)
                         best_model = clf
-                    # print(f'GB d={d} lr={lr} n={n}')
+                    print(f'GB d={d} lr={lr} n={n}')
                 values[lr] = y_tst_values
             plot_multiline_chart(
                 n_estimators,
@@ -77,22 +77,24 @@ class GradientBoosting:
         prd_tst: array = best_model.predict(self.tstX)
         figure()
         plot_evaluation_results(params, self.trnY, prd_trn, self.tstY, prd_tst, self.labels)
-        savefig(f'images/classification/{self.file_tag}_gb_{params["name"]}_best_{params["metric"]}_eval.png')
+        savefig(f'images/classification/GB/{self.file_tag}_gb_{params["name"]}_best_{params["metric"]}_eval.png')
 
     def full_metrics_gradient_boosting_study(self, nr_max_trees, lag):
-        # eval_metrics = ["accuracy","recall","precision","auc","f1"]
-        eval_metrics = ["accuracy"]
+        eval_metrics = ["accuracy","recall","precision","auc","f1"]
         for eval_metric in eval_metrics:
             figure()
             print(f"new metric: {eval_metric}")
             best_model, params = self.gradient_boosting_study(nr_max_trees, lag, eval_metric)
             plt.tight_layout()
-            savefig(f"images/classification/{self.file_tag}_gb_{nr_max_trees}_{eval_metric}_study.png")
-            if eval_metric == "accuracy":
-                self.performance_analysis(best_model, params)
-                self.gb_overfitting_study(params)
-                self.visualize_variable_importance(best_model, eval_metric)
-                self.visualize_tree(best_model, params)
+            savefig(f"images/classification/GB/{self.file_tag}_gb_{nr_max_trees}_{eval_metric}_study.png")
+
+    def specific_metric_gradient_boosting_study(self, nr_max_trees, lag, eval_metric):
+        figure()
+        best_model, params = self.gradient_boosting_study(nr_max_trees, lag, eval_metric)
+        plt.tight_layout()
+        savefig(f"images/classification/GB/{self.file_tag}_gb_{nr_max_trees}_{eval_metric}_study.png")
+        #show()
+        return best_model, params
 
     def visualize_variable_importance(self, best_model, eval_metric):  # passei eval_metric
         trees_importances: list[float] = []
@@ -120,7 +122,7 @@ class GradientBoosting:
             ylabel="variables",
             percentage=True,
         )
-        savefig(f"images/classification/{self.file_tag}_gb_{eval_metric}_vars_ranking.png")
+        savefig(f"images/classification/GB/{self.file_tag}_gb_{eval_metric}_vars_ranking.png")
 
     def gb_overfitting_study(self, params):
         d_max: int = params["params"][0]
@@ -148,11 +150,11 @@ class GradientBoosting:
             ylabel=str(acc_metric),  # eval_metric
             percentage=True,
         )
-        savefig(f"images/classification/{self.file_tag}_gb_{acc_metric}_overfitting.png")
+        savefig(f"images/classification/GB/{self.file_tag}_gb_{acc_metric}_overfitting.png")
 
     # Iguais aos do Decision Tree
     def visualize_tree(self, best_model, params, max_depth2show=3):
-        tree_filename = f"images/classification/{self.file_tag}_dt_{params['metric']}_best_tree"
+        tree_filename = f"images/classification/DT/{self.file_tag}_dt_{params['metric']}_best_tree"
         st_labels = [str(value) for value in self.labels]
 
         dot_data = export_graphviz(
@@ -178,7 +180,7 @@ class GradientBoosting:
         # show()
 
     def visualize_tree_simplified(self, best_model, params, max_depth2show=3):
-        tree_filename = f"images/classification/{self.file_tag}_dt_{params['metric']}_best_tree_simplified"
+        tree_filename = f"images/classification/DT/{self.file_tag}_dt_{params['metric']}_best_tree_simplified"
         st_labels = [str(value) for value in self.labels]
 
         figure(figsize=(14, 6))

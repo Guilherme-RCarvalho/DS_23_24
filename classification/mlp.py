@@ -70,7 +70,7 @@ class MultiLayerPerceptron:
                         best_performance = eval
                         best_params["params"] = (type, lr, nr_iterations[j])
                         best_model = clf
-                    # print(f'MLP lr_type={type} lr={lr} n={nr_iterations[j]}')
+                    print(f'MLP lr_type={type} lr={lr} n={nr_iterations[j]}')
                 values[lr] = y_tst_values
             plot_multiline_chart(
                 nr_iterations,
@@ -88,33 +88,40 @@ class MultiLayerPerceptron:
         return best_model, best_params
 
     def full_metrics_mlp_study(self, nr_max_iterations, lag):
-        # eval_metrics = ["accuracy","recall","precision","auc","f1"]
-        eval_metrics = ["accuracy"]
+        eval_metrics = ["accuracy","recall","precision","auc","f1"]
         for eval_metric in eval_metrics:
             figure()
             print(f"new metric: {eval_metric}")
             best_model, params = self.mlp_study(nr_max_iterations, lag, eval_metric)
             plt.tight_layout()
-            savefig(f"images/classification/{self.file_tag}_mlp_{nr_max_iterations}_{eval_metric}_study.png")
-            if eval_metric == "accuracy":
-                self.performance_analysis(best_model, params)
-                self.mlp_overfitting_study(params)
+            savefig(f"images/classification/MLP/{self.file_tag}_mlp_{nr_max_iterations}_{eval_metric}_study.png")
+
+
+    def specific_metric_mlp_study(self, nr_max_iterations, lag, eval_metric):
+        figure()
+        best_model, params = self.mlp_study(nr_max_iterations, lag, eval_metric)
+        plt.tight_layout()
+        savefig(f"images/classification/MLP/{self.file_tag}_mlp_{nr_max_iterations}_{eval_metric}_study.png")
+        #show()
+        return best_model, params
+
 
     def performance_analysis(self, best_model, params):
         prd_trn: array = best_model.predict(self.trnX)
         prd_tst: array = best_model.predict(self.tstX)
         figure()
         plot_evaluation_results(params, self.trnY, prd_trn, self.tstY, prd_tst, self.labels)
-        savefig(f'images/classification/{self.file_tag}_mlp_{params["name"]}_best_{params["metric"]}_eval.png')
+        savefig(f'images/classification/MLP/{self.file_tag}_mlp_{params["name"]}_best_{params["metric"]}_eval.png')
+        # show()
 
-    def mlp_overfitting_study(self, params):
+    def mlp_overfitting_study(self, params, eval_metric):
         lr_type: Literal["constant", "invscaling", "adaptive"] = params["params"][0]
         lr: float = params["params"][1]
         nr_iterations: list[int] = [i for i in range(100, 1001, 100)]
 
         y_tst_values: list[float] = []
         y_trn_values: list[float] = []
-        acc_metric = "accuracy"
+        acc_metric = eval_metric
 
         warm_start: bool = False
         for n in nr_iterations:
@@ -143,4 +150,5 @@ class MultiLayerPerceptron:
             ylabel=str(acc_metric),  # eval_metric
             percentage=True,
         )
-        savefig(f"images/{self.file_tag}_mlp_{acc_metric}_overfitting.png")
+        savefig(f"images/Classification/MLP/{self.file_tag}_mlp_{acc_metric}_overfitting.png")
+        # show()
