@@ -349,7 +349,7 @@ classificationMLP = MultiLayerPerceptron(file_tag,"data/pos_covid_train.csv","da
 
 # Testar Parâmetros:
 N_MAX_INTER = 2500 # default
-lag = 2
+lag = 100
 
 classificationMLP.full_metrics_mlp_study(N_MAX_INTER, lag) # only accuracy
 
@@ -361,7 +361,7 @@ classificationGB = GradientBoosting(file_tag,"data/pos_covid_train.csv","data/po
 
 # Testar Parâmetros:
 NR_MAX_TREES_GB = 2500 # default
-lag = 2
+lag = 100
 
 classificationGB.full_metrics_gradient_boosting_study(NR_MAX_TREES_GB, lag) # only accuracy
 
@@ -373,6 +373,6 @@ classificationRF = RandomForests(file_tag,"data/pos_covid_train.csv","data/pos_c
 
 # Testar Parâmetros:
 NR_MAX_TREES_RF = 2500 # default
-lag = 2
+lag = 100
 
 classificationRF.full_metrics_random_forests_study(NR_MAX_TREES_RF, lag) # only accuracy

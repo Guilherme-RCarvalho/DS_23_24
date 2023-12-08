@@ -50,7 +50,7 @@ class RandomForests:
                         best_performance = eval
                         best_params["params"] = (d, f, n)
                         best_model = clf
-                    # print(f'RF d={d} f={f} n={n}')
+                    print(f'RF d={d} f={f} n={n}')
                 values[f] = y_tst_values
             plot_multiline_chart(
                 n_estimators,

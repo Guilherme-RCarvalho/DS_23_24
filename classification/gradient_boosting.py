@@ -47,7 +47,7 @@ class GradientBoosting:
                         best_performance = eval
                         best_params["params"] = (d, lr, n)
                         best_model = clf
-                    # print(f'GB d={d} lr={lr} n={n}')
+                    print(f'GB d={d} lr={lr} n={n}')
                 values[lr] = y_tst_values
             plot_multiline_chart(
                 n_estimators,
