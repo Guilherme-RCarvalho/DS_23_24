@@ -4,6 +4,8 @@ file:       set2.py
 
 # Imports
 import os
+
+import joblib
 import numpy as np
 import pandas as pd
 from pandas import read_csv, DataFrame
@@ -456,7 +458,8 @@ gb_metric = "accuracy"
 
 best_model_gb, best_params_gb = classificationGB.specific_metric_gradient_boosting_study(NR_MAX_TREES_GB, lag_gb, gb_metric)
 
-c, d = best_model_gb, best_params_gb
+# guardar os resultados
+joblib.dump((best_model_gb, best_params_gb), 'resultados_gb.joblib')
 
 classificationGB.performance_analysis(best_model_gb, best_params_gb)
 classificationGB.gb_overfitting_study(best_params_gb)
@@ -478,7 +481,8 @@ rf_metric = "accuracy"
 
 best_model_rf, best_params_rf = classificationRF.specific_metric_random_forests_study(NR_MAX_TREES_RF, lag_rf, rf_metric)
 
-e, f = best_model_rf, best_params_rf
+# guardar os resultados
+joblib.dump((best_model_rf, best_params_rf), 'resultados_rf.joblib')
 
 classificationRF.performance_analysis(best_model_rf, best_params_rf)
 classificationRF.rf_overfitting_study(best_params_rf)
