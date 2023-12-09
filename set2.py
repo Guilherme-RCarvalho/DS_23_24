@@ -449,7 +449,7 @@ classificationGB = GradientBoosting(file_tag, "data/credit_train.csv", "data/cre
 
 # Testar Parâmetros:
 NR_MAX_TREES_GB = 2500 # default
-lag_gb = 200
+lag_gb = 250
 gb_metric = "accuracy"
 
 #classificationGB.full_metrics_gradient_boosting_study(NR_MAX_TREES_GB, lag_gb)
@@ -471,7 +471,7 @@ classificationRF = RandomForests(file_tag, "data/credit_train.csv" , "data/credi
 
 # Testar Parâmetros:
 NR_MAX_TREES_RF = 2500 # default
-lag_rf = 200
+lag_rf = 250
 rf_metric = "accuracy"
 
 #classificationRF.full_metrics_random_forests_study(NR_MAX_TREES_RF, lag_rf)
