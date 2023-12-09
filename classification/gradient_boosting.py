@@ -154,7 +154,7 @@ class GradientBoosting:
 
     # Iguais aos do Decision Tree
     def visualize_tree(self, best_model, params, max_depth2show=3):
-        tree_filename = f"images/classification/DT/{self.file_tag}_dt_{params['metric']}_best_tree"
+        tree_filename = f"images/classification/GB/{self.file_tag}_gb_{params['metric']}_best_tree"
         st_labels = [str(value) for value in self.labels]
 
         dot_data = export_graphviz(
@@ -171,16 +171,15 @@ class GradientBoosting:
         )
         # Convert to png
         call(
-            ["dot", "-Tpng", tree_filename + ".dot", "-o", tree_filename + ".png", "-Gdpi=600"]
+            ["C:\\Program Files\\Graphviz\\bin\\dot.exe", "-Tpng", tree_filename + ".dot", "-o", tree_filename + ".png", "-Gdpi=600"]
         )
 
-        figure(figsize=(14, 6))
-        imshow(imread(tree_filename + ".png"))
-        axis("off")
-        # show()
+        # figure(figsize=(14, 6))
+        # imshow(imread(tree_filename + ".png"))
+        # axis("off")
 
     def visualize_tree_simplified(self, best_model, params, max_depth2show=3):
-        tree_filename = f"images/classification/DT/{self.file_tag}_dt_{params['metric']}_best_tree_simplified"
+        tree_filename = f"images/classification/GB/{self.file_tag}_gb_{params['metric']}_best_tree_simplified"
         st_labels = [str(value) for value in self.labels]
 
         figure(figsize=(14, 6))

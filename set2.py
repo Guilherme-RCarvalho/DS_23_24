@@ -424,22 +424,22 @@ decisionTrees = decisionTrees(file_tag, "data/credit_train.csv", "data/credit_te
 # -------------------- #
 # ------- MLP -------- #
 # -------------------- #
-classificationMLP = MultiLayerPerceptron(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
-
-# Testar Parâmetros:
-N_MAX_INTER_MLP = 2500 # default
-lag_mlp = 100
-mlp_metric = "accuracy"
-
-#classificationMLP.full_metrics_mlp_study(N_MAX_INTER_MLP, lag_mlp)
-
-best_model_mlp, best_params_mlp = classificationMLP.specific_metric_mlp_study(N_MAX_INTER_MLP, lag_mlp, mlp_metric)
-
-a, b = best_model_mlp, best_params_mlp
-
-classificationMLP.performance_analysis(best_model_mlp, best_params_mlp)
-
-classificationMLP.mlp_overfitting_study(best_params_mlp, mlp_metric)
+# classificationMLP = MultiLayerPerceptron(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
+#
+# # Testar Parâmetros:
+# N_MAX_INTER_MLP = 2500 # default
+# lag_mlp = 100
+# mlp_metric = "accuracy"
+#
+# #classificationMLP.full_metrics_mlp_study(N_MAX_INTER_MLP, lag_mlp)
+#
+# best_model_mlp, best_params_mlp = classificationMLP.specific_metric_mlp_study(N_MAX_INTER_MLP, lag_mlp, mlp_metric)
+#
+# a, b = best_model_mlp, best_params_mlp
+#
+# classificationMLP.performance_analysis(best_model_mlp, best_params_mlp)
+#
+# classificationMLP.mlp_overfitting_study(best_params_mlp, mlp_metric)
 
 
 # --------------------- #
@@ -462,11 +462,11 @@ classificationGB.performance_analysis(best_model_gb, best_params_gb)
 classificationGB.gb_overfitting_study(best_params_gb)
 classificationGB.visualize_variable_importance(best_model_gb, gb_metric)
 classificationGB.visualize_tree(best_model_gb, best_params_gb)
-
-
-# --------------------- #
-# --- Random Forest --- #
-# --------------------- #
+#
+#
+# # --------------------- #
+# # --- Random Forest --- #
+# # --------------------- #
 classificationRF = RandomForests(file_tag, "data/credit_train.csv" , "data/credit_test.csv", target)
 
 # Testar Parâmetros:
