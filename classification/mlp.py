@@ -140,4 +140,4 @@ class MultiLayerPerceptron:
             ylabel=str(acc_metric), # eval_metric
             percentage=True,
         )
-        savefig(f"images/{self.file_tag}_mlp_{acc_metric}_overfitting.png")
+        savefig(f"images/classification/{self.file_tag}_mlp_{acc_metric}_overfitting.png")

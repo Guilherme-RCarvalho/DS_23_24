@@ -82,7 +82,7 @@ class RandomForests:
             print(f"new metric: {eval_metric}")
             best_model, params = self.random_forests_study(nr_max_trees, lag, eval_metric)
             plt.tight_layout()
-            savefig(f"images/classification/{self.file_tag}_rf_{nr_max_trees}_{eval_metric}_study.png")
+            savefig(f"images/classification/{self.file_tag}_rf_{nr_max_trees}_{lag}_{eval_metric}_study.png")
             self.performance_analysis(best_model,params)
             self.visualize_variable_importance(best_model,eval_metric)                
             if eval_metric == "accuracy":
@@ -97,8 +97,8 @@ class RandomForests:
         indices: list[int] = argsort(importances)[::-1]
         elems: list[str] = []
         imp_values: list[float] = []
-        for f in range(len(vars)):
-            elems += [vars[indices[f]]]
+        for f in range(len(self.vars)):
+            elems += [self.vars[indices[f]]]
             imp_values.append(importances[indices[f]])
             print(f"{f+1}. {elems[f]} ({importances[indices[f]]})")
 

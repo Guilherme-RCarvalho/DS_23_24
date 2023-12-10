@@ -101,8 +101,8 @@ class GradientBoosting:
         indices: list[int] = argsort(importances)[::-1]
         elems: list[str] = []
         imp_values: list[float] = []
-        for f in range(len(vars)):
-            elems += [vars[indices[f]]]
+        for f in range(len(self.vars)):
+            elems += [self.vars[indices[f]]]
             imp_values.append(importances[indices[f]])
             print(f"{f+1}. {elems[f]} ({importances[indices[f]]})")
 

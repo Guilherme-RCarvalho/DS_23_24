@@ -341,7 +341,7 @@ classificationDT = DecisionTree(file_tag,"data/pos_covid_train.csv","data/pos_co
 classificationDT.full_metrics_decision_tree_study(D_MAX, lag)
 
 
-'''
+
 # -------------------- #
 # ------- MLP -------- #
 # -------------------- #
@@ -353,7 +353,7 @@ lag = 100
 
 classificationMLP.full_metrics_mlp_study(N_MAX_INTER, lag) # only accuracy
 
-
+'''
 # -------------------- #
 # - GradientBoosting - #
 # -------------------- #
@@ -361,11 +361,11 @@ classificationGB = GradientBoosting(file_tag,"data/pos_covid_train.csv","data/po
 
 # Testar Parâmetros:
 NR_MAX_TREES_GB = 2500 # default
-lag = 100
+lag = 500
 
 classificationGB.full_metrics_gradient_boosting_study(NR_MAX_TREES_GB, lag) # only accuracy
 
-
+'''
 # -------------------- #
 # --- RandomForest --- #
 # -------------------- #
@@ -373,6 +373,7 @@ classificationRF = RandomForests(file_tag,"data/pos_covid_train.csv","data/pos_c
 
 # Testar Parâmetros:
 NR_MAX_TREES_RF = 2500 # default
-lag = 100
+lag = 500
 
 classificationRF.full_metrics_random_forests_study(NR_MAX_TREES_RF, lag) # only accuracy
+'''
