@@ -357,7 +357,7 @@ IQR_FACTOR: float = 1.5
 # ------ NBayes ------ #
 # -------------------- #
 
-classificationNB = NBayes(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
+#classificationNB = NBayes(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
 
 # classificationNB.full_metrics_NB_study()
 
@@ -379,7 +379,7 @@ classificationNB = NBayes(file_tag, "data/credit_train.csv", "data/credit_test.c
 # -------- KNN ------- #
 # -------------------- #
 
-classificationKNN = KNN(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
+#classificationKNN = KNN(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
 
 # classificationKNN.full_metrics_KNN_study()
 
@@ -397,7 +397,7 @@ classificationKNN = KNN(file_tag, "data/credit_train.csv", "data/credit_test.csv
 # -------- DT -------- #
 # -------------------- #
 
-decisionTrees = decisionTrees(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
+#decisionTrees = decisionTrees(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
 
 #decisionTrees.full_metrics_DT_study()
 
@@ -443,7 +443,7 @@ decisionTrees = decisionTrees(file_tag, "data/credit_train.csv", "data/credit_te
 #
 # classificationMLP.mlp_overfitting_study(best_params_mlp, mlp_metric)
 
-
+'''
 # --------------------- #
 # - Gradient Boosting - #
 # --------------------- #
@@ -466,7 +466,7 @@ classificationGB.gb_overfitting_study(best_params_gb)
 classificationGB.visualize_variable_importance(best_model_gb, gb_metric)
 classificationGB.visualize_tree(best_model_gb, best_params_gb)
 #
-#
+#'''
 # # --------------------- #
 # # --- Random Forest --- #
 # # --------------------- #
@@ -474,7 +474,7 @@ classificationRF = RandomForests(file_tag, "data/credit_train.csv" , "data/credi
 
 # Testar Parâmetros:
 NR_MAX_TREES_RF = 2500 # default
-lag_rf = 250
+lag_rf = 500
 rf_metric = "accuracy"
 
 #classificationRF.full_metrics_random_forests_study(NR_MAX_TREES_RF, lag_rf)
@@ -487,5 +487,5 @@ joblib.dump((best_model_rf, best_params_rf), 'resultados_rf.joblib')
 classificationRF.performance_analysis(best_model_rf, best_params_rf)
 classificationRF.rf_overfitting_study(best_params_rf)
 classificationRF.visualize_variable_importance(best_model_rf, rf_metric)
-classificationRF.visualize_tree(best_model_rf, best_params_rf)
+#classificationRF.visualize_tree(best_model_rf, best_params_rf)
 
