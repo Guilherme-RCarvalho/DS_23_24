@@ -2,10 +2,38 @@
 file:       set4.py
 '''
 
+
+from pandas import read_csv, DataFrame, Series
+
+from TSeries.profiling_ts import Profiling
+
+# Load Data
+filename = "data/forecast_traffic_single.csv"
+file_tag = "traffic"
+target = "Total"
+
+data: DataFrame = read_csv(
+    filename,
+    index_col = "Timestamp",
+    sep = ",",
+    decimal = ".",
+    parse_dates = True,
+    infer_datetime_format = True,
+)
+
+series: Series = data[target]
+
 # ------------------------------- #
 #           Profiling             #
 # ------------------------------- #
 
+profiling = Profiling(filename, file_tag, target, data, series)
+
+profiling.data_before()
+
+profiling.aggregation_by()
+
+profiling.aggregation_study()
 
 # ----------------- #
 # -- Granularity -- #
