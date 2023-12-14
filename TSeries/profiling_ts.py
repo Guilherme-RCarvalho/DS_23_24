@@ -1,6 +1,7 @@
 '''
 file:       profilling_ts.py
 '''
+
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.pyplot import figure, show, savefig, subplots, setp, legend, plot
@@ -147,6 +148,7 @@ class Profiling:
         return
 
     def plot_time_series_components(self):
+        print(self.series)
         plot_components(
             self.series,
             title=f"{self.file_tag} hourly {self.target}",
