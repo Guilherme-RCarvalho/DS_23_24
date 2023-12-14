@@ -62,5 +62,5 @@ class Profiling:
                 title=f"granularity={grans[i]}",
             )
 
-        savefig(f"images/TS/{self.file_tag}_profiling_aggregation_study.png")
+        savefig(f"images/TS/{self.file_tag}_granularity_aggregation_study.png")
         show()
