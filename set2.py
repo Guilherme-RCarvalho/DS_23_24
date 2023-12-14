@@ -443,7 +443,7 @@ IQR_FACTOR: float = 1.5
 #
 # classificationMLP.mlp_overfitting_study(best_params_mlp, mlp_metric)
 
-'''
+
 # --------------------- #
 # - Gradient Boosting - #
 # --------------------- #
@@ -451,7 +451,7 @@ classificationGB = GradientBoosting(file_tag, "data/credit_train.csv", "data/cre
 
 # Testar Parâmetros:
 NR_MAX_TREES_GB = 2500 # default
-lag_gb = 250
+lag_gb = 500
 gb_metric = "accuracy"
 
 #classificationGB.full_metrics_gradient_boosting_study(NR_MAX_TREES_GB, lag_gb)
@@ -464,9 +464,8 @@ joblib.dump((best_model_gb, best_params_gb), 'resultados_gb.joblib')
 classificationGB.performance_analysis(best_model_gb, best_params_gb)
 classificationGB.gb_overfitting_study(best_params_gb)
 classificationGB.visualize_variable_importance(best_model_gb, gb_metric)
-classificationGB.visualize_tree(best_model_gb, best_params_gb)
-#
-#'''
+
+
 # # --------------------- #
 # # --- Random Forest --- #
 # # --------------------- #
@@ -487,5 +486,5 @@ joblib.dump((best_model_rf, best_params_rf), 'resultados_rf.joblib')
 classificationRF.performance_analysis(best_model_rf, best_params_rf)
 classificationRF.rf_overfitting_study(best_params_rf)
 classificationRF.visualize_variable_importance(best_model_rf, rf_metric)
-#classificationRF.visualize_tree(best_model_rf, best_params_rf)
+
 
