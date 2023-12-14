@@ -21,23 +21,28 @@ data: DataFrame = read_csv(
     infer_datetime_format = True,
 )
 
+index = "Timestamp"
 series: Series = data[target]
 
 # ------------------------------- #
 #           Profiling             #
 # ------------------------------- #
 
-profiling = Profiling(filename, file_tag, target, data, series)
+profiling = Profiling(filename, file_tag, target, index, data, series)
 
-profiling.data_before()
+# profiling.data_before()
 
-profiling.aggregation_by()
-
-profiling.aggregation_study()
 
 # ----------------- #
 # -- Granularity -- #
 # ----------------- #
+
+# profiling.aggregation_by()
+#
+# profiling.aggregation_study()
+#
+# profiling.aggregation_by_w()
+
 
 # First granularity (most atomic)
 
@@ -50,25 +55,29 @@ profiling.aggregation_study()
 # -- Distribution -- #
 # ------------------ #
 
-# boxplots
-
-# histograms
+# # boxplots
+# profiling.number_summary()
+#
+# # histograms
+# profiling.variables_distribution()
 
 # ---------------------- #
 # -- Auto-correlation -- #
 # ---------------------- #
 
-# lag-plots
-
-# correlogram
-
+# # lag-plots
+# profiling.lag_plots()
+#
+# # correlogram
+# profiling.autocorrelation_study(10, 1)
 
 
 # ---------------------- #
 # -- Components study -- #
 # ---------------------- #
 
-
+# # nao funciona
+# profiling.plot_time_series_components()
 
 
 # ------------------ #
@@ -77,9 +86,20 @@ profiling.aggregation_study()
 
 # Stationarity study
 
+# profiling.stationary_study()
+#
+# profiling.stationary_study_2()
+
 # Stationarity Dickey-Fuller Test
+profiling.eval_stationarity()
 
-
+# ADF Statistic: -9.927
+# p-value: 0.000
+# Critical Values:
+# 	1%: -3.433
+# 	5%: -2.863
+# 	10%: -2.567
+# The series is stationary
 
 # ------------------------------- #
 #        - Transformation -       #

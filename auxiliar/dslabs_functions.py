@@ -28,6 +28,8 @@ from sklearn.metrics import f1_score
 from sklearn.metrics import confusion_matrix, RocCurveDisplay, roc_auc_score
 from sklearn.naive_bayes import _BaseNB, GaussianNB, MultinomialNB, BernoulliNB
 from sklearn.neighbors import KNeighborsClassifier
+from statsmodels.tsa.seasonal import DecomposeResult, seasonal_decompose
+from statsmodels.tsa.stattools import adfuller
 
 from auxiliar.config import LINE_COLOR, FILL_COLOR, cmap_blues
 
@@ -892,6 +894,21 @@ def dataframe_temporal_train_test_split(data: DataFrame, trn_pct: float = 0.90) 
     test: DataFrame = df_cp.iloc[trn_size:]
     return train, test
 
+def get_lagged_series(series: Series, max_lag: int, delta: int = 1):
+    lagged_series: dict = {"original": series, "lag 1": series.shift(1)}
+    for i in range(delta, max_lag + 1, delta):
+        lagged_series[f"lag {i}"] = series.shift(i)
+    return lagged_series
+
+
+def eval_stationarity(series: Series) -> bool:
+    result = adfuller(series)
+    print(f"ADF Statistic: {result[0]:.3f}")
+    print(f"p-value: {result[1]:.3f}")
+    print("Critical Values:")
+    for key, value in result[4].items():
+        print(f"\t{key}: {value:.3f}")
+    return result[1] <= 0.05
 
 # ---------------------------------------
 #             FORECASTING
