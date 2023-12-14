@@ -6,6 +6,7 @@ file:       set4.py
 from pandas import read_csv, DataFrame, Series
 
 from TSeries.profiling_ts import Profiling
+from TSeries.transformation import Transformation
 
 # Load Data
 filename = "data/forecast_traffic_single.csv"
@@ -20,7 +21,7 @@ data: DataFrame = read_csv(
     parse_dates = True,
     infer_datetime_format = True,
 )
-
+data.sort_index(inplace=True)
 index = "Timestamp"
 series: Series = data[target]
 
@@ -45,6 +46,8 @@ profiling = Profiling(filename, file_tag, target, index, data, series)
 
 
 # First granularity (most atomic)
+
+# mais atomico possivel -> intervalo mais pequeno no meu conjunto de dados (15 min)
 
 # Second granularity
 
@@ -76,7 +79,8 @@ profiling = Profiling(filename, file_tag, target, index, data, series)
 # -- Components study -- #
 # ---------------------- #
 
-# # nao funciona
+# dias nao estão sorted, apenas horas
+
 # profiling.plot_time_series_components()
 
 
@@ -94,7 +98,7 @@ profiling = Profiling(filename, file_tag, target, index, data, series)
 profiling.eval_stationarity()
 
 # ADF Statistic: -9.927
-# p-value: 0.000
+# p-value: 0.000  ----->> estranho???????
 # Critical Values:
 # 	1%: -3.433
 # 	5%: -2.863
@@ -110,6 +114,11 @@ profiling.eval_stationarity()
 Evaluate the performance of Linear Regression models trained 
 over each one of the three granularities considered.
 '''
+
+transformation = Transformation(filename, file_tag, target, index, data, series)
+
+# transformation.plot_time_series_line_chart()
+# transformation.plot_daily_aggregated_line_chart()
 
 # Forecasting plots after aggregations
 
