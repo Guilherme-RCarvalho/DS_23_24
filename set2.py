@@ -466,9 +466,9 @@ classificationGB.gb_overfitting_study(best_params_gb)
 classificationGB.visualize_variable_importance(best_model_gb, gb_metric)
 
 
-# # --------------------- #
-# # --- Random Forest --- #
-# # --------------------- #
+# --------------------- #
+# --- Random Forest --- #
+# --------------------- #
 classificationRF = RandomForests(file_tag, "data/credit_train.csv" , "data/credit_test.csv", target)
 
 # Testar Parâmetros:
