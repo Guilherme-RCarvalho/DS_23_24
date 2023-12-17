@@ -33,7 +33,7 @@ class Profiling:
             ylabel=self.target,
             title=f"{self.file_tag} hourly {self.target}",
         )
-        savefig(f"images/TS/{self.file_tag}_profiling_data_before.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_profiling_data_before.png")
         show()
 
     def aggregation_by(self):
@@ -46,7 +46,7 @@ class Profiling:
             ylabel=self.target,
             title=f"{self.file_tag} daily mean {self.target}",
         )
-        savefig(f"images/TS/{self.file_tag}_profiling_daily_mean.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_profiling_daily_mean.png")
         show()
 
     def aggregation_study(self):
@@ -67,7 +67,7 @@ class Profiling:
                 title=f"granularity={grans[i]}",
             )
 
-        savefig(f"images/TS/{self.file_tag}_granularity_aggregation_study.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_granularity_aggregation_study.png")
         show()
 
     def aggregation_by_w(self):
@@ -80,7 +80,7 @@ class Profiling:
             ylabel=self.target,
             title=f"{self.file_tag} weekly {self.target}",
         )
-        savefig(f"images/TS/{self.file_tag}_weekly_{self.target}.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_weekly_{self.target}.png")
         show()
 
     def number_summary(self):
@@ -100,7 +100,7 @@ class Profiling:
         axs[1, 1].grid(False)
         axs[1, 1].set_axis_off()
         axs[1, 1].text(0.2, 0, str(ss_weeks.describe()), fontsize="small")
-        savefig(f"images/TS/{self.file_tag}_number_summary.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_number_summary.png")
         show()
 
     def variables_distribution(self):
@@ -117,14 +117,14 @@ class Profiling:
         for i in range(len(grans)):
             set_chart_labels(axs[i], title=f"{gran_names[i]}", xlabel=self.target, ylabel="Nr records")
             axs[i].hist(grans[i].values)
-        savefig(f"images/TS/{self.file_tag}_variables_distribution.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_variables_distribution.png")
         show()
 
     def lag_plots(self):
         figure(figsize=(3 * HEIGHT, HEIGHT))
         lags = get_lagged_series(self.series, 20, 10)
         plot_multiline_chart(self.series.index.to_list(), lags, xlabel=self.index, ylabel=self.target)
-        savefig(f"images/TS/{self.file_tag}_lag_plots.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_lag_plots.png")
         show()
 
     def autocorrelation_study(self, max_lag: int, delta: int = 1):
@@ -143,7 +143,7 @@ class Profiling:
         ax.acorr(self.series, maxlags=max_lag)
         ax.set_title("Autocorrelation")
         ax.set_xlabel("Lags")
-        savefig(f"images/TS/{self.file_tag}_autocorrelation_study.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_autocorrelation_study.png")
         show()
         return
 
@@ -155,7 +155,7 @@ class Profiling:
             x_label=self.series.index.name,
             y_label=self.target,
         )
-        savefig(f"images/TS/{self.file_tag}_plot_time_series_components.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_plot_time_series_components.png")
         show()
 
     def stationary_study(self):
@@ -171,7 +171,7 @@ class Profiling:
         n: int = len(self.series)
         plot(self.series.index, [self.series.mean()] * n, "r-", label="mean")
         legend()
-        savefig(f"images/TS/{self.file_tag}_stationary_study.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_stationary_study.png")
         show()
 
     def stationary_study_2(self):
@@ -198,7 +198,7 @@ class Profiling:
 
         plot(self.series.index, mean_line, "r-", label="mean")
         legend()
-        savefig(f"images/TS/{self.file_tag}_stationary_study_2.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_stationary_study_2.png")
         show()
 
     def eval_stationarity(self):
