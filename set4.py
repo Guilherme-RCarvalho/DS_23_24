@@ -59,11 +59,11 @@ profiling = Profiling(filename, file_tag, target, index, data, series)
 
 # boxplots
 # profiling.number_summary()
-profiling.plot_boxplots_for_granularities()
-
-# histograms
-# profiling.variables_distribution()
-profiling.plot_histograms_for_granularities()
+# profiling.plot_boxplots_for_granularities()
+#
+# # histograms
+# # profiling.variables_distribution()
+# profiling.plot_histograms_for_granularities()
 
 # ---------------------- #
 # -- Auto-correlation -- #
@@ -118,15 +118,24 @@ over each one of the three granularities considered.
 
 transformation = Transformation(filename, file_tag, target, index, data, series)
 
-# transformation.plot_time_series_line_chart()
-# transformation.plot_daily_aggregated_line_chart()
+transformation.plot_time_series_line_chart()
+transformation.plot_daily_aggregated_line_chart()
+
 
 # Forecasting plots after aggregations
+transformation.forecasting_plots_after_aggregations()
 
 # Forecasting results after aggregation
+transformation.forecasting_results_after_aggregation()
+
+# Mean Squared Error for 15T granularity: 3681.418251377907
+# Mean Squared Error for H granularity: 3167.045709090381
+# Mean Squared Error for W granularity: 1.5496155228041761
 
 # Aggregation decision
+# Third - W granularity
 
+best_granularity="W"
 
 # ------------------------------- #
 #        - Transformation -       #
@@ -139,16 +148,18 @@ time series, considering different windows size, over the time series aggregated
 to the best aggregation found.
 '''
 
-# transformation.smoothing_different_winsizes()
-
+transformation.smoothing_different_winsizes()
+WIN_SIZE = 10
+transformation.specific_smoothing(WIN_SIZE)
 
 # Forecasting plots after smoothing
-# WIN_SIZE = 10
-# transformation.specific_smoothing(WIN_SIZE)
+# transformation.forecasting_plots_after_smoothing(best_granularity)
 
 # Forecasting results after smoothing
-
-# Smoothing decision (best window size)
+# transformation.forecasting_results_after_smoothing()
+#
+# # Smoothing decision (best window size)
+# transformation.smoothing_decision()
 
 
 # ------------------------------- #

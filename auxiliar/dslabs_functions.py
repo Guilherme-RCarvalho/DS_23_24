@@ -3,10 +3,10 @@ file:       dslabs_functions.py
 version:    2023.1
 author:     Claudia Antunes
 """
-from math import pi, sin, cos, ceil
+from math import pi, sin, cos, ceil, sqrt
 from itertools import product
 from datetime import datetime
-from typing import Callable
+from typing import Callable, Optional
 from numpy import array, ndarray, arange, std, set_printoptions
 from matplotlib.collections import PathCollection
 from matplotlib.colorbar import Colorbar
@@ -66,12 +66,21 @@ def define_grid(nr_vars, vars_per_row: int = NR_COLUMNS) -> tuple[int, int]:
 
 
 def set_chart_labels(
-    ax: Axes, title: str = "", xlabel: str = "", ylabel: str = ""
-) -> Axes:
+    ax: Axes = None,
+    title: str = "",
+    xlabel: str = "",
+    ylabel: str = "",
+    percentage: bool = False,
+mtick=None) -> Axes:
+    if ax is None:
+        ax = gca()
     ax.set_title(title)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
+    if percentage:
+        ax.yaxis.set_major_formatter(mtick.PercentFormatter(1.0))
     return ax
+
 
 
 def set_chart_xticks(
@@ -102,25 +111,27 @@ def set_chart_xticks(
 def plot_line_chart(
     xvalues: list,
     yvalues: list,
-    ax: Axes = None,  # type: ignore
+    ax: Axes = None,
     title: str = "",
     xlabel: str = "",
     ylabel: str = "",
     name: str = "",
     percentage: bool = False,
     show_stdev: bool = False,
+    label: Optional[str] = None,
 ) -> Axes:
     if ax is None:
         ax = gca()
     ax = set_chart_labels(ax=ax, title=title, xlabel=xlabel, ylabel=ylabel)
     ax = set_chart_xticks(xvalues, ax, percentage=percentage)
-    ax.plot(xvalues, yvalues, c=LINE_COLOR, label=name)
+    ax.plot(xvalues, yvalues, c=LINE_COLOR, label=label)  # Changed 'name' to 'label'
     if show_stdev:
         stdev: float = round(std(yvalues), 3)
         y_bottom: list[float] = [(y - stdev) for y in yvalues]
         y_top: list[float] = [(y + stdev) for y in yvalues]
         ax.fill_between(xvalues, y_bottom, y_top, color=FILL_COLOR, alpha=0.2)
     return ax
+
 
 
 def plot_bar_chart(
@@ -811,7 +822,7 @@ def plot_evaluation_results(
 # ---------------------------------------
 
 
-#from statsmodels.tsa.seasonal import DecomposeResult, seasonal_decompose
+from statsmodels.tsa.seasonal import DecomposeResult, seasonal_decompose
 
 
 def plot_ts_multivariate_chart(data: DataFrame, title: str) -> list[Axes]:
