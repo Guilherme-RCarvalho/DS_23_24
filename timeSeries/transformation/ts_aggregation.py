@@ -1,7 +1,10 @@
-from numpy import save
-from pandas import read_csv, DataFrame, Series
-from matplotlib.pyplot import figure, savefig, show, subplot
-from auxiliar.dslabs_functions import plot_line_chart, ts_aggregation_by, HEIGHT
+from numpy import arange
+from pandas import DataFrame, Series
+from matplotlib.pyplot import figure, savefig, show, subplot, subplots
+from auxiliar.dslabs_functions import plot_line_chart, ts_aggregation_by, HEIGHT, series_train_test_split, plot_forecasting_eval
+from sklearn.linear_model import LinearRegression
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 
 class ts_Aggregation:
 
@@ -51,3 +54,21 @@ class ts_Aggregation:
             ax=ax3
         )
         savefig(f"images/timeSeries/transformation/aggregation/{self.file_tag}_{self.target}_aggregation.png")
+
+    def ts_aggregation_lr(self):
+        grans: list[str] = ["W", "M", "Y"]
+        for i in range(len(grans)):
+            lr_series = ts_aggregation_by(self.data, gran_level=grans[i], agg_func="sum")
+            train, test = series_train_test_split(lr_series, trn_pct=0.90)
+            trnX = arange(len(train)).reshape(-1, 1)
+            trnY = train.to_numpy()
+            tstX = arange(len(train), len(lr_series)).reshape(-1, 1)
+            tstY = test.to_numpy()
+            model = LinearRegression()
+            model.fit(trnX, trnY)
+
+            prd_trn: Series = Series(model.predict(trnX), index=train.index)
+            prd_tst: Series = Series(model.predict(tstX), index=test.index)
+
+            plot_forecasting_eval(train, test, prd_trn, prd_tst, title=grans[i])
+            savefig(f"images/timeSeries/transformation/aggregation/{self.file_tag}_{self.target}_aggregation_lr_{grans[i]}.png")

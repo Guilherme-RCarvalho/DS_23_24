@@ -1,8 +1,10 @@
-from pandas import read_csv, DataFrame, Series
+from numpy import arange
+from pandas import DataFrame, Series
 from matplotlib.pyplot import figure, savefig, show, subplots
-from auxiliar.dslabs_functions import plot_line_chart, HEIGHT
+from auxiliar.dslabs_functions import plot_line_chart, HEIGHT, series_train_test_split, plot_forecasting_eval
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
+from sklearn.linear_model import LinearRegression
 
 class ts_Smoothing:
 
@@ -31,3 +33,21 @@ class ts_Smoothing:
                 title=f"size={sizes[i]}",
             )
         savefig(f"images/timeSeries/transformation/smoothing/{self.file_tag}_{self.target}_smoothing.png")
+
+    def ts_smoothing_lr(self):
+        sizes: list[int] = [25, 50, 75, 100]
+        for i in range(len(sizes)):
+            lr_series = self.data.rolling(window=sizes[i]).mean()
+            train, test = series_train_test_split(lr_series.dropna(), trn_pct=0.90)
+            trnX = arange(len(train)).reshape(-1, 1)
+            trnY = train.to_numpy()
+            tstX = arange(len(train), len(lr_series.dropna())).reshape(-1, 1)
+            tstY = test.to_numpy()
+            model = LinearRegression()
+            model.fit(trnX, trnY)
+
+            prd_trn: Series = Series(model.predict(trnX), index=train.index)
+            prd_tst: Series = Series(model.predict(tstX), index=test.index)
+
+            plot_forecasting_eval(train, test, prd_trn, prd_tst, title=f"size={sizes[i]}")
+            savefig(f"images/timeSeries/transformation/smoothing/{self.file_tag}_{self.target}_smoothing_lr_{sizes[i]}.png")

@@ -459,22 +459,25 @@ The series is not stationary (p-value > 0.05 : the series is non-stationary)
 #scaling.ts_scale()
 
 # -------------------- #
-# ---- Smoothing ----- #
-# -------------------- #
-
-#smoothing = ts_Smoothing(filename, file_tag, data, target)
-#smoothing.ts_smoothing()
-
-# -------------------- #
 # --- Aggregation ---- #
 # -------------------- #
 
 #aggregation = ts_Aggregation(filename, file_tag, data, target, index)
 #aggregation.ts_aggregation()
+#aggregation.ts_aggregation_lr()
+
+# -------------------- #
+# ---- Smoothing ----- #
+# -------------------- #
+
+#smoothing = ts_Smoothing(filename, file_tag, data, target)
+#smoothing.ts_smoothing()
+#smoothing.ts_smoothing_lr()
 
 # -------------------- #
 # - Differentiation -- #
 # -------------------- #
 
-differentiation = ts_Differentiation(filename, file_tag, data, target)
-differentiation.ts_differentiation()
+#differentiation = ts_Differentiation(filename, file_tag, data, target)
+#differentiation.ts_differentiation()
+#differentiation.ts_differentiation_lr()
