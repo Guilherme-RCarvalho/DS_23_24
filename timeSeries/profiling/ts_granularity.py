@@ -28,7 +28,7 @@ class ts_Granularity:
         return df
     
     def ts_aggregation(self):
-        grans: list[str] = ["M", "Q", "Y"]
+        grans: list[str] = ["W", "M", "Y"]
         fig: Figure
         axs: list[Axes]
         fig, axs = subplots(len(grans), 1, figsize=(3 * HEIGHT, HEIGHT / 2 * len(grans)))

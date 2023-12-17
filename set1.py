@@ -23,7 +23,9 @@ from profiling.granularity import Granularity
 from profiling.distribution import Distribution
 from matplotlib.pyplot import savefig, figure
 from timeSeries.profiling.ts_dimensionality import ts_Dimensionality
+from timeSeries.profiling.ts_distribution import ts_Distribtion
 from timeSeries.profiling.ts_granularity import ts_Granularity
+from timeSeries.profiling.ts_stationarity import ts_Stationarity
  
 # ---------------------------------------
 #             DATASET 1  
@@ -387,9 +389,10 @@ classificationRF.full_metrics_random_forests_study(NR_MAX_TREES_RF, lag) # only 
 filename = "data/forecast_covid_single.csv"
 file_tag = "covid"
 target   = "deaths" 
+index = "date"
 data: DataFrame = read_csv(
     filename,
-    index_col="date",
+    index_col=index,
     sep=",",
     decimal=".",
     parse_dates=True,
@@ -412,3 +415,35 @@ data: DataFrame = read_csv(
 
 #granularity = ts_Granularity(filename, file_tag, data, target)
 #granularity.ts_aggregation()
+
+# -------------------- #
+# --- Distribution --- #
+# -------------------- #
+
+#dist = ts_Distribtion(filename, file_tag, data, target, index)
+#dist.ts_distribution_boxplots()
+#dist.ts_distribution_histograms()
+#dist.ts_autocorrelation_lag()
+#dist.ts_autocorrelation_correlogram()
+
+# -------------------- #
+# --- Stationarity --- #
+# -------------------- #
+
+#stationarity = ts_Stationarity(filename, file_tag, data, target, index)
+#stationarity.ts_components()
+#stationarity.ts_stationarity_study()
+#stationarity.eval_stationarity()
+'''
+ADF Statistic: -2.156
+p-value: 0.223
+Critical Values:
+        1%: -3.464
+        5%: -2.876
+        10%: -2.575
+The series is not stationary (p-value > 0.05 : the series is non-stationary)
+'''
+# ---------------------------------------
+#             Transformation  
+# ---------------------------------------
+
