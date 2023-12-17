@@ -26,6 +26,10 @@ from timeSeries.profiling.ts_dimensionality import ts_Dimensionality
 from timeSeries.profiling.ts_distribution import ts_Distribtion
 from timeSeries.profiling.ts_granularity import ts_Granularity
 from timeSeries.profiling.ts_stationarity import ts_Stationarity
+from timeSeries.transformation.ts_aggregation import ts_Aggregation
+from timeSeries.transformation.ts_differentiation import ts_Differentiation
+from timeSeries.transformation.ts_smoothing import ts_Smoothing
+from timeSeries.transformation.ts_scaling import ts_Scaling
  
 # ---------------------------------------
 #             DATASET 1  
@@ -447,3 +451,30 @@ The series is not stationary (p-value > 0.05 : the series is non-stationary)
 #             Transformation  
 # ---------------------------------------
 
+# -------------------- #
+# ----- Scaling ------ #
+# -------------------- #
+
+#scaling = ts_Scaling(filename, file_tag, data, target)
+#scaling.ts_scale()
+
+# -------------------- #
+# ---- Smoothing ----- #
+# -------------------- #
+
+#smoothing = ts_Smoothing(filename, file_tag, data, target)
+#smoothing.ts_smoothing()
+
+# -------------------- #
+# --- Aggregation ---- #
+# -------------------- #
+
+#aggregation = ts_Aggregation(filename, file_tag, data, target, index)
+#aggregation.ts_aggregation()
+
+# -------------------- #
+# - Differentiation -- #
+# -------------------- #
+
+differentiation = ts_Differentiation(filename, file_tag, data, target)
+differentiation.ts_differentiation()
