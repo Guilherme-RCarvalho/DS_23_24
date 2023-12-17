@@ -22,7 +22,9 @@ from profiling.sparsity import Sparsity
 from profiling.granularity import Granularity
 from profiling.distribution import Distribution
 from matplotlib.pyplot import savefig, figure
-
+from timeSeries.profiling.ts_dimensionality import ts_Dimensionality
+from timeSeries.profiling.ts_granularity import ts_Granularity
+ 
 # ---------------------------------------
 #             DATASET 1  
 # ---------------------------------------
@@ -353,7 +355,7 @@ lag = 100
 
 classificationMLP.full_metrics_mlp_study(N_MAX_INTER, lag) # only accuracy
 
-'''
+
 # -------------------- #
 # - GradientBoosting - #
 # -------------------- #
@@ -365,7 +367,7 @@ lag = 500
 
 classificationGB.full_metrics_gradient_boosting_study(NR_MAX_TREES_GB, lag) # only accuracy
 
-'''
+
 # -------------------- #
 # --- RandomForest --- #
 # -------------------- #
@@ -377,3 +379,36 @@ lag = 500
 
 classificationRF.full_metrics_random_forests_study(NR_MAX_TREES_RF, lag) # only accuracy
 '''
+# ---------------------------------------#
+#             Time-Series                #
+# ---------------------------------------#
+
+
+filename = "data/forecast_covid_single.csv"
+file_tag = "covid"
+target   = "deaths" 
+data: DataFrame = read_csv(
+    filename,
+    index_col="date",
+    sep=",",
+    decimal=".",
+    parse_dates=True,
+    infer_datetime_format=True,
+)
+
+# ---------------------------------------
+#             Profiling  
+# ---------------------------------------
+# -------------------- #
+# -- Dimensionality -- #
+# -------------------- #
+
+#dim = ts_Dimensionality(filename, file_tag, data, target)
+#dim.univariate_ts()
+
+# -------------------- #
+# --- Granularity ---- #
+# -------------------- #
+
+#granularity = ts_Granularity(filename, file_tag, data, target)
+#granularity.ts_aggregation()
