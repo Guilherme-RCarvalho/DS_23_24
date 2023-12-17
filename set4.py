@@ -38,31 +38,32 @@ profiling = Profiling(filename, file_tag, target, index, data, series)
 # -- Granularity -- #
 # ----------------- #
 
-# profiling.aggregation_by()
-#
 # profiling.aggregation_study()
 #
+# # First granularity (most atomic)
+# # mais atomico possivel -> intervalo mais pequeno no meu conjunto de dados (15 min)
+# profiling.plot_most_atomic_granularity()
+#
+# # Second granularity
+# profiling.aggregation_by_d()
+#
+# # Third granularity
 # profiling.aggregation_by_w()
 
-
-# First granularity (most atomic)
-
-# mais atomico possivel -> intervalo mais pequeno no meu conjunto de dados (15 min)
-
-# Second granularity
-
-# Third granularity
 
 
 # ------------------ #
 # -- Distribution -- #
 # ------------------ #
 
-# # boxplots
+
+# boxplots
 # profiling.number_summary()
-#
-# # histograms
+profiling.plot_boxplots_for_granularities()
+
+# histograms
 # profiling.variables_distribution()
+profiling.plot_histograms_for_granularities()
 
 # ---------------------- #
 # -- Auto-correlation -- #
@@ -95,7 +96,7 @@ profiling = Profiling(filename, file_tag, target, index, data, series)
 # profiling.stationary_study_2()
 
 # Stationarity Dickey-Fuller Test
-profiling.eval_stationarity()
+# profiling.eval_stationarity()
 
 # ADF Statistic: -9.927
 # p-value: 0.000  ----->> estranho???????
@@ -138,7 +139,12 @@ time series, considering different windows size, over the time series aggregated
 to the best aggregation found.
 '''
 
+# transformation.smoothing_different_winsizes()
+
+
 # Forecasting plots after smoothing
+# WIN_SIZE = 10
+# transformation.specific_smoothing(WIN_SIZE)
 
 # Forecasting results after smoothing
 
@@ -154,6 +160,8 @@ to the best aggregation found.
 Evaluate the performance of Linear Regression models trained over the first and 
 second differentiation of the best time series found up to the moment.
 '''
+
+# transformation.differentiation()
 
 # Forecasting plots after differentiation
 

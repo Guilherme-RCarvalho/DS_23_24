@@ -1,6 +1,7 @@
 '''
 file:       profilling_ts.py
 '''
+from typing import Optional
 
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
@@ -36,7 +37,7 @@ class Profiling:
         savefig(f"images/TS/Profiling/{self.file_tag}_profiling_data_before.png")
         show()
 
-    def aggregation_by(self):
+    def aggregation_by_d(self):
         ss_days: Series = ts_aggregation_by(self.series, "D")
         figure(figsize=(3 * HEIGHT, HEIGHT / 2))
         plot_line_chart(
@@ -44,9 +45,36 @@ class Profiling:
             ss_days.to_list(),
             xlabel="days",
             ylabel=self.target,
-            title=f"{self.file_tag} daily mean {self.target}",
+            title=f"{self.file_tag} daily granularity",
         )
-        savefig(f"images/TS/Profiling/{self.file_tag}_profiling_daily_mean.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_daily_granularity.png")
+        show()
+
+    def aggregation_by_w(self):
+        ss_weeks: Series = ts_aggregation_by(self.series, gran_level="W", agg_func=sum)
+        figure(figsize=(3 * HEIGHT, HEIGHT))
+        plot_line_chart(
+            ss_weeks.index.to_list(),
+            ss_weeks.to_list(),
+            xlabel="weeks",
+            ylabel=self.target,
+            title=f"{self.file_tag} weekly granularity",
+        )
+        savefig(f"images/TS/Profiling/{self.file_tag}_weekly_granularity.png")
+        show()
+
+    def aggregation_by_m(self):
+        ss_months: Series = ts_aggregation_by(self.series, gran_level="M", agg_func=sum)
+        figure(figsize=(3 * HEIGHT, HEIGHT))
+        plot_line_chart(
+            ss_months.index.to_list(),
+            ss_months.to_list(),
+            xlabel="months",
+            ylabel=self.target,
+            title=f"{self.file_tag} monthly granularity",
+        )
+        savefig(f"images/TS/Profiling/{self.file_tag}_monthly_granularity.png")
+
         show()
 
     def aggregation_study(self):
@@ -70,17 +98,18 @@ class Profiling:
         savefig(f"images/TS/Profiling/{self.file_tag}_granularity_aggregation_study.png")
         show()
 
-    def aggregation_by_w(self):
-        ss_weeks: Series = ts_aggregation_by(self.series, gran_level="W", agg_func=sum)
-        figure(figsize=(3 * HEIGHT, HEIGHT))
+
+    def plot_most_atomic_granularity(self, interval: Optional[str] = "15T"):
+        series_most_atomic: Series = ts_aggregation_by(self.series, gran_level=interval, agg_func=sum)
+        figure(figsize=(3 * HEIGHT, HEIGHT / 2))
         plot_line_chart(
-            ss_weeks.index.to_list(),
-            ss_weeks.to_list(),
-            xlabel="weeks",
+            series_most_atomic.index.to_list(),
+            series_most_atomic.to_list(),
+            xlabel=series_most_atomic.index.name,
             ylabel=self.target,
-            title=f"{self.file_tag} weekly {self.target}",
+            title=f"{self.file_tag} most atomic granularity ({interval}) {self.target}",
         )
-        savefig(f"images/TS/Profiling/{self.file_tag}_weekly_{self.target}.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_most_atomic_granularity.png")
         show()
 
     def number_summary(self):
@@ -101,6 +130,32 @@ class Profiling:
         axs[1, 1].set_axis_off()
         axs[1, 1].text(0.2, 0, str(ss_weeks.describe()), fontsize="small")
         savefig(f"images/TS/Profiling/{self.file_tag}_number_summary.png")
+        show()
+
+    def plot_boxplots_for_granularities(self):
+
+        granularities = ["15T", "H", "W"]  # granularidades identificadas
+        fig, axs = subplots(len(granularities), 1, figsize=(3 * HEIGHT, HEIGHT / 2 * len(granularities)))
+        fig.suptitle(f"{self.file_tag} {self.target} Distribution: Boxplots")
+
+        for i, gran in enumerate(granularities):
+            ss: Series = ts_aggregation_by(self.series, gran)
+            axs[i].boxplot(ss)
+            set_chart_labels(axs[i], title=f"{gran} granularity", xlabel="Time", ylabel=self.target)
+        savefig(f"images/TS/Profiling/{self.file_tag}_boxplots_for_granularities.png")
+        show()
+
+    def plot_histograms_for_granularities(self):
+
+        granularities = ["15T", "H", "W"]
+        fig, axs = subplots(1, len(granularities), figsize=(3 * HEIGHT * len(granularities), HEIGHT))
+        fig.suptitle(f"{self.file_tag} {self.target} Distribution: Histograms")
+
+        for i, gran in enumerate(granularities):
+            ss: Series = ts_aggregation_by(self.series, gran)
+            axs[i].hist(ss, bins=20)  # Ajuste o número de bins conforme necessário
+            set_chart_labels(axs[i], title=f"{gran} granularity", xlabel=self.target, ylabel="Frequency")
+        savefig(f"images/TS/Profiling/{self.file_tag}_histograms_for_granularities.png")
         show()
 
     def variables_distribution(self):
