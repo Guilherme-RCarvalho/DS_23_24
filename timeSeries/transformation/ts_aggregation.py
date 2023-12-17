@@ -1,7 +1,7 @@
 from numpy import arange
 from pandas import DataFrame, Series
 from matplotlib.pyplot import figure, savefig, show, subplot, subplots
-from auxiliar.dslabs_functions import plot_line_chart, ts_aggregation_by, HEIGHT, series_train_test_split, plot_forecasting_eval
+from auxiliar.dslabs_functions import plot_line_chart, ts_aggregation_by, HEIGHT, series_train_test_split, plot_forecasting_eval, plot_forecasting_series
 from sklearn.linear_model import LinearRegression
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
@@ -72,3 +72,5 @@ class ts_Aggregation:
 
             plot_forecasting_eval(train, test, prd_trn, prd_tst, title=grans[i])
             savefig(f"images/timeSeries/transformation/aggregation/{self.file_tag}_{self.target}_aggregation_lr_{grans[i]}.png")
+            plot_forecasting_series(train, test, prd_tst, title=f"{self.file_tag} - Linear Regression", xlabel=self.index, ylabel=self.target,)
+            savefig(f"images/timeSeries/transformation/aggregation/{self.file_tag}_{self.target}_aggregation_lr_{grans[i]}_series.png")

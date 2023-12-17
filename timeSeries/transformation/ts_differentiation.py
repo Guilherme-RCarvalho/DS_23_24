@@ -1,17 +1,18 @@
 from pandas import Series
 from numpy import arange
-from auxiliar.dslabs_functions import plot_line_chart, ts_aggregation_by, HEIGHT, series_train_test_split, plot_forecasting_eval
+from auxiliar.dslabs_functions import plot_line_chart, ts_aggregation_by, HEIGHT, series_train_test_split, plot_forecasting_eval, plot_forecasting_series
 from matplotlib.pyplot import figure, savefig, subplots, suptitle
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 
 class ts_Differentiation:
 
-    def __init__(self, filename, file_tag, data, target):
+    def __init__(self, filename, file_tag, data, target, index):
         self.filename = filename
         self.file_tag = file_tag
         self.data     = data
         self.target   = target
+        self.index    = index
         self.series: Series = self.data[self.target]
 
     def ts_differentiation(self):
@@ -54,3 +55,5 @@ class ts_Differentiation:
 
             plot_forecasting_eval(train, test, prd_trn, prd_tst, title=f"diff={i}")
             savefig(f"images/timeSeries/transformation/differentiation/{self.file_tag}_{self.target}_differentiation_lr_diff{i+1}.png")
+            plot_forecasting_series(train, test, prd_tst, title=f"{self.file_tag} - Linear Regression", xlabel=self.index, ylabel=self.target,)
+            savefig(f"images/timeSeries/transformation/differentiation/{self.file_tag}_{self.target}_differentiation_lr_diff{i+1}_series.png")

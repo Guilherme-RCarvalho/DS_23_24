@@ -1,18 +1,19 @@
 from numpy import arange
 from pandas import DataFrame, Series
 from matplotlib.pyplot import figure, savefig, show, subplots
-from auxiliar.dslabs_functions import plot_line_chart, HEIGHT, series_train_test_split, plot_forecasting_eval
+from auxiliar.dslabs_functions import plot_line_chart, HEIGHT, series_train_test_split, plot_forecasting_eval, plot_forecasting_series
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from sklearn.linear_model import LinearRegression
 
 class ts_Smoothing:
 
-    def __init__(self, filename, file_tag, data, target):
+    def __init__(self, filename, file_tag, data, target, index):
         self.filename = filename
         self.file_tag = file_tag
         self.data     = data
         self.target   = target
+        self.index    = index
         self.series: Series = self.data[self.target]
 
     def ts_smoothing(self):
@@ -51,3 +52,5 @@ class ts_Smoothing:
 
             plot_forecasting_eval(train, test, prd_trn, prd_tst, title=f"size={sizes[i]}")
             savefig(f"images/timeSeries/transformation/smoothing/{self.file_tag}_{self.target}_smoothing_lr_{sizes[i]}.png")
+            plot_forecasting_series(train, test, prd_tst, title=f"{self.file_tag} - Linear Regression", xlabel=self.index, ylabel=self.target,)
+            savefig(f"images/timeSeries/transformation/smoothing/{self.file_tag}_{self.target}_smoothing_lr_{sizes[i]}_series.png")
