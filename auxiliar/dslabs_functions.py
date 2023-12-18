@@ -33,7 +33,16 @@ from statsmodels.tsa.stattools import adfuller
 
 from auxiliar.config import LINE_COLOR, FILL_COLOR, cmap_blues
 
-#from config import ACTIVE_COLORS, LINE_COLOR, FILL_COLOR, cmap_blues
+from auxiliar.config import (
+    ACTIVE_COLORS,
+    LINE_COLOR,
+    FILL_COLOR,
+    PAST_COLOR,
+    FUTURE_COLOR,
+    PRED_PAST_COLOR,
+    PRED_FUTURE_COLOR,
+    cmap_blues,
+)
 
 NR_COLUMNS: int = 3
 HEIGHT: int = 4
@@ -109,29 +118,35 @@ def set_chart_xticks(
 
 
 def plot_line_chart(
-    xvalues: list,
-    yvalues: list,
-    ax: Axes = None,
-    title: str = "",
-    xlabel: str = "",
-    ylabel: str = "",
-    name: str = "",
-    percentage: bool = False,
-    show_stdev: bool = False,
-    label: Optional[str] = None,
+        xvalues: list,
+        yvalues: list,
+        ax: Axes = None,
+        title: str = "",
+        xlabel: str = "",
+        ylabel: str = "",
+        name: str = "",
+        percentage: bool = False,
+        show_stdev: bool = False,
+        label: Optional[str] = None,
+        color: Optional[str] = None,
 ) -> Axes:
     if ax is None:
         ax = gca()
     ax = set_chart_labels(ax=ax, title=title, xlabel=xlabel, ylabel=ylabel)
     ax = set_chart_xticks(xvalues, ax, percentage=percentage)
-    ax.plot(xvalues, yvalues, c=LINE_COLOR, label=label)  # Changed 'name' to 'label'
+
+    # Use color argument if provided, otherwise use default LINE_COLOR
+    line_color = color if color else LINE_COLOR
+
+    ax.plot(xvalues, yvalues, label=label, c=line_color)  # Changed 'name' to 'label'
+
     if show_stdev:
         stdev: float = round(std(yvalues), 3)
         y_bottom: list[float] = [(y - stdev) for y in yvalues]
         y_top: list[float] = [(y + stdev) for y in yvalues]
         ax.fill_between(xvalues, y_bottom, y_top, color=FILL_COLOR, alpha=0.2)
-    return ax
 
+    return ax
 
 
 def plot_bar_chart(
