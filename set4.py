@@ -169,7 +169,7 @@ to the best aggregation found.
 # transformation.ts_smoothing_lr()
 
 best_window_size = 100
-
+#comentario teste
 # ------------------------------- #
 #        - Transformation -       #
 #       - Differentiation -       #
