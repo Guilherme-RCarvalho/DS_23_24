@@ -134,8 +134,8 @@ transformation = Transformation(filename, file_tag, target, index, data, series)
 # Mean Squared Error for W granularity: 1.5496155228041761
 
 print("vou agora->>>>>>>>>>")
-# transformation.ts_aggregation()
-# transformation.ts_aggregation_lr()
+transformation.ts_aggregation()
+transformation.ts_aggregation_lr()
 
 # Aggregation decision
 # Third - W granularity
@@ -191,4 +191,4 @@ second differentiation of the best time series found up to the moment.
 # transformation.ts_differentiation()
 # transformation.ts_differentiation_lr()
 
-transformation.example_usage()
+# transformation.example_usage()
