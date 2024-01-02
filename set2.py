@@ -39,12 +39,9 @@ from preparation.methodology import Methodology
 filename = "data/class_credit_score.csv"
 file_tag = "credit"
 target = "Credit_Score"
-# data: DataFrame = read_csv(filename, na_values="")
-# data = data.drop(['ID', 'SSN', 'Name'], axis=1)
-# print("Drop of ID, SSN and Name")
-# mv_out = MV_out("data/class_credit_score.csv", file_tag, data, 2)
-# data = mv_out.data_correction()
-# print("Data Cleaned")
+data: DataFrame = read_csv(filename, na_values="")
+
+
 
 
 # ------------------------------------------ #
@@ -61,10 +58,10 @@ target = "Credit_Score"
 
 # dim = Dimensionality(filename, file_tag, data)
 #
-# print('Set2 Data Shape: ', data.shape)  # Dimension: (100000, 27)
+# print('Set2 Data Shape: ', data.shape)  # Dimension: (100000, 28)
 # print('Set2 Columns Names: ', data.columns)
 
-# Index(['Customer_ID', 'Month', 'Name', 'Age', 'SSN', 'Occupation',
+# Index(['ID', 'Customer_ID', 'Month', 'Name', 'Age', 'SSN', 'Occupation',
 #        'Annual_Income', 'Monthly_Inhand_Salary', 'Num_Bank_Accounts',
 #        'Num_Credit_Card', 'Interest_Rate', 'NumofLoan', 'Type_of_Loan',
 #        'Delay_from_due_date', 'NumofDelayedPayment', 'ChangedCreditLimit',
@@ -74,16 +71,48 @@ target = "Credit_Score"
 #        'MonthlyBalance', 'Credit_Score'],
 #       dtype='object')
 
-# Number of records and variables
+# # Number of records and variables
 # dim.num_records_variables()
-
-# Missing Values
+#
+# # Missing Values
 # dim.missing_values()
-
-# Variables Type
+#
+# # Variables Type
 # print('Set2 Data Types 2:\n', data.dtypes, '\n')
 
-# Number of variables per type
+# Set2 Data Types 2:
+# ID                         object
+# Customer_ID                object
+# Month                      object
+# Name                       object
+# Age                        object
+# SSN                        object
+# Occupation                 object
+# Annual_Income             float64
+# Monthly_Inhand_Salary     float64
+# Num_Bank_Accounts           int64
+# Num_Credit_Card             int64
+# Interest_Rate               int64
+# NumofLoan                   int64
+# Type_of_Loan               object
+# Delay_from_due_date         int64
+# NumofDelayedPayment       float64
+# ChangedCreditLimit        float64
+# NumCreditInquiries        float64
+# CreditMix                  object
+# OutstandingDebt           float64
+# CreditUtilizationRatio    float64
+# Credit_History_Age         object
+# Payment_of_Min_Amount      object
+# TotalEMIpermonth          float64
+# Amountinvestedmonthly     float64
+# Payment_Behaviour          object
+# MonthlyBalance            float64
+# Credit_Score               object
+# dtype: object
+
+#
+# # Number of variables per type
 # dim.num_variables_per_type()
 
 # ------------------ #
@@ -98,39 +127,48 @@ target = "Credit_Score"
 # Histograms for symbolic               - Done
 # Class Distribution                    - Done (images2submit/credit_class_distribution.png)
 
-# summary5: DataFrame = data.describe(include="all")
-# print(summary5, '\n')
-#
-# distribution = Distribution(filename, file_tag, data)
-#
+data = data.drop(['ID', 'SSN', 'Name'], axis=1)
+#data = data.drop(['Annual_Income', 'TotalEMIpermonth'], axis=1)
+print("Drop of ID, SSN and Name")
+# mv_out = MV_out("data/class_credit_score.csv", file_tag, data, 2)
+# data = mv_out.data_correction()
+# data['MonthlyBalance'] = data['MonthlyBalance'].replace(-3.33333E+26, )
+# data = data.drop(['Customer_ID'], axis=1)
+
+summary5: DataFrame = data.describe(include="all")
+print(summary5, '\n')
+
+
+
+distribution = Distribution(filename, file_tag, data)
+
 # print('Numeric Variables: ', distribution.get_numeric_variables(), '\n')
 # print('Symbolic Variables: ', distribution.get_symbolic_variables(), '\n')
 
-# data['MonthlyBalance'] = data['MonthlyBalance'].replace(-3.33333E+26, "")
 
-# Global Boxplot
+# # Global Boxplot
 # distribution.global_boxplot2()
 
-# Single Variable Boxplots
+# # Single Variable Boxplots
 # distribution.boxplots()
 
-# Outliers Study
+# # Outliers Study
 # distribution.num_standart_outliers_per_variable()
 
 NR_STDEV: int = 2
 IQR_FACTOR: float = 1.5
 # distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR)
 
-# Histograms - numeric
+# # Histograms - numeric
 # distribution.histogram_numeric()
 
 # Histograms - symbolic
 # distribution.histograms_symbolic_variables()
 
-# Distribution for numeric
+# # Distribution for numeric
 # distribution.histograms_numeric_with_distributions()
 
-# Class Distribution
+# # Class Distribution
 # distribution.class_distribution(target='Credit_Score')
 
 # ----------------- #
@@ -139,9 +177,9 @@ IQR_FACTOR: float = 1.5
 
 # Symbolic variables
 
-# granularity = Granularity(filename, file_tag, data)
+granularity = Granularity(filename, file_tag, data)
 
-#granularity.analyse_property_granularity("credit_history",["Credit_Score", "CreditMix" , "Payment_Behaviour"])
+granularity.analyse_property_granularity("credit_history",["Credit_Score", "CreditMix" , "Payment_Behaviour"])
 
 # -------------- #
 # -- Sparsity -- #
@@ -170,6 +208,12 @@ IQR_FACTOR: float = 1.5
 # -------------- #
 # filename = "cleaned_data.csv"
 # encoding = Encoding(filename, file_tag, data)
+
+# data = data.drop(['ID', 'SSN', 'Name'], axis=1)
+# print("Drop of ID, SSN and Name")
+# mv_out = MV_out("data/class_credit_score.csv", file_tag, data, 2)
+# data = mv_out.data_correction()
+# print("Data Cleaned")
 #
 # def create_loan_type_columns():
 #     # Preencher os valores ausentes na coluna 'Type_of_Loan' com uma string vazia
@@ -447,44 +491,44 @@ IQR_FACTOR: float = 1.5
 # --------------------- #
 # - Gradient Boosting - #
 # --------------------- #
-classificationGB = GradientBoosting(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
-
-# Testar Parâmetros:
-NR_MAX_TREES_GB = 2500 # default
-lag_gb = 500
-gb_metric = "accuracy"
-
-#classificationGB.full_metrics_gradient_boosting_study(NR_MAX_TREES_GB, lag_gb)
-
-best_model_gb, best_params_gb = classificationGB.specific_metric_gradient_boosting_study(NR_MAX_TREES_GB, lag_gb, gb_metric)
-
-# guardar os resultados
-joblib.dump((best_model_gb, best_params_gb), 'resultados_gb.joblib')
-
-classificationGB.performance_analysis(best_model_gb, best_params_gb)
-classificationGB.gb_overfitting_study(best_params_gb)
-classificationGB.visualize_variable_importance(best_model_gb, gb_metric)
+# classificationGB = GradientBoosting(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
+#
+# # Testar Parâmetros:
+# NR_MAX_TREES_GB = 2500 # default
+# lag_gb = 500
+# gb_metric = "accuracy"
+#
+# #classificationGB.full_metrics_gradient_boosting_study(NR_MAX_TREES_GB, lag_gb)
+#
+# best_model_gb, best_params_gb = classificationGB.specific_metric_gradient_boosting_study(NR_MAX_TREES_GB, lag_gb, gb_metric)
+#
+# # guardar os resultados
+# joblib.dump((best_model_gb, best_params_gb), 'resultados_gb.joblib')
+#
+# classificationGB.performance_analysis(best_model_gb, best_params_gb)
+# classificationGB.gb_overfitting_study(best_params_gb)
+# classificationGB.visualize_variable_importance(best_model_gb, gb_metric)
 
 
 # --------------------- #
 # --- Random Forest --- #
 # --------------------- #
-classificationRF = RandomForests(file_tag, "data/credit_train.csv" , "data/credit_test.csv", target)
-
-# Testar Parâmetros:
-NR_MAX_TREES_RF = 2500 # default
-lag_rf = 500
-rf_metric = "accuracy"
-
-#classificationRF.full_metrics_random_forests_study(NR_MAX_TREES_RF, lag_rf)
-
-best_model_rf, best_params_rf = classificationRF.specific_metric_random_forests_study(NR_MAX_TREES_RF, lag_rf, rf_metric)
-
-# guardar os resultados
-joblib.dump((best_model_rf, best_params_rf), 'resultados_rf.joblib')
-
-classificationRF.performance_analysis(best_model_rf, best_params_rf)
-classificationRF.rf_overfitting_study(best_params_rf)
-classificationRF.visualize_variable_importance(best_model_rf, rf_metric)
+# classificationRF = RandomForests(file_tag, "data/credit_train.csv" , "data/credit_test.csv", target)
+#
+# # Testar Parâmetros:
+# NR_MAX_TREES_RF = 2500 # default
+# lag_rf = 500
+# rf_metric = "accuracy"
+#
+# #classificationRF.full_metrics_random_forests_study(NR_MAX_TREES_RF, lag_rf)
+#
+# best_model_rf, best_params_rf = classificationRF.specific_metric_random_forests_study(NR_MAX_TREES_RF, lag_rf, rf_metric)
+#
+# # guardar os resultados
+# joblib.dump((best_model_rf, best_params_rf), 'resultados_rf.joblib')
+#
+# classificationRF.performance_analysis(best_model_rf, best_params_rf)
+# classificationRF.rf_overfitting_study(best_params_rf)
+# classificationRF.visualize_variable_importance(best_model_rf, rf_metric)
 
 

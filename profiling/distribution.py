@@ -195,6 +195,7 @@ class Distribution():
                 i, j = (i + 1, 0) if (n + 1) % cols == 0 else (i, j + 1)
             plt.tight_layout()
             savefig(f"images/profiling/{self.file_tag}_single_histograms_numeric.png")
+            show()
         else:
             print("There are no numeric variables.")
 
@@ -226,13 +227,16 @@ class Distribution():
 
     def histograms_symbolic_variables(self):
         symbolic = self.get_symbolic_variables()
-        if [] != symbolic:
+        if symbolic:
             rows, cols = define_grid(len(symbolic))
             _, axs = subplots(
                 rows, cols, figsize=(cols * HEIGHT, rows * HEIGHT), squeeze=False
             )
             i, j = 0, 0
+            p = len(symbolic)
+            print("len: ", p)
             for n in range(len(symbolic)):
+                print(n, " of ", p)
                 counts: Series = self.data[symbolic[n]].value_counts()
                 plot_bar_chart(
                     counts.index.to_list(),

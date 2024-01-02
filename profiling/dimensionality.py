@@ -24,6 +24,7 @@ class Dimensionality:
             list(values.keys()), list(values.values()), title="Nr of records vs nr variables"
         )
         savefig(f"images/profiling/{self.file_tag}_records_variables.png")
+        show()
 
     def missing_values(self):
         mv: dict[str, int] = {}
@@ -41,6 +42,7 @@ class Dimensionality:
             ylabel="nr missing values",
         )
         savefig(f"images/profiling/{self.file_tag}_mv.png")
+        show()
 
 
     def num_variables_per_type(self):
@@ -55,4 +57,5 @@ class Dimensionality:
             list(counts.keys()), list(counts.values()), title="Nr of variables per type"
         )
         savefig(f"images/profiling/{self.file_tag}_variable_types.png")
+        show()
     
