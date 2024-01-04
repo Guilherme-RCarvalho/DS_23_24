@@ -14,7 +14,7 @@ class ts_Rollingmean:
     def rolling_mean_study(self, measure: str = "R2"):
         win_size = (3, 5, 10, 15, 20, 25, 30, 40, 50)
         #win_size = (12, 24, 48, 96, 192, 384, 768)
-        flag = measure == "R2" or measure == "MAPE"
+        flag = measure == "MAPE"
         best_model = None
         best_params: dict = {"name": "Rolling Mean", "metric": measure, "params": ()}
         best_performance: float = -100000
@@ -34,6 +34,7 @@ class ts_Rollingmean:
             yvalues.append(eval)
 
         print(f"Rolling Mean best with win={best_params['params'][0]:.0f} -> {measure}={best_performance}")
+        print(yvalues)
         plot_line_chart(
             win_size, yvalues, title=f"Rolling Mean ({measure})", xlabel="window size", ylabel=measure, percentage=flag
         )

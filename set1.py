@@ -494,11 +494,12 @@ series = smoothing.ts_smoothing_size(50)
 differentiation = ts_Differentiation(filename, file_tag, df, target, index,series)
 dif1,dif2 = differentiation.ts_differentiation()
 differentiation.ts_differentiation_lr()
-'''
+
 # ---------------------------------------
 #             Forecasting 
 # ---------------------------------------
 train, test = series_train_test_split(dif1, trn_pct=0.90)
+'''
 # -------------------- #
 # -- Simple Average -- #
 # -------------------- #
@@ -561,16 +562,17 @@ savefig(f"images/timeseries/forecasting/persistanceModel/{file_tag}_persistence_
 # -------------------- #
 # --- Rolling Mean --- #
 # -------------------- #
-
+'''
 rollingMean = ts_Rollingmean(train, test, file_tag, target, index)
 rollingMean.rolling_mean_study()
+'''
 # -------------------- #
 # ------- ARIMA ------ #
 # -------------------- #
 
 arima = ts_Arima(train, test, file_tag, target, index)
 arima.arima_study()
-'''
+
 # -------------------- #
 # ------- LSTMs ------ #
 # -------------------- #
@@ -583,3 +585,4 @@ train, test = series[:train_size], series[train_size:]
 
 lstm = ts_LSTM(train, test, file_tag, target, index,series2,train_size)
 lstm.lstm_study(3000)
+'''
