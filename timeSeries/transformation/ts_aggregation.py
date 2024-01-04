@@ -74,3 +74,6 @@ class ts_Aggregation:
             savefig(f"images/timeSeries/transformation/aggregation/{self.file_tag}_{self.target}_aggregation_lr_{grans[i]}.png")
             plot_forecasting_series(train, test, prd_tst, title=f"{self.file_tag} - Linear Regression", xlabel=self.index, ylabel=self.target,)
             savefig(f"images/timeSeries/transformation/aggregation/{self.file_tag}_{self.target}_aggregation_lr_{grans[i]}_series.png")
+
+    def ts_aggregation_df(self, level: str):
+        return ts_aggregation_by(self.data, gran_level=level, agg_func="sum")

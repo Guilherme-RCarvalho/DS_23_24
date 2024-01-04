@@ -3,10 +3,10 @@ file:       set1.py
 '''
 
 #Imports
-from pandas import read_csv, DataFrame
+from pandas import Series, read_csv, DataFrame
 from numpy import array, ndarray
 from sklearn.model_selection import train_test_split
-from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping, mvi_by_filling, plot_multibar_chart
+from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping, mvi_by_filling, plot_forecasting_eval, plot_forecasting_series, plot_multibar_chart, series_train_test_split
 from classification.NBayes import NBayes
 from classification.decision_tree import DecisionTree
 from classification.gradient_boosting import GradientBoosting
@@ -22,6 +22,12 @@ from profiling.sparsity import Sparsity
 from profiling.granularity import Granularity
 from profiling.distribution import Distribution
 from matplotlib.pyplot import savefig, figure
+from timeSeries.forecasting.ts_arima import ts_Arima
+from timeSeries.forecasting.ts_lstms import ts_LSTM
+from timeSeries.forecasting.ts_persistance_optimist import PersistenceOptimistRegressor
+from timeSeries.forecasting.ts_persistance_realist import PersistenceRealistRegressor
+from timeSeries.forecasting.ts_rolingmean import ts_Rollingmean
+from timeSeries.forecasting.ts_simpleaverage import SimpleAvgRegressor
 from timeSeries.profiling.ts_dimensionality import ts_Dimensionality
 from timeSeries.profiling.ts_distribution import ts_Distribtion
 from timeSeries.profiling.ts_granularity import ts_Granularity
@@ -455,29 +461,125 @@ The series is not stationary (p-value > 0.05 : the series is non-stationary)
 # ----- Scaling ------ #
 # -------------------- #
 
-#scaling = ts_Scaling(filename, file_tag, data, target)
-#scaling.ts_scale()
+scaling = ts_Scaling(filename, file_tag, data, target)
+scaling.ts_scale()
+
+df = scaling.scale_all_dataframe(data)
 
 # -------------------- #
 # --- Aggregation ---- #
 # -------------------- #
 
-aggregation = ts_Aggregation(filename, file_tag, data, target, index)
+aggregation = ts_Aggregation(filename, file_tag, df, target, index)
 aggregation.ts_aggregation()
 aggregation.ts_aggregation_lr()
+
+df = aggregation.ts_aggregation_df("W")
 
 # -------------------- #
 # ---- Smoothing ----- #
 # -------------------- #
 
-smoothing = ts_Smoothing(filename, file_tag, data, target, index)
+smoothing = ts_Smoothing(filename, file_tag, df, target, index)
 smoothing.ts_smoothing()
 smoothing.ts_smoothing_lr()
+
+series = smoothing.ts_smoothing_size(50)
+#size 50?
 
 # -------------------- #
 # - Differentiation -- #
 # -------------------- #
 
-differentiation = ts_Differentiation(filename, file_tag, data, target, index)
-differentiation.ts_differentiation()
+differentiation = ts_Differentiation(filename, file_tag, df, target, index,series)
+dif1,dif2 = differentiation.ts_differentiation()
 differentiation.ts_differentiation_lr()
+'''
+# ---------------------------------------
+#             Forecasting 
+# ---------------------------------------
+train, test = series_train_test_split(dif1, trn_pct=0.90)
+# -------------------- #
+# -- Simple Average -- #
+# -------------------- #
+
+fr_mod = SimpleAvgRegressor()
+fr_mod.fit(train)
+prd_trn: Series = fr_mod.predict(train)
+prd_tst: Series = fr_mod.predict(test)
+
+plot_forecasting_eval(train, test, prd_trn, prd_tst, title=f"{file_tag} - Simple Average")
+savefig(f"images/timeseries/forecasting/simpleAverage/{file_tag}_simpleAvg_eval.png")
+plot_forecasting_series(
+    train,
+    test,
+    prd_tst,
+    title=f"{file_tag} - Simple Average",
+    xlabel=index,
+    ylabel=target,
+)
+savefig(f"images/timeseries/forecasting/simpleAverage/{file_tag}_simpleAvg_forecast.png")
+# -------------------- #
+#  Persistence Model - #
+# -------------------- #
+#Optimist
+fr_mod = PersistenceOptimistRegressor()
+fr_mod.fit(train)
+prd_trn: Series = fr_mod.predict(train)
+prd_tst: Series = fr_mod.predict(test)
+
+plot_forecasting_eval(train, test, prd_trn, prd_tst, title=f"{file_tag} - Persistence Optimist")
+savefig(f"images/timeseries/forecasting/persistanceModel/{file_tag}_persistence_optim_eval.png")
+plot_forecasting_series(
+    train,
+    test,
+    prd_tst,
+    title=f"{file_tag} - Persistence Optimist",
+    xlabel=index,
+    ylabel=target,
+)
+savefig(f"images/timeseries/forecasting/persistanceModel/{file_tag}_persistence_optim_forecast.png")
+
+#Realist
+fr_mod = PersistenceRealistRegressor()
+fr_mod.fit(train)
+prd_trn: Series = fr_mod.predict(train)
+prd_tst: Series = fr_mod.predict(test)
+
+plot_forecasting_eval(train, test, prd_trn, prd_tst, title=f"{file_tag} - Persistence Realist")
+savefig(f"images/timeseries/forecasting/persistanceModel/{file_tag}_persistence_real_eval.png")
+plot_forecasting_series(
+    train,
+    test,
+    prd_tst,
+    title=f"{file_tag} - Persistence Realist",
+    xlabel=index,
+    ylabel=target,
+)
+savefig(f"images/timeseries/forecasting/persistanceModel/{file_tag}_persistence_real_forecast.png")
+
+# -------------------- #
+# --- Rolling Mean --- #
+# -------------------- #
+
+rollingMean = ts_Rollingmean(train, test, file_tag, target, index)
+rollingMean.rolling_mean_study()
+# -------------------- #
+# ------- ARIMA ------ #
+# -------------------- #
+
+arima = ts_Arima(train, test, file_tag, target, index)
+arima.arima_study()
+'''
+# -------------------- #
+# ------- LSTMs ------ #
+# -------------------- #
+
+series = dif1[[target]].values.astype("float32")
+series2 = dif1[[target]]
+train_size = int(len(series) * 0.90)
+train, test = series[:train_size], series[train_size:]
+
+
+lstm = ts_LSTM(train, test, file_tag, target, index,series2,train_size)
+lstm.lstm_study(3000)

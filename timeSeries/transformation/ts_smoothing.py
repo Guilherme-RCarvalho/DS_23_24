@@ -54,3 +54,6 @@ class ts_Smoothing:
             savefig(f"images/timeSeries/transformation/smoothing/{self.file_tag}_{self.target}_smoothing_lr_{sizes[i]}.png")
             plot_forecasting_series(train, test, prd_tst, title=f"{self.file_tag} - Linear Regression", xlabel=self.index, ylabel=self.target,)
             savefig(f"images/timeSeries/transformation/smoothing/{self.file_tag}_{self.target}_smoothing_lr_{sizes[i]}_series.png")
+
+    def ts_smoothing_size(self, size):
+        return self.series.rolling(window=size).mean()

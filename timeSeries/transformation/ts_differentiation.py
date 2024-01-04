@@ -7,13 +7,13 @@ import matplotlib.pyplot as plt
 
 class ts_Differentiation:
 
-    def __init__(self, filename, file_tag, data, target, index):
+    def __init__(self, filename, file_tag, data, target, index, series):
         self.filename = filename
         self.file_tag = file_tag
         self.data     = data
         self.target   = target
         self.index    = index
-        self.series: Series = self.data[self.target]
+        self.series: Series = series
 
     def ts_differentiation(self):
         ss_diff_1: Series = self.series.diff()
@@ -38,9 +38,10 @@ class ts_Differentiation:
         )
         plt.tight_layout()
         savefig(f"images/timeSeries/transformation/differentiation/{self.file_tag}_{self.target}_differentiation.png")
+        return ss_diff_1.to_frame().dropna(), ss_diff_2.to_frame().dropna()
     
     def ts_differentiation_lr(self):
-        diffs : list[Series] = [self.data.diff(), self.data.diff().diff()]
+        diffs : list[Series] = [self.series.to_frame().diff(), self.series.to_frame().diff().diff()]
         for i in range(len(diffs)):
             train, test = series_train_test_split(diffs[i].dropna(), trn_pct=0.90)
             trnX = arange(len(train)).reshape(-1, 1)
