@@ -16,14 +16,14 @@ class Methodology:
         self.data     = data
 
 
-    def evaluate_approach(self, train, test, name, target):
+    def evaluate_approach(self, train, test, name, graph_name, target):
         figure()
-        eval: dict[str, list] = evaluate_approach(train, test, target=target, metric="recall")
+        eval: dict[str, list] = evaluate_approach(train, test, target=target, metric="accuracy")
         plot_multibar_chart(
-            ["NB", "KNN"], eval, title=f"{self.file_tag} evaluation", percentage=True
+            ["NB", "KNN"], eval, title=f"{graph_name} - Evaluation", percentage=True
         )
         savefig(f"images/preparation/{self.file_tag}_eval{name}.png")
-        #show()
+        show()
         return eval
 
 

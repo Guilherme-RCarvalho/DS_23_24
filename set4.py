@@ -192,3 +192,92 @@ second differentiation of the best time series found up to the moment.
 # transformation.ts_differentiation_lr()
 
 # transformation.example_usage()
+
+# ---------------------------------------
+#             Forecasting
+# ---------------------------------------
+train, test = series_train_test_split(dif1, trn_pct=0.90)
+# -------------------- #
+# -- Simple Average -- #
+# -------------------- #
+
+fr_mod = SimpleAvgRegressor()
+fr_mod.fit(train)
+prd_trn: Series = fr_mod.predict(train)
+prd_tst: Series = fr_mod.predict(test)
+
+plot_forecasting_eval(train, test, prd_trn, prd_tst, title=f"{file_tag} - Simple Average")
+savefig(f"images/timeseries/forecasting/simpleAverage/{file_tag}_simpleAvg_eval.png")
+plot_forecasting_series(
+    train,
+    test,
+    prd_tst,
+    title=f"{file_tag} - Simple Average",
+    xlabel=index,
+    ylabel=target,
+)
+savefig(f"images/timeseries/forecasting/simpleAverage/{file_tag}_simpleAvg_forecast.png")
+# -------------------- #
+#  Persistence Model - #
+# -------------------- #
+#Optimist
+fr_mod = PersistenceOptimistRegressor()
+fr_mod.fit(train)
+prd_trn: Series = fr_mod.predict(train)
+prd_tst: Series = fr_mod.predict(test)
+
+plot_forecasting_eval(train, test, prd_trn, prd_tst, title=f"{file_tag} - Persistence Optimist")
+savefig(f"images/timeseries/forecasting/persistanceModel/{file_tag}_persistence_optim_eval.png")
+plot_forecasting_series(
+    train,
+    test,
+    prd_tst,
+    title=f"{file_tag} - Persistence Optimist",
+    xlabel=index,
+    ylabel=target,
+)
+savefig(f"images/timeseries/forecasting/persistanceModel/{file_tag}_persistence_optim_forecast.png")
+
+#Realist
+fr_mod = PersistenceRealistRegressor()
+fr_mod.fit(train)
+prd_trn: Series = fr_mod.predict(train)
+prd_tst: Series = fr_mod.predict(test)
+
+plot_forecasting_eval(train, test, prd_trn, prd_tst, title=f"{file_tag} - Persistence Realist")
+savefig(f"images/timeseries/forecasting/persistanceModel/{file_tag}_persistence_real_eval.png")
+plot_forecasting_series(
+    train,
+    test,
+    prd_tst,
+    title=f"{file_tag} - Persistence Realist",
+    xlabel=index,
+    ylabel=target,
+)
+savefig(f"images/timeseries/forecasting/persistanceModel/{file_tag}_persistence_real_forecast.png")
+
+# -------------------- #
+# --- Rolling Mean --- #
+# -------------------- #
+
+rollingMean = ts_Rollingmean(train, test, file_tag, target, index)
+rollingMean.rolling_mean_study()
+# -------------------- #
+# ------- ARIMA ------ #
+# -------------------- #
+
+arima = ts_Arima(train, test, file_tag, target, index)
+arima.arima_study()
+
+# -------------------- #
+# ------- LSTMs ------ #
+# -------------------- #
+
+series = dif1[[target]].values.astype("float32")
+series2 = dif1[[target]]
+train_size = int(len(series) * 0.90)
+train, test = series[:train_size], series[train_size:]
+
+
+lstm = ts_LSTM(train, test, file_tag, target, index,series2,train_size)
+lstm.lstm_study(3000)

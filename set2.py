@@ -20,6 +20,8 @@ from classification.decisionTrees import decisionTrees
 from classification.gradient_boosting import GradientBoosting
 from classification.mlp import MultiLayerPerceptron
 from classification.random_forest import RandomForests
+from preparation import methodology
+from preparation.methodology import Methodology
 from profiling.dimensionality import Dimensionality
 from profiling.distribution import Distribution
 from profiling.sparsity import Sparsity
@@ -28,7 +30,6 @@ from preparation.variables_encoding import Encoding
 from preparation.mv_and_outliers import MV_out
 from preparation.data_balancing import Balancing
 from preparation.scaling_transf import Scaling
-from preparation.methodology import Methodology
 
 
 # ------------------------------------------------- #
@@ -56,7 +57,7 @@ data: DataFrame = read_csv(filename, na_values="")
 # Nr Variable types         - Done (images2submit/credit_variable_types.png)
 # Nr missing values         - Done (images2submit/credit_mv.png)
 
-# dim = Dimensionality(filename, file_tag, data)
+dim = Dimensionality(filename, file_tag, data)
 #
 # print('Set2 Data Shape: ', data.shape)  # Dimension: (100000, 28)
 # print('Set2 Columns Names: ', data.columns)
@@ -73,12 +74,12 @@ data: DataFrame = read_csv(filename, na_values="")
 
 # # Number of records and variables
 # dim.num_records_variables()
-#
+
 # # Missing Values
 # dim.missing_values()
-#
-# # Variables Type
-# print('Set2 Data Types 2:\n', data.dtypes, '\n')
+
+# Variables Type
+print('Set2 Data Types 2:\n', data.dtypes, '\n')
 
 # Set2 Data Types 2:
 # ID                         object
@@ -111,7 +112,7 @@ data: DataFrame = read_csv(filename, na_values="")
 # Credit_Score               object
 # dtype: object
 
-#
+
 # # Number of variables per type
 # dim.num_variables_per_type()
 
@@ -127,13 +128,13 @@ data: DataFrame = read_csv(filename, na_values="")
 # Histograms for symbolic               - Done
 # Class Distribution                    - Done (images2submit/credit_class_distribution.png)
 
-data = data.drop(['ID', 'SSN', 'Name'], axis=1)
-#data = data.drop(['Annual_Income', 'TotalEMIpermonth'], axis=1)
-print("Drop of ID, SSN and Name")
+# data = data.drop(['ID', 'SSN', 'Name'], axis=1)
+# #data = data.drop(['Annual_Income', 'TotalEMIpermonth'], axis=1)
+# print("Drop of ID, SSN and Name")
 # mv_out = MV_out("data/class_credit_score.csv", file_tag, data, 2)
 # data = mv_out.data_correction()
-# data['MonthlyBalance'] = data['MonthlyBalance'].replace(-3.33333E+26, )
-# data = data.drop(['Customer_ID'], axis=1)
+data['MonthlyBalance'] = data['MonthlyBalance'].replace(-3.33333E+26, )
+
 
 summary5: DataFrame = data.describe(include="all")
 print(summary5, '\n')
@@ -148,10 +149,10 @@ distribution = Distribution(filename, file_tag, data)
 
 # # Global Boxplot
 # distribution.global_boxplot2()
-
+#
 # # Single Variable Boxplots
 # distribution.boxplots()
-
+#
 # # Outliers Study
 # distribution.num_standart_outliers_per_variable()
 
@@ -179,7 +180,7 @@ IQR_FACTOR: float = 1.5
 
 granularity = Granularity(filename, file_tag, data)
 
-granularity.analyse_property_granularity("credit_history",["Credit_Score", "CreditMix" , "Payment_Behaviour"])
+# granularity.analyse_property_granularity("credit_history",["Credit_Score", "CreditMix", "Payment_Behaviour"])
 
 # -------------- #
 # -- Sparsity -- #
@@ -189,10 +190,10 @@ granularity.analyse_property_granularity("credit_history",["Credit_Score", "Cred
 # Correlation (all x all - including class)     -
 
 # sparsity = Sparsity(filename, file_tag, data)
-
-# Scatter plots to project the data along two of its defining variables
+#
+# # Scatter plots to project the data along two of its defining variables
 # sparsity.analyse_property_sparsity("Credit_Score")
-
+#
 # encoded_data = sparsity.encode_credit()
 # print('Encoded Data Shape: ', encoded_data.shape)
 # sparsity.correlation_analysis(encoded_data)
@@ -206,14 +207,15 @@ granularity.analyse_property_granularity("credit_history",["Credit_Score", "Cred
 # -------------- #
 # -- Encoding -- #
 # -------------- #
-# filename = "cleaned_data.csv"
-# encoding = Encoding(filename, file_tag, data)
 
 # data = data.drop(['ID', 'SSN', 'Name'], axis=1)
 # print("Drop of ID, SSN and Name")
 # mv_out = MV_out("data/class_credit_score.csv", file_tag, data, 2)
 # data = mv_out.data_correction()
 # print("Data Cleaned")
+# #
+# filename = "cleaned_data.csv"
+# encoding = Encoding(filename, file_tag, data)
 #
 # def create_loan_type_columns():
 #     # Preencher os valores ausentes na coluna 'Type_of_Loan' com uma string vazia
@@ -269,7 +271,7 @@ granularity.analyse_property_granularity("credit_history",["Credit_Score", "Cred
 #
 # # Divide os dados em conjuntos de treino e teste
 # train_data, test_data = train_test_split(df1, test_size=0.3, random_state=42)
-# methodology.evaluate_approach(train_data, test_data, "mvi_by_filling_first_approach", target=target)
+# methodology.evaluate_approach(train_data, test_data, "mvi_by_filling_first_approach", "Prof MV filling", target=target)
 #
 # # Second approach
 # print("Our filling")
@@ -281,7 +283,7 @@ granularity.analyse_property_granularity("credit_history",["Credit_Score", "Cred
 #
 # # Divide os dados em conjuntos de treino e teste
 # train_data, test_data = train_test_split(df2, test_size=0.3, random_state=42)
-# methodology.evaluate_approach(train_data, test_data, "our_mv_second_approach", target=target)
+# methodology.evaluate_approach(train_data, test_data, "our_mv_second_approach", "Our MV filling", target=target)
 
 # best_approach = df2
 
@@ -292,21 +294,21 @@ granularity.analyse_property_granularity("credit_history",["Credit_Score", "Cred
 # best_approach: DataFrame = read_csv("DF_2_NOSSO.csv", na_values="")
 # filename = "DF_2_NOSSO.csv"
 # dataOutliers = MV_out(filename, file_tag, best_approach, 2)
-# #
+#
 # outliers1 = dataOutliers.median_outliers()
 # outliers2 = dataOutliers.truncate_outliers()
-# outliers3 = dataOutliers.median_outliers_by_customer()
-# outliers4 = dataOutliers.truncate_outliers_by_customer()
+# # outliers3 = dataOutliers.median_outliers_by_customer()
+# # outliers4 = dataOutliers.truncate_outliers_by_customer()
 # outliers5 = dataOutliers.drop_outliers()
-
+#
 # # Eval Outliers1
 # train_data_1, test_data_1 = train_test_split(outliers1, test_size=0.3, random_state=42)
-# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, "median_outliers1", target)
+# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, "median_outliers1", "Median Outliers", target)
 # print("EVAL 1:", eval1)
-
+#
 # # Eval Outliers2
 # train_data_2, test_data_2 = train_test_split(outliers2, test_size=0.3, random_state=42)
-# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, "truncate_outliers2", target)
+# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, "truncate_outliers2", "Truncate Outliers", target)
 # print("EVAL 2:", eval2)
 
 # # Eval Outliers3
@@ -321,7 +323,7 @@ granularity.analyse_property_granularity("credit_history",["Credit_Score", "Cred
 
 # # Eval Outliers5
 # train_data_5, test_data_5 = train_test_split(outliers5, test_size=0.3, random_state=42)
-# eval5 = methodology.evaluate_approach(train_data_5, test_data_5, "drop_outliers5", target)
+# eval5 = methodology.evaluate_approach(train_data_5, test_data_5, "drop_outliers5", "Drop Outliers", target)
 # print("EVAL 5:", eval5)
 
 # melhor escolha -> outliers1
@@ -336,17 +338,20 @@ granularity.analyse_property_granularity("credit_history",["Credit_Score", "Cred
 # scaling2 = dataScaling.min_max_scaler()
 # dataScaling.scaler_plot(scaling1, scaling2)
 
-# #Eval Scaling1
+# # Eval Scaling1
 # train_data_1, test_data_1 = train_test_split(scaling1, test_size=0.3, random_state=42)
-# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, "standard_scaler", target)
+# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, "standard_scaler", "Standard Scaler", target)
 # print(eval1)
 #
 # # Eval Scaling2
 # train_data_2, test_data_2 = train_test_split(scaling2, test_size=0.3, random_state=42)
-# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, "min_max_scaler", target)
+# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, "min_max_scaler", "Min Max Scaler", target)
 # print(eval2)
 
 # best_scaling = scaling1
+
+# {'accuracy': [0.7556, 0.8563], 'recall': [0.7568766218447747, 0.8990799716914366], 'precision': [0.8804127106086383, 0.8976823063877897], 'auc': [0.7547017975776968, 0.8262009739206756], 'f1': [0.8139841688654353, 0.8983805954317233]}
+# {'accuracy': [0.7429333333333333, 0.8567], 'recall': [0.798490209955178, 0.8978060863411181], 'precision': [0.831033636140437, 0.8992061241848597], 'auc': [0.7038447642620864, 0.8277786820121263], 'f1': [0.8144369586140519, 0.8985055598838444]}
 
 # -------------------- #
 # -- Data Balancing -- #
@@ -366,27 +371,27 @@ granularity.analyse_property_granularity("credit_history",["Credit_Score", "Cred
 # smote = dataBalancing.SMOTE()
 
 
-# # Eval undersampling
+# # Eval under sampling
 # train_data_1, test_data_1 = train_test_split(undersampling, test_size=0.3, random_state=42)
-# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, "undersampling", target = "Credit_Score")
+# eval1 = methodology.evaluate_approach(train_data_1, test_data_1, "under_sampling", "Undersampling", target)
 # print(eval1)
-
+#
 # # Eval oversampling
 # train_data_2, test_data_2 = train_test_split(oversampling, test_size=0.3, random_state=42)
-# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, "oversampling", target = "Credit_Score")
+# eval2 = methodology.evaluate_approach(train_data_2, test_data_2, "oversampling", "Oversampling", target)
 # print(eval2)
-
+#
 # # Eval smote
 # train_data_3, test_data_3 = train_test_split(smote, test_size=0.3, random_state=42)
-# eval3 = methodology.evaluate_approach(train_data_3, test_data_3, "SMOTE", target = "Credit_Score")
+# eval3 = methodology.evaluate_approach(train_data_3, test_data_3, "SMOTE", "SMOTE", target)
 # print(eval3)
 
 
-# {'accuracy': [0.7420541410425886, 0.8372894993965171], 'recall': [0.7224064966258721, 0.8107057074230813], 'precision': [0.753969201384744, 0.8576960309777347], 'auc': [0.7421528786271689, 0.8374230940072893], 'f1': [0.7378504672897197, 0.833539130946081]}
-# {'accuracy': [0.7446364020468522, 0.9259893901694756], 'recall': [0.7182675613532917, 0.8908544882924312], 'precision': [0.7584481220889902, 0.9582576216434484], 'auc': [0.7446487870173533, 0.926005892401347], 'f1': [0.7378111970693851, 0.9233275782408871]}
-# {'accuracy': [0.7463264635463124, 0.9200272287686024], 'recall': [0.7217264700356941, 0.8764324628968627], 'precision': [0.7589016741567485, 0.9600761434377734], 'auc': [0.74631607406055, 0.9200088170889756], 'f1': [0.7398473796971665, 0.9163495298190478]}
+# {'accuracy': [0.7463875205254515, 0.8052545155993431], 'recall': [0.7292177037399967, 0.7731504164625184], 'precision': [0.7572930800542741, 0.8280566730802869], 'auc': [0.7464810658373089, 0.8054294264911239], 'f1': [0.742990265413096, 0.7996621621621622]}
+# {'accuracy': [0.7504778511786996, 0.9216994735253681], 'recall': [0.7246298788694482, 0.884185733512786], 'precision': [0.7627682935467875, 0.9553551952301316], 'auc': [0.7503906028262086, 0.9215728480410665], 'f1': [0.7432101321737931, 0.9183937371125013]}
+# {'accuracy': [0.753529392039167, 0.914489789074813], 'recall': [0.7354009687836384, 0.8688105489773951], 'precision': [0.7618483412322274, 0.9556015983424597], 'auc': [0.753473032362669, 0.9143477763273015], 'f1': [0.7483910721621251, 0.9101416590316442]}
 
-#oversample escolhido
+# oversample escolhido
 # oversampling.to_csv(f"data/{file_tag}_train.csv", index=False)
 
 # --------------------------------------- #
@@ -401,7 +406,7 @@ granularity.analyse_property_granularity("credit_history",["Credit_Score", "Cred
 # ------ NBayes ------ #
 # -------------------- #
 
-#classificationNB = NBayes(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
+# classificationNB = NBayes(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
 
 # classificationNB.full_metrics_NB_study()
 
@@ -423,14 +428,14 @@ granularity.analyse_property_granularity("credit_history",["Credit_Score", "Cred
 # -------- KNN ------- #
 # -------------------- #
 
-#classificationKNN = KNN(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
-
-# classificationKNN.full_metrics_KNN_study()
-
+# classificationKNN = KNN(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
+#
+# # classificationKNN.full_metrics_KNN_study()
+#
 # KNN_metric = "accuracy"
 #
 # # Chama a função full_metrics_KNN_study para obter o melhor modelo e parâmetros
-# best_model, best_params = classificationKNN.specific_metric_naive_Bayes_study(KNN_metric)
+# best_model, best_params = classificationKNN.specific_metric_KNN_study(KNN_metric)
 #
 # # Chama a função performance_analysis com os resultados obtidos
 # classificationKNN.performance_analysis(best_model, best_params)
@@ -441,7 +446,7 @@ granularity.analyse_property_granularity("credit_history",["Credit_Score", "Cred
 # -------- DT -------- #
 # -------------------- #
 
-#decisionTrees = decisionTrees(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
+decisionTrees = decisionTrees(file_tag, "data/credit_train.csv", "data/credit_test.csv", target)
 
 #decisionTrees.full_metrics_DT_study()
 
@@ -452,19 +457,19 @@ granularity.analyse_property_granularity("credit_history",["Credit_Score", "Cred
 # auc -> DT best with gini and d=24
 # f1 -> DT best with gini and d=24
 
-# dt_metric = "accuracy"
-#
-# best_model, best_params = decisionTrees.specific_metric_DT_study(dt_metric)
-#
+dt_metric = "accuracy"
+
+best_model, best_params = decisionTrees.specific_metric_DT_study(dt_metric)
+
 # decisionTrees.performance_analysis(best_model, best_params)
-#
-# decisionTrees.variables_importance(best_model, dt_metric)
-#
-# decisionTrees.simple_tree(best_model)
-#
-# decisionTrees.tree_importance(best_model, dt_metric)
-#
-# decisionTrees.overfitting_study(dt_metric, best_params)
+
+decisionTrees.variables_importance(best_model, dt_metric)
+
+decisionTrees.simple_tree(best_model)
+
+decisionTrees.tree_importance(best_model, dt_metric)
+
+decisionTrees.overfitting_study(dt_metric, best_params)
 
 
 # -------------------- #

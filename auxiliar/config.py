@@ -71,7 +71,8 @@ cmap_blues = LinearSegmentedColormap.from_list("myCMPBlues", blues)
 cmap_active = LinearSegmentedColormap.from_list("myCMPActive", ACTIVE_COLORS)
 
 LINE_COLOR = my_palette["dark blue"]
-FILL_COLOR = my_palette["blue2"]  # my_palette["pale blue"]
+# FILL_COLOR = my_palette["blue2"]
+FILL_COLOR = my_palette["pale blue"]
 DOT_COLOR = my_palette["blue3"]
 
 PAST_COLOR = FILL_COLOR
