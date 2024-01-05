@@ -17,7 +17,7 @@ class ts_Smoothing:
         self.series: Series = self.data[self.target]
 
     def ts_smoothing(self):
-        sizes: list[int] = [25, 50, 75, 100]
+        sizes: list[int] = [5, 10, 15, 20]
         fig: Figure
         axs: list[Axes]
         fig, axs = subplots(len(sizes), 1, figsize=(3 * HEIGHT, HEIGHT / 2 * len(sizes)))
@@ -36,7 +36,7 @@ class ts_Smoothing:
         savefig(f"images/timeSeries/transformation/smoothing/{self.file_tag}_{self.target}_smoothing.png")
 
     def ts_smoothing_lr(self):
-        sizes: list[int] = [25, 50, 75, 100]
+        sizes: list[int] = [5, 10, 15, 20]
         for i in range(len(sizes)):
             lr_series = self.data.rolling(window=sizes[i]).mean()
             train, test = series_train_test_split(lr_series.dropna(), trn_pct=0.90)

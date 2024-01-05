@@ -7,6 +7,7 @@ from pandas import read_csv, DataFrame, Series
 
 from TSeries.profiling_ts import Profiling
 from TSeries.transformation import Transformation
+from auxiliar.dslabs_functions import series_train_test_split
 
 # Load Data
 filename = "data/forecast_traffic_single.csv"
@@ -40,15 +41,15 @@ profiling = Profiling(filename, file_tag, target, index, data, series)
 
 # profiling.aggregation_study()
 #
-# # First granularity (most atomic)
-# # mais atomico possivel -> intervalo mais pequeno no meu conjunto de dados (15 min)
+# First granularity (most atomic)
+# mais atomico possivel -> intervalo mais pequeno no meu conjunto de dados (15 min)
 # profiling.plot_most_atomic_granularity()
 #
-# # Second granularity
-# profiling.aggregation_by_d()
-#
+# Second granularity
+# profiling.aggregation_by_h()
+
 # # Third granularity
-# profiling.aggregation_by_w()
+# profiling.aggregation_by_d()
 
 
 
@@ -57,8 +58,8 @@ profiling = Profiling(filename, file_tag, target, index, data, series)
 # ------------------ #
 
 
-# boxplots
-# profiling.number_summary()
+# # boxplots
+# # profiling.number_summary()
 # profiling.plot_boxplots_for_granularities()
 #
 # # histograms
@@ -91,19 +92,19 @@ profiling = Profiling(filename, file_tag, target, index, data, series)
 
 # Stationarity study
 
-# profiling.stationary_study()
+profiling.stationary_study()
 #
 # profiling.stationary_study_2()
+#
+# # Stationarity Dickey-Fuller Test
+profiling.eval_stationarity()
 
-# Stationarity Dickey-Fuller Test
-# profiling.eval_stationarity()
-
-# ADF Statistic: -9.927
-# p-value: 0.000  ----->> estranho???????
+# ADF Statistic: -14.169
+# p-value: 0.000
 # Critical Values:
-# 	1%: -3.433
-# 	5%: -2.863
-# 	10%: -2.567
+# 	1%: -3.439
+# 	5%: -2.866
+# 	10%: -2.569
 # The series is stationary
 
 # ------------------------------- #
@@ -134,13 +135,13 @@ transformation = Transformation(filename, file_tag, target, index, data, series)
 # Mean Squared Error for W granularity: 1.5496155228041761
 
 print("vou agora->>>>>>>>>>")
-transformation.ts_aggregation()
-transformation.ts_aggregation_lr()
+# transformation.ts_aggregation()
+# transformation.ts_aggregation_lr()
 
 # Aggregation decision
 # Third - W granularity
 
-best_granularity="W"
+best_granularity="H"
 
 # ------------------------------- #
 #        - Transformation -       #

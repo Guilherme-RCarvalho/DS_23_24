@@ -3,12 +3,15 @@ file:       profilling_ts.py
 '''
 from typing import Optional
 
+import pandas as pd
+from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.pyplot import figure, show, savefig, subplots, setp, legend, plot
 from matplotlib.gridspec import GridSpec
 from pandas import Series, Index, Period
 from numpy import array
+from datetime import datetime
 from auxiliar.dslabs_functions import plot_line_chart, HEIGHT, ts_aggregation_by, set_chart_labels, \
     plot_multiline_chart, get_lagged_series, plot_components, eval_stationarity
 
@@ -50,18 +53,58 @@ class Profiling:
         savefig(f"images/TS/Profiling/{self.file_tag}_daily_granularity.png")
         show()
 
-    def aggregation_by_w(self):
-        ss_weeks: Series = ts_aggregation_by(self.series, gran_level="W", agg_func=sum)
+    # def aggregation_by_h(self):
+    #     ss_weeks: Series = ts_aggregation_by(self.series, gran_level="h", agg_func=sum)
+    #     figure(figsize=(3 * HEIGHT, HEIGHT))
+    #     plot_line_chart(
+    #         ss_weeks.index.to_list(),
+    #         ss_weeks.to_list(),
+    #         xlabel="hours",
+    #         ylabel=self.target,
+    #         title=f"{self.file_tag} hourly granularity",
+    #     )
+    #     savefig(f"images/TS/Profiling/{self.file_tag}_hourly_granularity.png")
+    #     show()
+
+    def aggregation_by_h(self):
+        ss_hours = ts_aggregation_by(self.series, gran_level="h", agg_func=sum)
         figure(figsize=(3 * HEIGHT, HEIGHT))
         plot_line_chart(
-            ss_weeks.index.to_list(),
-            ss_weeks.to_list(),
-            xlabel="weeks",
+            ss_hours.index.to_list(),
+            ss_hours.to_list(),
+            xlabel="hours",
             ylabel=self.target,
-            title=f"{self.file_tag} weekly granularity",
+            title=f"{self.file_tag} hourly granularity",
         )
-        savefig(f"images/TS/Profiling/{self.file_tag}_weekly_granularity.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_hourly_granularity_3.png")
         show()
+
+    # def aggregation_by_h(self):
+    #     ss_hours = ts_aggregation_by(self.series, gran_level="h", agg_func=sum)
+    #
+    #     # Converta o índice para formato de data e hora
+    #     ss_hours.index = pd.to_datetime(ss_hours.index)
+    #
+    #     # Crie uma lista de strings com as horas e minutos
+    #     time_labels = ss_hours.index.strftime('%H:%M').to_list()
+    #
+    #     # Plote o gráfico de linha
+    #     plt.figure(figsize=(3 * HEIGHT, HEIGHT))
+    #     plt.plot(time_labels, ss_hours.to_list())
+    #
+    #     # Configurações do gráfico
+    #     plt.xlabel("Hours")
+    #     plt.ylabel(self.target)
+    #     plt.title(f"{self.file_tag} Hourly Granularity")
+    #
+    #     # Rotacione os rótulos do eixo x para melhor legibilidade
+    #     plt.xticks(rotation=45, ha="right")
+    #
+    #     # Salve o gráfico
+    #     plt.savefig(f"images/TS/Profiling/{self.file_tag}_hourly_granularity_2.png")
+    #
+    #     # Mostre o gráfico
+    #     plt.show()
 
     def aggregation_by_m(self):
         ss_months: Series = ts_aggregation_by(self.series, gran_level="M", agg_func=sum)
@@ -134,7 +177,7 @@ class Profiling:
 
     def plot_boxplots_for_granularities(self):
 
-        granularities = ["15T", "H", "W"]  # granularidades identificadas
+        granularities = ["15T", "H", "D"]  # granularidades identificadas
         fig, axs = subplots(len(granularities), 1, figsize=(3 * HEIGHT, HEIGHT / 2 * len(granularities)))
         fig.suptitle(f"{self.file_tag} {self.target} Distribution: Boxplots")
 
@@ -147,7 +190,7 @@ class Profiling:
 
     def plot_histograms_for_granularities(self):
 
-        granularities = ["15T", "H", "W"]
+        granularities = ["15T", "H", "D"]
         fig, axs = subplots(1, len(granularities), figsize=(3 * HEIGHT * len(granularities), HEIGHT))
         fig.suptitle(f"{self.file_tag} {self.target} Distribution: Histograms")
 
@@ -203,59 +246,64 @@ class Profiling:
         return
 
     def plot_time_series_components(self):
+        ss_hours = ts_aggregation_by(self.series, gran_level="h", agg_func=sum)
         print(self.series)
         plot_components(
-            self.series,
-            title=f"{self.file_tag} hourly {self.target}",
-            x_label=self.series.index.name,
+            ss_hours,
+            title=f"{self.file_tag} Hour - Components Study",
+            x_label=ss_hours.index.name,
             y_label=self.target,
         )
         savefig(f"images/TS/Profiling/{self.file_tag}_plot_time_series_components.png")
         show()
 
-    def stationary_study(self):
+    def stationary_study_2(self):
+        ss_hours = ts_aggregation_by(self.series, gran_level="h", agg_func=sum)
         figure(figsize=(3 * HEIGHT, HEIGHT))
         plot_line_chart(
-            self.series.index.to_list(),
-            self.series.to_list(),
-            xlabel=self.series.index.name,
+            ss_hours.index.to_list(),
+            ss_hours.to_list(),
+            xlabel=ss_hours.index.name,
             ylabel=self.target,
             title=f"{self.file_tag} stationary study",
             name="original",
         )
-        n: int = len(self.series)
-        plot(self.series.index, [self.series.mean()] * n, "r-", label="mean")
+        n: int = len(ss_hours)
+        plot(ss_hours.index, [ss_hours.mean()] * n, "r-", label="mean")
         legend()
-        savefig(f"images/TS/Profiling/{self.file_tag}_stationary_study.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_stationary_study_2.png")
         show()
 
-    def stationary_study_2(self):
+    def stationary_study(self):
+        ss_hours = ts_aggregation_by(self.series, gran_level="h", agg_func=sum)
         BINS = 10
         mean_line: list[float] = []
-        n: int = len(self.series)
+        n: int = len(ss_hours)
 
         for i in range(BINS):
-            segment: Series = self.series[i * n // BINS : (i + 1) * n // BINS]
+            segment: Series = ss_hours[i * n // BINS : (i + 1) * n // BINS]
             mean_value: list[float] = [segment.mean()] * (n // BINS)
             mean_line += mean_value
         mean_line += [mean_line[-1]] * (n - len(mean_line))
 
         figure(figsize=(3 * HEIGHT, HEIGHT))
         plot_line_chart(
-            self.series.index.to_list(),
-            self.series.to_list(),
-            xlabel=self.series.index.name,
+            ss_hours.index.to_list(),
+            ss_hours.to_list(),
+            xlabel=ss_hours.index.name,
             ylabel=self.target,
             title=f"{self.file_tag} stationary study",
             name="original",
             show_stdev=True,
+            label="original",
         )
 
-        plot(self.series.index, mean_line, "r-", label="mean")
+        plot(ss_hours.index, mean_line, "r-", label="mean")
         legend()
-        savefig(f"images/TS/Profiling/{self.file_tag}_stationary_study_2.png")
+        savefig(f"images/TS/Profiling/{self.file_tag}_stationary_study.png")
         show()
 
     def eval_stationarity(self):
-        x = eval_stationarity(self.series)
+        ss_hours = ts_aggregation_by(self.series, gran_level="h", agg_func=sum)
+        x = eval_stationarity(ss_hours)
         print(f"The series {('is' if x else 'is not')} stationary")

@@ -32,3 +32,4 @@ class ts_Scaling:
         )
         plt.tight_layout()
         savefig(f"images/timeSeries/transformation/scaling/{self.file_tag}_{self.target}_after_scaling.png")
+        show()

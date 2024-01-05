@@ -22,7 +22,7 @@ class ts_Stationarity:
     x_label: str = "time",
     y_label: str = "",
     ) -> list[Axes]:
-        decomposition: DecomposeResult = seasonal_decompose(series, model="add")
+        decomposition: DecomposeResult = seasonal_decompose(series, model="add", period=7)
         components: dict = {
             "observed": series,
             "trend": decomposition.trend,

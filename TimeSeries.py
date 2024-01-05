@@ -5,13 +5,35 @@ file:       set4.py
 
 from pandas import read_csv, DataFrame, Series
 
+
+from numpy import array, ndarray
+
+from auxiliar.dslabs_functions import evaluate_approach, mvi_by_dropping, mvi_by_filling, plot_forecasting_eval, plot_forecasting_series, plot_multibar_chart, series_train_test_split
+from matplotlib.pyplot import savefig, figure
 from TSeries.profiling_ts import Profiling
 from TSeries.transformation import Transformation
+from timeSeries.forecasting.ts_arima import ts_Arima
+from timeSeries.forecasting.ts_lstms import ts_LSTM
+from timeSeries.forecasting.ts_persistance_optimist import PersistenceOptimistRegressor
+from timeSeries.forecasting.ts_persistance_realist import PersistenceRealistRegressor
+from timeSeries.forecasting.ts_rolingmean import ts_Rollingmean
+from timeSeries.forecasting.ts_simpleaverage import SimpleAvgRegressor
+from timeSeries.profiling.ts_dimensionality import ts_Dimensionality
+from timeSeries.profiling.ts_distribution import ts_Distribtion
+from timeSeries.profiling.ts_granularity import ts_Granularity
+from timeSeries.profiling.ts_stationarity import ts_Stationarity
+from timeSeries.transformation.ts_aggregation import ts_Aggregation
+from timeSeries.transformation.ts_differentiation import ts_Differentiation
+from timeSeries.transformation.ts_smoothing import ts_Smoothing
+from timeSeries.transformation.ts_scaling import ts_Scaling
+
+
 
 # Load Data
 filename = "data/forecast_traffic_single.csv"
 file_tag = "traffic"
 target = "Total"
+index = "Timestamp"
 
 data: DataFrame = read_csv(
     filename,
@@ -22,7 +44,6 @@ data: DataFrame = read_csv(
     infer_datetime_format = True,
 )
 data.sort_index(inplace=True)
-index = "Timestamp"
 series: Series = data[target]
 
 # ---------------------------------------
@@ -32,43 +53,43 @@ series: Series = data[target]
 # -- Dimensionality -- #
 # -------------------- #
 
-dim = ts_Dimensionality(filename, file_tag, data, target)
-dim.univariate_ts()
+# dim = ts_Dimensionality(filename, file_tag, data, target)
+# dim.univariate_ts()
 
 # -------------------- #
 # --- Granularity ---- #
 # -------------------- #
 
-granularity = ts_Granularity(filename, file_tag, data, target)
-granularity.ts_aggregation()
+# granularity = ts_Granularity(filename, file_tag, data, target)
+# granularity.ts_aggregation()
 
 # -------------------- #
 # --- Distribution --- #
 # -------------------- #
 
-dist = ts_Distribtion(filename, file_tag, data, target, index)
-dist.ts_distribution_boxplots()
-dist.ts_distribution_histograms()
-dist.ts_autocorrelation_lag()
-dist.ts_autocorrelation_correlogram()
+# dist = ts_Distribtion(filename, file_tag, data, target, index)
+# dist.ts_distribution_boxplots()
+# dist.ts_distribution_histograms()
+# dist.ts_autocorrelation_lag()
+# dist.ts_autocorrelation_correlogram()
 
 # -------------------- #
 # --- Stationarity --- #
 # -------------------- #
 
-stationarity = ts_Stationarity(filename, file_tag, data, target, index)
-stationarity.ts_components()
-stationarity.ts_stationarity_study()
-stationarity.eval_stationarity()
-'''
-ADF Statistic: -2.156
-p-value: 0.223
-Critical Values:
-        1%: -3.464
-        5%: -2.876
-        10%: -2.575
-The series is not stationary (p-value > 0.05 : the series is non-stationary)
-'''
+# stationarity = ts_Stationarity(filename, file_tag, data, target, index)
+# stationarity.ts_components()
+# stationarity.ts_stationarity_study()
+# stationarity.eval_stationarity()
+
+# ADF Statistic: -2.156
+# p-value: 0.223
+# Critical Values:
+#         1%: -3.464
+#         5%: -2.876
+#         10%: -2.575
+# The series is not stationary (p-value > 0.05 : the series is non-stationary)
+
 # ---------------------------------------
 #             Transformation
 # ---------------------------------------
@@ -87,20 +108,20 @@ df = scaling.scale_all_dataframe(data)
 # -------------------- #
 
 aggregation = ts_Aggregation(filename, file_tag, df, target, index)
-aggregation.ts_aggregation()
-aggregation.ts_aggregation_lr()
+# aggregation.ts_aggregation()
+# aggregation.ts_aggregation_lr()
 
-df = aggregation.ts_aggregation_df("W")
+df = aggregation.ts_aggregation_df("H")
 
 # -------------------- #
 # ---- Smoothing ----- #
 # -------------------- #
 
 smoothing = ts_Smoothing(filename, file_tag, df, target, index)
-smoothing.ts_smoothing()
-smoothing.ts_smoothing_lr()
+# smoothing.ts_smoothing()
+# smoothing.ts_smoothing_lr()
 
-series = smoothing.ts_smoothing_size(50)
+series = smoothing.ts_smoothing_size(15)
 #size 50?
 
 # -------------------- #
