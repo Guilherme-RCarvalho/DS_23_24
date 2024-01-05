@@ -43,8 +43,8 @@ data: DataFrame = read_csv(
     parse_dates = True,
     infer_datetime_format = True,
 )
-data.sort_index(inplace=True)
-series: Series = data[target]
+# data.sort_index(inplace=True)
+# series: Series = data[target]
 
 # ---------------------------------------
 #             Profiling
@@ -118,10 +118,10 @@ df = aggregation.ts_aggregation_df("H")
 # -------------------- #
 
 smoothing = ts_Smoothing(filename, file_tag, df, target, index)
-# smoothing.ts_smoothing()
-# smoothing.ts_smoothing_lr()
+smoothing.ts_smoothing()
+smoothing.ts_smoothing_lr()
 
-series = smoothing.ts_smoothing_size(15)
+series = smoothing.ts_smoothing_size(50)
 #size 50?
 
 # -------------------- #
@@ -220,3 +220,6 @@ train, test = series[:train_size], series[train_size:]
 
 lstm = ts_LSTM(train, test, file_tag, target, index,series2,train_size)
 lstm.lstm_study(3000)
+
+# {'name': 'LSTM', 'metric': 'R2', 'params': (4, 25, 3000)}
+# LSTM best results achieved with length=4 hidden_units=25 and nr_episodes=3000) ==> measure=0.67
