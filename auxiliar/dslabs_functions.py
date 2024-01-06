@@ -239,6 +239,39 @@ def plot_multiline_chart(
     return ax
 
 
+# def plot_multibar_chart(
+#     group_labels: list,
+#     yvalues: dict,
+#     ax: Axes = None,  # type: ignore
+#     title: str = "",
+#     xlabel: str = "",
+#     ylabel: str = "",
+#     percentage: bool = False,
+# ) -> Axes | list[Axes]:
+#     if ax is None:
+#         ax = gca()
+#     ax = set_chart_labels(ax=ax, title=title, xlabel=xlabel, ylabel=ylabel)
+#     if percentage:
+#         ax.set_ylim(0.0, 1.0)
+#     bar_labels: list = list(yvalues.keys())
+#
+#     # This is the location for each bar
+#     index: ndarray = arange(len(group_labels))
+#     bar_width: float = 0.8 / len(bar_labels)
+#     ax.set_xticks(index + bar_width / 2, labels=group_labels)
+#
+#     for i in range(len(bar_labels)):
+#         values: BarContainer = ax.bar(
+#             index + i * bar_width,
+#             yvalues[bar_labels[i]],
+#             width=bar_width,
+#             label=bar_labels[i],
+#         )
+#         format = "%.2f" if percentage else "%.0f"
+#         ax.bar_label(values, fmt=format, fontproperties=FONT_TEXT)
+#     ax.legend(fontsize="xx-small")
+#     return ax
+
 def plot_multibar_chart(
     group_labels: list,
     yvalues: dict,
@@ -261,14 +294,17 @@ def plot_multibar_chart(
     ax.set_xticks(index + bar_width / 2, labels=group_labels)
 
     for i in range(len(bar_labels)):
+        bar_yvalues = yvalues[bar_labels[i]]
         values: BarContainer = ax.bar(
             index + i * bar_width,
-            yvalues[bar_labels[i]],
+            bar_yvalues,
             width=bar_width,
             label=bar_labels[i],
         )
-        format = "%.2f" if percentage else "%.0f"
+        format = "%.2f" if percentage else "%.3f"
         ax.bar_label(values, fmt=format, fontproperties=FONT_TEXT)
+        if any(y < 0 for y in bar_yvalues) and percentage:
+            ax.set_ylim(-1.0, 1.0)
     ax.legend(fontsize="xx-small")
     return ax
 

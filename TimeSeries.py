@@ -43,8 +43,8 @@ data: DataFrame = read_csv(
     parse_dates = True,
     infer_datetime_format = True,
 )
-# data.sort_index(inplace=True)
-# series: Series = data[target]
+data.sort_index(inplace=True)
+series: Series = data[target]
 
 # ---------------------------------------
 #             Profiling
@@ -67,11 +67,11 @@ data: DataFrame = read_csv(
 # --- Distribution --- #
 # -------------------- #
 
-# dist = ts_Distribtion(filename, file_tag, data, target, index)
+dist = ts_Distribtion(filename, file_tag, data, target, index)
 # dist.ts_distribution_boxplots()
 # dist.ts_distribution_histograms()
-# dist.ts_autocorrelation_lag()
-# dist.ts_autocorrelation_correlogram()
+dist.ts_autocorrelation_lag()
+dist.ts_autocorrelation_correlogram()
 
 # -------------------- #
 # --- Stationarity --- #
@@ -89,7 +89,7 @@ data: DataFrame = read_csv(
 #         5%: -2.876
 #         10%: -2.575
 # The series is not stationary (p-value > 0.05 : the series is non-stationary)
-
+'''
 # ---------------------------------------
 #             Transformation
 # ---------------------------------------
@@ -121,7 +121,7 @@ smoothing = ts_Smoothing(filename, file_tag, df, target, index)
 smoothing.ts_smoothing()
 smoothing.ts_smoothing_lr()
 
-series = smoothing.ts_smoothing_size(50)
+series = smoothing.ts_smoothing_size(100)
 #size 50?
 
 # -------------------- #
@@ -221,5 +221,11 @@ train, test = series[:train_size], series[train_size:]
 lstm = ts_LSTM(train, test, file_tag, target, index,series2,train_size)
 lstm.lstm_study(3000)
 
+# 50
 # {'name': 'LSTM', 'metric': 'R2', 'params': (4, 25, 3000)}
 # LSTM best results achieved with length=4 hidden_units=25 and nr_episodes=3000) ==> measure=0.67
+
+# 100
+# {'name': 'LSTM', 'metric': 'R2', 'params': (4, 100, 2100)}
+# LSTM best results achieved with length=4 hidden_units=100 and nr_episodes=2100) ==> measure=0.85
+'''

@@ -61,9 +61,10 @@ class ts_Distribtion:
         return lagged_series
 
     def ts_autocorrelation_lag(self):
+        ss_hours = ts_aggregation_by(self.series, gran_level="h", agg_func=sum)
         figure(figsize=(3 * HEIGHT, HEIGHT))
-        lags = self.get_lagged_series(self.series, 20, 10)
-        plot_multiline_chart(self.series.index.to_list(), lags, xlabel=self.index, ylabel=self.target)
+        lags = self.get_lagged_series(ss_hours, 20, 10)
+        plot_multiline_chart(ss_hours.index.to_list(), lags, xlabel=self.index, ylabel=self.target)
         savefig(f"images/timeSeries/profiling/distribution/{self.file_tag}_{self.target}_autocorrelation_lag.png")
 
     def ts_autocorrelation_study(self, series: Series, max_lag: int, delta: int = 1):
@@ -85,5 +86,6 @@ class ts_Distribtion:
         return
 
     def ts_autocorrelation_correlogram(self):
-        self.ts_autocorrelation_study(self.series, 10, 1)
+        ss_hours = ts_aggregation_by(self.series, gran_level="h", agg_func=sum)
+        self.ts_autocorrelation_study(ss_hours, 10, 1)
         savefig(f"images/timeSeries/profiling/distribution/{self.file_tag}_{self.target}_autocorrelation_correlogram.png")
