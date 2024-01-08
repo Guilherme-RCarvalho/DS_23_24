@@ -157,7 +157,7 @@ distribution = Distribution(filename, file_tag, data)
 # distribution.num_standart_outliers_per_variable()
 
 NR_STDEV: int = 2
-IQR_FACTOR: float = 1.5
+IQR_FACTOR: float = 2.5
 # distribution.num_outliers_per_variable(NR_STDEV, IQR_FACTOR)
 
 # # Histograms - numeric
@@ -189,15 +189,22 @@ granularity = Granularity(filename, file_tag, data)
 # Scatter-plots (all x all - including class)   -
 # Correlation (all x all - including class)     -
 
-# sparsity = Sparsity(filename, file_tag, data)
-#
-# # Scatter plots to project the data along two of its defining variables
+data = data.drop(['ID', 'SSN', 'Name'], axis=1)
+print("Drop of ID, SSN and Name")
+mv_out = MV_out("data/class_credit_score.csv", file_tag, data, 2)
+data = mv_out.data_correction()
+print("Data Cleaned")
+# #
+
+sparsity = Sparsity(filename, file_tag, data)
+
+# Scatter plots to project the data along two of its defining variables
 # sparsity.analyse_property_sparsity("Credit_Score")
 #
 # encoded_data = sparsity.encode_credit()
 # print('Encoded Data Shape: ', encoded_data.shape)
 # sparsity.correlation_analysis(encoded_data)
-# sparsity.correlation_analysis_num(data)
+
 
 
 # ------------------------------------------ #
@@ -208,46 +215,43 @@ granularity = Granularity(filename, file_tag, data)
 # -- Encoding -- #
 # -------------- #
 
-# data = data.drop(['ID', 'SSN', 'Name'], axis=1)
-# print("Drop of ID, SSN and Name")
-# mv_out = MV_out("data/class_credit_score.csv", file_tag, data, 2)
-# data = mv_out.data_correction()
-# print("Data Cleaned")
-# #
-# filename = "cleaned_data.csv"
-# encoding = Encoding(filename, file_tag, data)
-#
-# def create_loan_type_columns():
-#     # Preencher os valores ausentes na coluna 'Type_of_Loan' com uma string vazia
-#     data['Type_of_Loan'] = data['Type_of_Loan'].fillna('').astype(str).str.replace('and ', '').str.replace(' ', '').str.split(',')
-#
-#     # Adicionar uma coluna 'Without_Loan' e atribuir 1 aos clientes com NumofLoan igual a 0 e célula vazia em 'Type_of_Loan'
-#     data['Without_Loan'] = data.apply(lambda row: 1 if row['NumofLoan'] == 0 and all(pd.isna(item) or (isinstance(item, str) and item == '') for item in row['Type_of_Loan']) else 0, axis=1)
-#
-#     existing_loan_types = list()
-#
-#     # Iterar sobre os tipos de empréstimos e criar uma nova coluna para cada um
-#     for loan_list in data['Type_of_Loan']:
-#         for loan_type in loan_list:
-#             # Verificar se o novo valor já existe na lista
-#             if loan_type not in existing_loan_types:
-#                 # Adicionar o novo valor à lista
-#                 existing_loan_types.append(loan_type)
-#
-#     # Iterar sobre os tipos únicos de empréstimos e criar colunas binárias
-#     for loan_type in existing_loan_types:
-#         if loan_type != '':
-#             data[loan_type] = data['Type_of_Loan'].apply(lambda x: 1 if loan_type in x else 0)
-#
-# create_loan_type_columns()
-# data.drop('Type_of_Loan', axis=1, inplace=True)
-#
-# encoded_data = encoding.encode_credit()
-# print("Encode done")
-# target = "Credit_Score"
-# encoded_data.to_csv("encoded.csv", index=False)
-# print("Encode to .csv")
 
+filename = "cleaned_data.csv"
+encoding = Encoding(filename, file_tag, data)
+
+def create_loan_type_columns():
+    # Preencher os valores ausentes na coluna 'Type_of_Loan' com uma string vazia
+    data['Type_of_Loan'] = data['Type_of_Loan'].fillna('').astype(str).str.replace('and ', '').str.replace(' ', '').str.split(',')
+
+    # Adicionar uma coluna 'Without_Loan' e atribuir 1 aos clientes com NumofLoan igual a 0 e célula vazia em 'Type_of_Loan'
+    data['Without_Loan'] = data.apply(lambda row: 1 if row['NumofLoan'] == 0 and all(pd.isna(item) or (isinstance(item, str) and item == '') for item in row['Type_of_Loan']) else 0, axis=1)
+
+    existing_loan_types = list()
+
+    # Iterar sobre os tipos de empréstimos e criar uma nova coluna para cada um
+    for loan_list in data['Type_of_Loan']:
+        for loan_type in loan_list:
+            # Verificar se o novo valor já existe na lista
+            if loan_type not in existing_loan_types:
+                # Adicionar o novo valor à lista
+                existing_loan_types.append(loan_type)
+
+    # Iterar sobre os tipos únicos de empréstimos e criar colunas binárias
+    for loan_type in existing_loan_types:
+        if loan_type != '':
+            data[loan_type] = data['Type_of_Loan'].apply(lambda x: 1 if loan_type in x else 0)
+
+create_loan_type_columns()
+data.drop('Type_of_Loan', axis=1, inplace=True)
+
+encoded_data = encoding.encode_credit()
+print("Encode done")
+target = "Credit_Score"
+encoded_data.to_csv("encoded.csv", index=False)
+print("Encode to .csv")
+
+sparsity.correlation_analysis(encoded_data)
+# sparsity.analyse_property_sparsity("Credit_Score")
 
 # --------------------- #
 # --------- MV -------- #
@@ -457,19 +461,19 @@ decisionTrees = decisionTrees(file_tag, "data/credit_train.csv", "data/credit_te
 # auc -> DT best with gini and d=24
 # f1 -> DT best with gini and d=24
 
-dt_metric = "accuracy"
-
-best_model, best_params = decisionTrees.specific_metric_DT_study(dt_metric)
-
-# decisionTrees.performance_analysis(best_model, best_params)
-
-decisionTrees.variables_importance(best_model, dt_metric)
-
-decisionTrees.simple_tree(best_model)
-
-decisionTrees.tree_importance(best_model, dt_metric)
-
-decisionTrees.overfitting_study(dt_metric, best_params)
+# dt_metric = "accuracy"
+#
+# best_model, best_params = decisionTrees.specific_metric_DT_study(dt_metric)
+#
+# # decisionTrees.performance_analysis(best_model, best_params)
+#
+# decisionTrees.variables_importance(best_model, dt_metric)
+#
+# decisionTrees.simple_tree(best_model)
+#
+# decisionTrees.tree_importance(best_model, dt_metric)
+#
+# decisionTrees.overfitting_study(dt_metric, best_params)
 
 
 # -------------------- #
