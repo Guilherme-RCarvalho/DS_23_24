@@ -70,8 +70,8 @@ series: Series = data[target]
 dist = ts_Distribtion(filename, file_tag, data, target, index)
 # dist.ts_distribution_boxplots()
 # dist.ts_distribution_histograms()
-dist.ts_autocorrelation_lag()
-dist.ts_autocorrelation_correlogram()
+# dist.ts_autocorrelation_lag()
+# dist.ts_autocorrelation_correlogram()
 
 # -------------------- #
 # --- Stationarity --- #
@@ -89,7 +89,7 @@ dist.ts_autocorrelation_correlogram()
 #         5%: -2.876
 #         10%: -2.575
 # The series is not stationary (p-value > 0.05 : the series is non-stationary)
-'''
+
 # ---------------------------------------
 #             Transformation
 # ---------------------------------------
@@ -228,4 +228,7 @@ lstm.lstm_study(3000)
 # 100
 # {'name': 'LSTM', 'metric': 'R2', 'params': (4, 100, 2100)}
 # LSTM best results achieved with length=4 hidden_units=100 and nr_episodes=2100) ==> measure=0.85
-'''
+
+# {'name': 'LSTM', 'metric': 'R2', 'params': (4, 100, 2700)}
+# LSTM best results achieved with length=4 hidden_units=100 and nr_episodes=2700) ==> measure=0.87
+
