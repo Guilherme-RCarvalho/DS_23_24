@@ -250,6 +250,8 @@ target = "Credit_Score"
 encoded_data.to_csv("encoded.csv", index=False)
 print("Encode to .csv")
 
+columns_to_drop = ["Occupation_Accountant", "Occupation_Architect", "Occupation_Developer", "Occupation_Doctor", "Occupation_Engineer", "Occupation_Entrepreneur", "Occupation_Journalist", "Occupation_Lawyer", "Occupation_Manager", "Occupation_Mechanic", "Occupation_Media_Manager", "Occupation_Musician", "Occupation_Scientist", "Occupation_Teacher", "Occupation_Writer", "Occupation_nan"]
+encoded_data.drop(columns=columns_to_drop, axis=1, inplace=True)
 sparsity.correlation_analysis(encoded_data)
 # sparsity.analyse_property_sparsity("Credit_Score")
 

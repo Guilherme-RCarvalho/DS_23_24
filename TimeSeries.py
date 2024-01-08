@@ -229,6 +229,8 @@ lstm.lstm_study(3000)
 # {'name': 'LSTM', 'metric': 'R2', 'params': (4, 100, 2100)}
 # LSTM best results achieved with length=4 hidden_units=100 and nr_episodes=2100) ==> measure=0.85
 
+# Rolling Mean best with win=20 -> R2=-0.00048706325161229636
+# ARIMA best results achieved with (p,d,q)=(2, 1, 3) ==> measure=0.44
 # {'name': 'LSTM', 'metric': 'R2', 'params': (4, 100, 2700)}
 # LSTM best results achieved with length=4 hidden_units=100 and nr_episodes=2700) ==> measure=0.87
 
